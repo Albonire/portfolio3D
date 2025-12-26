@@ -10,12 +10,12 @@ if (typeof window !== 'undefined') {
 }
 
 export default function ProjectGallery() {
-  const containerRef = useRef<HTMLDivElement>(null); // El contenedor alto (scroll track)
-  const stickyRef = useRef<HTMLDivElement>(null);    // El viewport sticky
-  const sliderRef = useRef<HTMLDivElement>(null);    // La tira horizontal
+  const containerRef = useRef<HTMLDivElement>(null); // The tall parent container
+  const stickyRef = useRef<HTMLDivElement>(null);    // The sticky viewport
+  const sliderRef = useRef<HTMLDivElement>(null);    // The horizontal slider
   const [activeVideo, setActiveVideo] = useState<number | null>(null);
 
-  // Intro + Projects
+  // Slides including intro slide
   const slides = [0, ...PROJECTS]; 
 
   useEffect(() => {
@@ -60,7 +60,7 @@ export default function ProjectGallery() {
           <div className="w-screen h-screen flex flex-col justify-center items-center shrink-0 border-r border-current/10 bg-[var(--color-dark)] text-[var(--color-text)]">
              <h2 className="font-display text-[8vw] leading-none uppercase text-center">
                SELECTED<br/>
-               <span className="text-neon stroke-black dark:stroke-neon dark:text-transparent">WORKS</span>
+               <span className="text-neon stroke-black dark:stroke-neon dark:white">WORKS</span>
              </h2>
              <p className="font-mono text-neon mt-8 animate-pulse text-xl">[ SCROLL TO EXPLORE &gt;&gt;&gt; ]</p>
           </div>
