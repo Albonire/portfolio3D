@@ -1,61 +1,60 @@
 "use client";
 import { Canvas, useFrame } from '@react-three/fiber';
-import { MeshDistortMaterial, Sphere, Float, Environment } from '@react-three/drei';
-import { useRef, useState } from 'react';
+import { MeshDistortMaterial, Sphere, Float } from '@react-three/drei';
+import { useRef } from 'react';
 import * as THREE from 'three';
 import { useTheme } from 'next-themes';
 
 function LiquidShape() {
+  const meshRef = useRef<any>(null);
   const materialRef = useRef<any>(null);
   const { theme } = useTheme();
   
   useFrame((state) => {
     if (!materialRef.current) return;
-
-    // Get mouse distance from center (normalized 0 to ~1.4)
+    
     const mouseX = state.pointer.x;
     const mouseY = state.pointer.y;
     const dist = Math.sqrt(mouseX * mouseX + mouseY * mouseY);
-
-    // FIX: Invert logic. 
-    // Closer to center (dist -> 0) = Higher Distortion.
-    // Far from center (dist -> 1) = Calm.
     
-    // Intensity factor: 1 at center, 0 at edges.
-    const intensity = Math.max(0, 1 - dist); 
-
-    const targetDistort = 0.3 + (intensity * 0.6); // Base 0.3, Max 0.9
-    const targetSpeed = 1.5 + (intensity * 4);     // Base 1.5, Max 5.5
-
-    // Smooth Lerp
-    materialRef.current.distort = THREE.MathUtils.lerp(materialRef.current.distort, targetDistort, 0.05);
-    materialRef.current.speed = THREE.MathUtils.lerp(materialRef.current.speed, targetSpeed, 0.05);
+    // Calm when far, moderate when close
+    const intensity = Math.max(0, 1 - dist);
+    const targetDistort = 0.15 + (intensity * 0.35);
+    const targetSpeed = 1.0 + (intensity * 2.5);
     
-    // Subtle parallax rotation
+    materialRef.current.distort = THREE.MathUtils.lerp(materialRef.current.distort, targetDistort, 0.04);
+    materialRef.current.speed = THREE.MathUtils.lerp(materialRef.current.speed, targetSpeed, 0.04);
+    
+    // Enhanced parallax for liquid feel
     if (state.camera) {
-        state.camera.position.x = THREE.MathUtils.lerp(state.camera.position.x, mouseX * 0.3, 0.05);
-        state.camera.position.y = THREE.MathUtils.lerp(state.camera.position.y, mouseY * 0.3, 0.05);
+        state.camera.position.x = THREE.MathUtils.lerp(state.camera.position.x, mouseX * 0.5, 0.08);
+        state.camera.position.y = THREE.MathUtils.lerp(state.camera.position.y, mouseY * 0.5, 0.08);
         state.camera.lookAt(0,0,0);
     }
+    
+    // Subtle rotation for liquid mercury effect
+    if (meshRef.current) {
+      meshRef.current.rotation.y += 0.002;
+      meshRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.3) * 0.1;
+    }
   });
-
-  // Theme Colors
+  
+  // Optimized colors for each theme
   const isDark = theme === 'dark' || theme === 'system';
-  // Lighter base to catch more environment highlights
-  const sphereColor = isDark ? "#222222" : "#111111"; 
+  const sphereColor = isDark ? "#C8C8C8" : "#8A8A8A";
   
   return (
-    <Float speed={2} rotationIntensity={0.5} floatIntensity={1}>
-      <Sphere args={[1, 128, 256]} scale={2.2}>
+    <Float speed={2.5} rotationIntensity={0.8} floatIntensity={1.5}>
+      <Sphere ref={meshRef} args={[1, 128, 256]} scale={1.8}>
         <MeshDistortMaterial
           ref={materialRef}
           color={sphereColor}
           attach="material"
-          distort={0.4} 
-          speed={2}
-          roughness={0}    // Maximum shine
-          metalness={1}    // Pure metal
-          clearcoat={1}    // Extra layer of shine
+          distort={0.2} 
+          speed={1.5}
+          roughness={0.05}
+          metalness={0.85}
+          clearcoat={1}
           clearcoatRoughness={0}
         />
       </Sphere>
@@ -64,6 +63,9 @@ function LiquidShape() {
 }
 
 export default function HeroSection() {
+  const { theme } = useTheme();
+  const isDark = theme === 'dark' || theme === 'system';
+  
   return (
     <section className="h-screen w-full relative flex items-center justify-center overflow-hidden bg-transparent transition-colors duration-500">
       {/* Background Text */}
@@ -75,16 +77,87 @@ export default function HeroSection() {
           Developer
         </h1>
       </div>
-
+      
       {/* 3D Canvas */}
       <div className="absolute inset-0 z-10 cursor-pointer">
-        <Canvas camera={{ position: [0, 0, 5] }} dpr={[1, 2]}>
-          <ambientLight intensity={1} />
-          <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={2} color="#FFFFFF" />
-          <pointLight position={[10, 10, 10]} intensity={3} color="#FFFFFF" />
-          <pointLight position={[-10, -10, -5]} intensity={3} color="#CCFF00" />
+        <Canvas 
+          camera={{ position: [0, 0, 5], fov: 50 }} 
+          dpr={[1, 2]}
+        >
+          {/* Hemisphere light simulates sky and ground - creates base metallic look */}
+          <hemisphereLight
+            intensity={isDark ? 2.5 : 2}
+            color="#FFFFFF"
+            groundColor={isDark ? "#888888" : "#666666"}
+          />
+          
+          {/* Strong ambient for visibility */}
+          <ambientLight intensity={isDark ? 1.2 : 0.8} />
+          
+          {/* Main spotlight - creates primary metallic highlight */}
+          <spotLight 
+            position={[12, 12, 8]} 
+            angle={0.4} 
+            penumbra={1} 
+            intensity={isDark ? 20 : 10} 
+            color="#FFFFFF" 
+          />
+          
+          {/* Directional lights for broad metallic sheen */}
+          <directionalLight
+            position={[10, 5, 5]}
+            intensity={isDark ? 8 : 3}
+            color="#FFFFFF"
+          />
+          <directionalLight
+            position={[-10, 5, 5]}
+            intensity={isDark ? 8 : 3}
+            color="#FFFFFF"
+          />
+          
+          {/* Point lights for specular highlights */}
+          <pointLight 
+            position={[8, 8, 6]} 
+            intensity={isDark ? 15 : 7}
+            color="#FFFFFF" 
+            decay={2}
+          />
+          <pointLight 
+            position={[-8, 8, 6]} 
+            intensity={isDark ? 15 : 7}
+            color="#FFFFFF" 
+            decay={2}
+          />
+          <pointLight 
+            position={[0, -8, 8]} 
+            intensity={isDark ? 12 : 5}
+            color="#FFFFFF" 
+            decay={2}
+          />
+          
+          {/* Colored accent lights - add depth */}
+          <pointLight 
+            position={[-6, -6, -6]} 
+            intensity={isDark ? 6 : 3}
+            color={isDark ? "#00CCFF" : "#0088DD"}
+            decay={2}
+          />
+          <pointLight 
+            position={[6, 0, -8]} 
+            intensity={isDark ? 5 : 2}
+            color={isDark ? "#FF0088" : "#DD0077"}
+            decay={2}
+          />
+          
+          {/* Back fill for dimension */}
+          <pointLight 
+            position={[0, 0, -12]} 
+            intensity={isDark ? 10 : 4}
+            color="#FFFFFF" 
+            decay={2}
+          />
+          
           <LiquidShape />
-          <Environment preset="city" />
         </Canvas>
       </div>
       
