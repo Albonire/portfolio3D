@@ -9,7 +9,7 @@ export default function Navbar() {
 
   return (
     <nav className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50">
-      <ul className="flex gap-1 p-1.5 bg-white/10 dark:bg-black/20 backdrop-blur-2xl border border-white/30 dark:border-white/10 rounded-full shadow-[0_8px_32px_0_rgba(31,38,135,0.37)]">
+      <ul className="flex gap-1 p-1.5 bg-white/20 dark:bg-black/30 backdrop-blur-xl border border-white/40 dark:border-white/10 rounded-full shadow-[0_4px_24px_-1px_rgba(0,0,0,0.1)] dark:shadow-[0_4px_24px_-1px_rgba(0,0,0,0.5)]">
         {navItems.map((item) => (
           <li key={item.label}>
             <a 

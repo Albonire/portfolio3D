@@ -126,6 +126,8 @@ export const SKILLS = [
   { name: "Python / Django", level: "high", category: "backend" },
   { name: "FastAPI", level: "high", category: "backend" },
   { name: "Node.js", level: "medium", category: "backend" },
+  { name: "Spring Boot", level: "medium", category: "backend" },
   { name: "SQL (Postgres)", level: "medium", category: "database" },
   { name: "Git & Docker", level: "high", category: "tools" },
+  { name: "Redis", level: "medium", category: "tools" },
 ];
