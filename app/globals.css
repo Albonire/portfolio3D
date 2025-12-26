@@ -1,26 +1,83 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-dark: var(--bg-primary);
+  --color-text: var(--text-primary);
+  --color-neon: #CCFF00;
+  --color-neon-hover: #B3E600;
+  
+  --font-display: 'Clash Display', sans-serif;
+  --font-body: 'Satoshi', sans-serif;
+
+  --animate-pulse-fast: pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --bg-primary: #EAEAEA;
+    --text-primary: #050505;
+  }
+
+  [data-theme='dark'], .dark {
+    --bg-primary: #050505;
+    --text-primary: #FFFFFF;
+  }
+
+  [data-theme='light'], .light {
+    --bg-primary: #F2F2F2;
+    --text-primary: #050505;
+  }
+
+  body {
+    background-color: var(--color-dark);
+    color: var(--color-text);
+    cursor: none;
+    overflow-x: hidden;
+    transition: background-color 0.5s ease, color 0.5s ease;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer utilities {
+  .bg-noise {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.07'/%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+
+  /* Typography Utilities */
+  .stroke-text {
+    -webkit-text-stroke: 2px currentColor;
+    color: transparent;
+  }
+  
+  .stroke-neon {
+    -webkit-text-stroke: 2px var(--color-neon);
+  }
+  
+  .stroke-black {
+    -webkit-text-stroke: 2px black;
+  }
+}
+
+/* Glitch Animation */
+@keyframes glitch-anim {
+  0% { clip-path: inset(20% 0 80% 0); transform: translate(-2px, 1px); }
+  20% { clip-path: inset(60% 0 10% 0); transform: translate(2px, -1px); }
+  40% { clip-path: inset(40% 0 50% 0); transform: translate(-2px, 2px); }
+  60% { clip-path: inset(80% 0 5% 0); transform: translate(2px, -2px); }
+  80% { clip-path: inset(10% 0 70% 0); transform: translate(-1px, 1px); }
+  100% { clip-path: inset(30% 0 50% 0); transform: translate(1px, -1px); }
+}
+
+.glitch-layer {
+  display: none;
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  mix-blend-mode: hard-light;
+  background-size: cover;
+}
+
+.group:hover .glitch-layer {
+  display: block;
+  animation: glitch-anim 0.3s infinite linear alternate-reverse;
 }

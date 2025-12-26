@@ -1,65 +1,76 @@
-import Image from "next/image";
+import HeroSection from "@/components/Hero3D";
+import ProjectGallery from "@/components/ProjectGallery";
+import StackBrutalist from "@/components/StackBrutalist";
+import EducationBrutalist from "@/components/EducationBrutalist";
+import { ABOUT } from "@/data/content";
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <div className="flex flex-col w-full min-h-screen bg-[var(--color-dark)]">
+      <HeroSection />
+      
+      {/* Intro Section */}
+      <section className="min-h-[60vh] flex flex-col justify-center py-24 px-6 md:px-20 border-b border-current/10 transition-colors duration-500 relative overflow-hidden z-10 bg-[var(--color-dark)] text-[var(--color-text)]">
+        <div className="max-w-7xl w-full mx-auto z-10">
+          <p className="font-mono text-xs md:text-sm text-neon mb-8 tracking-widest">
+            // {ABOUT.subtitle}
           </p>
+          <h2 className="font-display text-4xl md:text-7xl lg:text-8xl leading-[0.9] text-[var(--color-text)] uppercase mb-12">
+            {ABOUT.description.split(" ").map((word, i) => (
+              <span key={i} className="inline-block hover:text-neon transition-colors duration-300 mr-4 cursor-default">
+                {word}
+              </span>
+            ))}
+          </h2>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
+      </section>
+
+      {/* Projects - Sticky Horizontal Scroll */}
+      <ProjectGallery />
+
+      {/* Stack */}
+      <StackBrutalist />
+
+      {/* Education */}
+      <EducationBrutalist />
+
+      {/* Contact / CTA */}
+      <section className="relative z-30 min-h-screen flex flex-col items-center justify-center overflow-hidden transition-colors duration-500
+        bg-neon text-black 
+        dark:bg-black dark:text-neon"
+      >
+        <div className="absolute inset-0 bg-noise opacity-20 pointer-events-none" />
+        
+        <p className="font-mono text-sm md:text-xl tracking-widest mb-10 z-10">
+          [ READY TO START? ]
+        </p>
+
+        <h2 className="font-display text-[15vw] leading-[0.8] text-center cursor-none z-10 group relative">
+          <span className="block group-hover:scale-110 transition-transform duration-700 ease-in-out">
+            LET'S
+          </span>
+          <span className="block group-hover:-scale-x-110 transition-transform duration-700 ease-in-out text-transparent stroke-text dark:stroke-neon stroke-black">
+            TALK
+          </span>
+        </h2>
+
+        <div className="mt-20 flex gap-8 md:gap-20 font-display text-xl md:text-3xl z-10">
+          <a href="mailto:contact@fabian.dev" className="hover:line-through decoration-4 decoration-black dark:decoration-neon transition-all">
+            CONTACT@FABIAN.DEV
           </a>
         </div>
-      </main>
+      </section>
+      
+      <footer className="relative z-30 py-10 px-6 md:px-10 border-t border-current/10 flex flex-col md:flex-row justify-between items-center font-mono uppercase text-xs md:text-sm mix-blend-difference opacity-80 bg-[var(--color-dark)] text-[var(--color-text)]">
+        <div className="mb-4 md:mb-0">© 2025 {ABOUT.title}</div>
+        <div className="flex gap-6">
+           {ABOUT.social.map((s) => (
+             <a key={s.label} href={s.url} className="hover:text-neon transition-colors" target="_blank" rel="noopener noreferrer">
+               [{s.label}]
+             </a>
+           ))}
+        </div>
+      </footer>
     </div>
   );
 }
