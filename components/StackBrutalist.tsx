@@ -6,7 +6,7 @@ export default function StackBrutalist() {
       <div className="max-w-7xl mx-auto">
         <h3 className="font-mono text-neon-readable text-sm mb-10 tracking-widest uppercase">[ SYSTEM ARCHITECTURE ]</h3>
         
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-current/20 border border-current/20">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-px bg-current/20 border border-current/20">
           {SKILLS.map((skill) => (
             <div key={skill.name} className="bg-[var(--color-dark)] p-8 hover:bg-neon hover:text-black transition-colors duration-300 group">
               <span className="font-mono text-xs opacity-50 block mb-2">// {skill.category}</span>
