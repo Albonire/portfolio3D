@@ -7,12 +7,14 @@ import { ABOUT } from "@/data/content";
 export default function Home() {
   return (
     <div className="flex flex-col w-full min-h-screen bg-[var(--color-dark)]">
-      <HeroSection />
+      <section id="hero">
+        <HeroSection />
+      </section>
       
       {/* Intro Section */}
       <section className="min-h-[60vh] flex flex-col justify-center py-24 px-6 md:px-20 border-b border-current/10 transition-colors duration-500 relative overflow-hidden z-10 bg-[var(--color-dark)] text-[var(--color-text)]">
         <div className="max-w-7xl w-full mx-auto z-10">
-          <p className="font-mono text-xs md:text-sm text-neon mb-8 tracking-widest">
+          <p className="font-mono text-xs md:text-sm text-black dark:text-neon mb-8 tracking-widest uppercase">
             // {ABOUT.subtitle}
           </p>
           <h2 className="font-display text-4xl md:text-7xl lg:text-8xl leading-[0.9] text-[var(--color-text)] uppercase mb-12">
@@ -26,16 +28,18 @@ export default function Home() {
       </section>
 
       {/* Projects - Sticky Horizontal Scroll */}
-      <ProjectGallery />
+      <section id="work">
+        <ProjectGallery />
+      </section>
 
-      {/* Stack */}
-      <StackBrutalist />
-
-      {/* Education */}
-      <EducationBrutalist />
+      {/* About/Stack/Education */}
+      <section id="about">
+        <StackBrutalist />
+        <EducationBrutalist />
+      </section>
 
       {/* Contact / CTA */}
-      <section className="relative z-30 min-h-screen flex flex-col items-center justify-center overflow-hidden transition-colors duration-500
+      <section id="contact" className="relative z-30 min-h-screen flex flex-col items-center justify-center overflow-hidden transition-colors duration-500
         bg-neon text-black 
         dark:bg-black dark:text-neon"
       >
@@ -65,7 +69,7 @@ export default function Home() {
         <div className="mb-4 md:mb-0">© 2025 {ABOUT.title}</div>
         <div className="flex gap-6">
            {ABOUT.social.map((s) => (
-             <a key={s.label} href={s.url} className="hover:text-neon transition-colors" target="_blank" rel="noopener noreferrer">
+             <a key={s.label} href={s.url} className="hover:text-black dark:hover:text-neon transition-colors" target="_blank" rel="noopener noreferrer">
                [{s.label}]
              </a>
            ))}
