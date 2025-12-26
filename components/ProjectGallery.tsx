@@ -64,6 +64,8 @@ function ProjectCard({ project, isActive, onHover, onLeave }: {
               muted 
               playsInline
               preload="none"
+              crossOrigin="anonymous"
+              suppressHydrationWarning
               className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${isActive ? 'opacity-100' : 'opacity-0'}`}
             />
           </>
