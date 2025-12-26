@@ -1,5 +1,5 @@
 "use client";
-import { Canvas, useFrame } from '@react-three/fiber';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { MeshDistortMaterial, Sphere, Float } from '@react-three/drei';
 import { useRef } from 'react';
 import * as THREE from 'three';
@@ -9,6 +9,12 @@ function LiquidShape() {
   const meshRef = useRef<any>(null);
   const materialRef = useRef<any>(null);
   const { theme } = useTheme();
+  const { viewport } = useThree();
+  
+  // Responsive scale: Smaller on mobile to prevent overflow
+  // Viewport width < 6 is roughly mobile/vertical tablet
+  const isMobile = viewport.width < 6;
+  const responsiveScale = isMobile ? 0.9 : 1.8;
   
   useFrame((state) => {
     if (!materialRef.current) return;
@@ -39,13 +45,15 @@ function LiquidShape() {
     }
   });
   
-  // Optimized colors for each theme
+  // Optimized colors for each theme - RESTORED CORRECT VALUES
+  // Dark Mode: Light gray (#C8C8C8) for visibility and proper light reflection
+  // Light Mode: Medium-dark gray (#8A8A8A) for contrast against light background
   const isDark = theme === 'dark' || theme === 'system';
   const sphereColor = isDark ? "#C8C8C8" : "#8A8A8A";
   
   return (
     <Float speed={2.5} rotationIntensity={0.8} floatIntensity={1.5}>
-      <Sphere ref={meshRef} args={[1, 128, 256]} scale={1.8}>
+      <Sphere ref={meshRef} args={[1, 128, 256]} scale={responsiveScale}>
         <MeshDistortMaterial
           ref={materialRef}
           color={sphereColor}
