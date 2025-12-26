@@ -2,6 +2,7 @@ import HeroSection from "@/components/Hero3D";
 import ProjectGallery from "@/components/ProjectGallery";
 import StackBrutalist from "@/components/StackBrutalist";
 import EducationBrutalist from "@/components/EducationBrutalist";
+import IntroScroll from "@/components/IntroScroll";
 import { ABOUT } from "@/data/content";
 
 export default function Home() {
@@ -17,13 +18,7 @@ export default function Home() {
           <p className="font-mono text-xs md:text-sm text-neon-readable mb-8 tracking-widest uppercase">
             // {ABOUT.subtitle}
           </p>
-          <h2 className="font-display text-4xl md:text-7xl lg:text-8xl leading-[0.9] text-[var(--color-text)] uppercase mb-12">
-            {ABOUT.description.split(" ").map((word, i) => (
-              <span key={i} className="inline-block hover:text-neon-readable transition-colors duration-300 mr-4 cursor-default">
-                {word}
-              </span>
-            ))}
-          </h2>
+          <IntroScroll description={ABOUT.description} />
         </div>
       </section>
 
