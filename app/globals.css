@@ -5,6 +5,7 @@
   --color-text: var(--text-primary);
   --color-neon: #CCFF00;
   --color-neon-hover: #B3E600;
+  --color-neon-readable: var(--color-neon-readable);
   
   --font-display: 'Clash Display', sans-serif;
   --font-body: 'Satoshi', sans-serif;
@@ -16,11 +17,13 @@
   :root {
     --bg-primary: #EAEAEA;
     --text-primary: #050505;
+    --color-neon-readable: #4A6B00; /* Darker green for white bg */
   }
 
   [data-theme='dark'], .dark {
     --bg-primary: #050505;
     --text-primary: #FFFFFF;
+    --color-neon-readable: #CCFF00; /* Pure neon for dark bg */
   }
 
   [data-theme='light'], .light {

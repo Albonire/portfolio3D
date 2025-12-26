@@ -40,20 +40,23 @@ function LiquidShape() {
   });
 
   // Theme Colors
-  const isDark = theme === 'dark' || theme === 'system'; // Default logic assumption
-  const sphereColor = isDark ? "#080808" : "#000000"; 
+  const isDark = theme === 'dark' || theme === 'system';
+  // Lighter base to catch more environment highlights
+  const sphereColor = isDark ? "#222222" : "#111111"; 
   
   return (
     <Float speed={2} rotationIntensity={0.5} floatIntensity={1}>
-      <Sphere args={[1, 100, 200]} scale={2.2}>
+      <Sphere args={[1, 128, 256]} scale={2.2}>
         <MeshDistortMaterial
           ref={materialRef}
           color={sphereColor}
           attach="material"
-          distort={0.3} 
-          speed={1.5}
-          roughness={0.2}
-          metalness={0.9}
+          distort={0.4} 
+          speed={2}
+          roughness={0}    // Maximum shine
+          metalness={1}    // Pure metal
+          clearcoat={1}    // Extra layer of shine
+          clearcoatRoughness={0}
         />
       </Sphere>
     </Float>
@@ -75,10 +78,11 @@ export default function HeroSection() {
 
       {/* 3D Canvas */}
       <div className="absolute inset-0 z-10 cursor-pointer">
-        <Canvas camera={{ position: [0, 0, 5] }}>
-          <ambientLight intensity={1.5} />
-          <pointLight position={[10, 10, 10]} intensity={2} color="#FFFFFF" />
-          <pointLight position={[-10, -10, -5]} intensity={2} color="#CCFF00" />
+        <Canvas camera={{ position: [0, 0, 5] }} dpr={[1, 2]}>
+          <ambientLight intensity={1} />
+          <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={2} color="#FFFFFF" />
+          <pointLight position={[10, 10, 10]} intensity={3} color="#FFFFFF" />
+          <pointLight position={[-10, -10, -5]} intensity={3} color="#CCFF00" />
           <LiquidShape />
           <Environment preset="city" />
         </Canvas>

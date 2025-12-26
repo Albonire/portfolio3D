@@ -14,12 +14,12 @@ export default function Home() {
       {/* Intro Section */}
       <section className="min-h-[60vh] flex flex-col justify-center py-24 px-6 md:px-20 border-b border-current/10 transition-colors duration-500 relative overflow-hidden z-10 bg-[var(--color-dark)] text-[var(--color-text)]">
         <div className="max-w-7xl w-full mx-auto z-10">
-          <p className="font-mono text-xs md:text-sm text-black dark:text-neon mb-8 tracking-widest uppercase">
+          <p className="font-mono text-xs md:text-sm text-neon-readable mb-8 tracking-widest uppercase">
             // {ABOUT.subtitle}
           </p>
           <h2 className="font-display text-4xl md:text-7xl lg:text-8xl leading-[0.9] text-[var(--color-text)] uppercase mb-12">
             {ABOUT.description.split(" ").map((word, i) => (
-              <span key={i} className="inline-block hover:text-neon transition-colors duration-300 mr-4 cursor-default">
+              <span key={i} className="inline-block hover:text-neon-readable transition-colors duration-300 mr-4 cursor-default">
                 {word}
               </span>
             ))}
@@ -69,7 +69,7 @@ export default function Home() {
         <div className="mb-4 md:mb-0">© 2025 {ABOUT.title}</div>
         <div className="flex gap-6">
            {ABOUT.social.map((s) => (
-             <a key={s.label} href={s.url} className="hover:text-black dark:hover:text-neon transition-colors" target="_blank" rel="noopener noreferrer">
+             <a key={s.label} href={s.url} className="hover:text-neon-readable transition-colors" target="_blank" rel="noopener noreferrer">
                [{s.label}]
              </a>
            ))}

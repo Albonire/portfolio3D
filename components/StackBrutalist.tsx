@@ -4,7 +4,7 @@ export default function StackBrutalist() {
   return (
     <section className="relative z-30 py-32 px-6 md:px-20 border-b border-current/10 bg-[var(--color-dark)] text-[var(--color-text)] transition-colors duration-500">
       <div className="max-w-7xl mx-auto">
-        <h3 className="font-mono text-neon text-sm mb-10 tracking-widest">[ SYSTEM ARCHITECTURE ]</h3>
+        <h3 className="font-mono text-neon-readable text-sm mb-10 tracking-widest uppercase">[ SYSTEM ARCHITECTURE ]</h3>
         
         <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-current/20 border border-current/20">
           {SKILLS.map((skill) => (

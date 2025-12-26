@@ -6,7 +6,7 @@ export default function EducationBrutalist() {
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-20">
         <div className="md:w-1/3">
           <h3 className="font-display text-6xl uppercase leading-[0.8] sticky top-32">
-            ACADEMIC<br/>DATA<span className="text-neon">.LOG</span>
+            ACADEMIC<br/>DATA<span className="text-neon-readable">.LOG</span>
           </h3>
         </div>
         
@@ -17,7 +17,7 @@ export default function EducationBrutalist() {
               
               <div className="flex justify-between items-baseline mb-2">
                 <h4 className="font-display text-3xl uppercase">{edu.title}</h4>
-                <span className="font-mono text-neon text-sm">{edu.year}</span>
+                <span className="font-mono text-neon-readable text-sm">{edu.year}</span>
               </div>
               
               <p className="font-mono text-sm opacity-60 mb-4 uppercase tracking-widest">{edu.institution}</p>
