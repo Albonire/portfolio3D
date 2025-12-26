@@ -1,0 +1,129 @@
+export const ABOUT = {
+  title: "FABIAN ALBONIRE",
+  subtitle: "FULL STACK DEVELOPER & CREATIVE ENGINEER",
+  description: "Specializing in high-performance web applications, AI integration, and system architecture. Building the bridge between complex back-end logic and immersive front-end experiences.",
+  social: [
+    { label: "GITHUB", url: "https://github.com/Albonire" },
+    { label: "LINKEDIN", url: "https://linkedin.com/in/fabian-albonire" },
+    { label: "EMAIL", url: "mailto:contact@fabian.dev" },
+  ]
+};
+
+export const PROJECTS = [
+  { 
+    id: 1, 
+    title: "TASK MANAGER", 
+    category: "WEB / DJANGO", 
+    color: "from-yellow-600 to-orange-900",
+    year: "2024",
+    image: "/thumbnails/home_screencast_thumb.jpg",
+    video: "/home_screencast.mp4",
+    tech: ["Django 5", "Python", "SQLite"],
+    link: "https://github.com/Albonire/To-DoList1.0"
+  },
+  { 
+    id: 2, 
+    title: "BDI ZOO", 
+    category: "WEB / FASTAPI", 
+    color: "from-green-600 to-emerald-900",
+    year: "2024",
+    image: "/thumbnails/bdi_screencast_thumb.jpg",
+    video: "/bdi_screencast.mp4",
+    tech: ["FastAPI", "PostgreSQL", "Docker"],
+    link: "https://bdi-gb-zoo.vercel.app/"
+  },
+  { 
+    id: 3, 
+    title: "IA HUMANIZER", 
+    category: "AI / REACT", 
+    color: "from-purple-600 to-indigo-900",
+    year: "2024",
+    image: "/thumbnails/humanizer_screencast_thumb.jpg",
+    video: "/humanizer_screencast.mp4",
+    tech: ["React", "OpenAI API", "Tailwind"],
+    link: "https://ia-humanizer-neon.vercel.app/"
+  },
+  { 
+    id: 4, 
+    title: "HOME BUTTON", 
+    category: "DESKTOP / GNOME", 
+    color: "from-gray-600 to-slate-900",
+    year: "2023",
+    image: "/thumbnails/homebutton_screencast_thumb.jpg",
+    video: "/homebutton_screencast.mp4",
+    tech: ["JavaScript", "GJS", "Shell"],
+    link: "https://github.com/Albonire/home-button"
+  },
+  { 
+    id: 5, 
+    title: "CUPIDO APP", 
+    category: "FULL STACK", 
+    color: "from-rose-600 to-pink-900",
+    year: "2023",
+    image: "/thumbnails/cupido_screencast_thumb.jpg",
+    video: "/cupido_screencast.mp4",
+    tech: ["React", "Django DRF", "PostgreSQL"],
+    link: "https://cupido-sandy.vercel.app/"
+  }
+];
+
+export const EDUCATION = [
+  {
+    id: 1,
+    year: '2024',
+    title: 'Programming Bootcamp',
+    institution: 'Sergio Arboleda University',
+    description: 'TypeScript, React, Node.js, Next.js, Tailwind CSS',
+    type: 'certification',
+    link: 'https://certificadotech.tiiny.site'
+  },
+  {
+    id: 2,
+    year: '2022',
+    title: 'Systems Engineering',
+    institution: 'Pamplona University',
+    description: 'Formal education in software engineering and computer science.',
+    type: 'ongoing degree',
+    link: 'https://example.com/certificate4'
+  },
+  {
+    id: 3,
+    year: '2021',
+    title: 'FullStack development',
+    institution: 'Programming Academy',
+    description: 'JavaScript, React, Node.js & databases',
+    type: 'course',
+    link: 'https://example.com/certificate3'
+  },
+  {
+    id: 4,
+    year: '2019',
+    title: 'Bachiller Técnico',
+    institution: 'IT Technical Institute',
+    description: 'Focus on electronics and industrial mechanics',
+    type: 'degree',
+    link: 'https://example.com/certificate1'
+  },
+  {
+    id: 5,
+    year: '2017',
+    title: 'IT Technician',
+    institution: 'SENA',
+    description: 'Hardware & Networking',
+    type: 'certification',
+    link: 'https://example.com/certificate2'
+  }
+];
+
+export const SKILLS = [
+  { name: 'HTML/CSS/JS', level: 'high', category: 'frontend' },
+  { name: 'TypeScript', level: 'high', category: 'frontend' },
+  { name: 'React & Next.js', level: 'high', category: 'frontend' },
+  { name: 'Tailwind CSS', level: 'high', category: 'frontend' },
+  { name: 'Three.js / R3F', level: 'medium', category: 'frontend' },
+  { name: 'Python / Django', level: 'high', category: 'backend' },
+  { name: 'FastAPI', level: 'high', category: 'backend' },
+  { name: 'Node.js', level: 'medium', category: 'backend' },
+  { name: 'SQL (Postgres)', level: 'medium', category: 'database' },
+  { name: 'Git & Docker', level: 'high', category: 'tools' }
+];
