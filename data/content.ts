@@ -57,7 +57,7 @@ export const PROJECTS = [
   },
   {
     id: 5,
-    title: "CUPIDO APP",
+    title: "CUPIDO WEB APP",
     category: "FULL STACK",
     color: "from-rose-600 to-pink-900",
     year: "2025",

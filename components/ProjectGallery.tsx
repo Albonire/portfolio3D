@@ -156,7 +156,7 @@ export default function ProjectGallery() {
           <div className="w-screen h-screen flex flex-col justify-center items-center shrink-0 border-r border-current/10 bg-[var(--color-dark)] text-[var(--color-text)]">
              <h2 className="font-display text-[8vw] leading-none uppercase text-center">
                SELECTED<br/>
-               <span className="text-neon-readable stroke-black dark:stroke-neon-readable dark:text-black">WORKS</span>
+               <span className="text-neon-readable">WORKS</span>
              </h2>
              <p className="font-mono text-neon-readable mt-8 animate-pulse text-xl">[ SCROLL TO EXPLORE &gt;&gt;&gt; ]</p>
           </div>
