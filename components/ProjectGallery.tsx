@@ -5,7 +5,7 @@
   import { PROJECTS } from '@/data/content';
   import Image from 'next/image';
   import TiltCard from './TiltCard';
-  
+  import MaskText from './MaskText';  
   if (typeof window !== 'undefined') {
       gsap.registerPlugin(ScrollTrigger);
   }
@@ -155,15 +155,24 @@
           {/* SLIDER: The actual horizontal content */}
           <div ref={sliderRef} className="flex h-full w-max will-change-transform">
             
-            {/* SLIDE 0: INTRO */}
-            <div className="w-screen h-screen flex flex-col justify-center items-center shrink-0 border-r border-current/10 bg-[var(--color-dark)] text-[var(--color-text)]">
-              <h2 className="font-display text-[8vw] leading-none uppercase text-center">
-                SELECTED<br/>
-                <span className="text-neon-readable">WORKS</span>
-              </h2>
-              <p className="font-mono text-neon-readable mt-8 animate-pulse text-xl">[ SCROLL TO EXPLORE &gt;&gt;&gt; ]</p>
-            </div>
-  
+                      {/* SLIDE 0: INTRO */}
+                      <div className="w-screen h-screen flex flex-col justify-center items-center shrink-0 border-r border-current/10 bg-[var(--color-dark)] text-[var(--color-text)]">
+                        <div className="text-center">
+                          <MaskText>
+                            <h2 className="font-display text-[8vw] leading-none uppercase">
+                              SELECTED
+                            </h2>
+                          </MaskText>
+                          <MaskText delay={0.1}>
+                            <h2 className="font-display text-[8vw] leading-none uppercase text-neon-readable">
+                              WORKS
+                            </h2>
+                          </MaskText>
+                        </div>
+                        <MaskText delay={0.4}>
+                          <p className="font-mono text-neon-readable mt-8 animate-pulse text-xl">[ SCROLL TO EXPLORE &gt;&gt;&gt; ]</p>
+                        </MaskText>
+                      </div>  
             {/* SLIDES 1..N: PROJECTS */}
             {PROJECTS.map((project, index) => (
               <ProjectCard 

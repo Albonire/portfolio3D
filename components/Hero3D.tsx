@@ -70,6 +70,8 @@ function LiquidShape() {
   );
 }
 
+import MaskText from './MaskText';
+
 export default function HeroSection() {
   const { theme } = useTheme();
   const isDark = theme === 'dark' || theme === 'system';
@@ -78,12 +80,16 @@ export default function HeroSection() {
     <section className="h-screen w-full relative flex items-center justify-center overflow-hidden bg-transparent transition-colors duration-500">
       {/* Background Text */}
       <div className="absolute inset-0 flex flex-col justify-center items-center pointer-events-none z-0 select-none">
-        <h1 className="font-display text-[15vw] leading-none text-transparent bg-clip-text bg-gradient-to-b from-current to-transparent opacity-10 uppercase tracking-tighter">
-          Creative
-        </h1>
-        <h1 className="font-display text-[15vw] leading-none text-current uppercase tracking-tighter mix-blend-overlay opacity-50">
-          Developer
-        </h1>
+        <MaskText>
+          <h1 className="font-display text-[15vw] leading-none text-transparent bg-clip-text bg-gradient-to-b from-current to-transparent opacity-10 uppercase tracking-tighter">
+            Creative
+          </h1>
+        </MaskText>
+        <MaskText delay={0.2}>
+          <h1 className="font-display text-[15vw] leading-none text-current uppercase tracking-tighter mix-blend-overlay opacity-50">
+            Developer
+          </h1>
+        </MaskText>
       </div>
       
       {/* 3D Canvas */}
