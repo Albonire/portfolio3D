@@ -5,7 +5,8 @@
   import { PROJECTS } from '@/data/content';
   import Image from 'next/image';
   import TiltCard from './TiltCard';
-  import MaskText from './MaskText';  
+  import MaskText from './MaskText';
+  import Magnetic from './Magnetic';  
   if (typeof window !== 'undefined') {
       gsap.registerPlugin(ScrollTrigger);
   }
@@ -86,11 +87,13 @@
   
         {/* Info - Refined animation */}
         <div className="absolute z-40 pointer-events-none top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center w-full mix-blend-difference text-white">
-          <a href={project.link} target="_blank" className="pointer-events-auto cursor-none block">
-            <h2 className="font-display text-[8vw] leading-none uppercase tracking-tighter translate-y-[20%] group-hover:translate-y-[-10%] transition-transform duration-700 cubic-bezier(0.23, 1, 0.32, 1) hover:text-neon-readable">
-              {project.title}
-            </h2>
-          </a>
+          <Magnetic>
+            <a href={project.link} target="_blank" className="pointer-events-auto cursor-none block">
+              <h2 className="font-display text-[8vw] leading-none uppercase tracking-tighter translate-y-[20%] group-hover:translate-y-[-10%] transition-transform duration-700 cubic-bezier(0.23, 1, 0.32, 1) hover:text-neon-readable">
+                {project.title}
+              </h2>
+            </a>
+          </Magnetic>
           <div className="flex justify-between items-center w-[90vw] md:w-[800px] mx-auto mt-8 px-6 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-500 delay-100 bg-black/40 backdrop-blur-md p-3 border border-white/10 rounded">
             <div className="flex gap-3 flex-wrap">
               {project.tech.map(t => (

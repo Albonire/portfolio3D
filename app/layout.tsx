@@ -28,7 +28,7 @@ export default function RootLayout({
       <body className="antialiased bg-[var(--color-dark)] text-[var(--color-text)] overflow-x-hidden selection:bg-neon selection:text-black transition-colors duration-500">
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
           <SmoothScroll>
-            <div className="bg-noise fixed inset-0 z-[1] opacity-40 mix-blend-overlay pointer-events-none" />
+            <div className="bg-noise fixed -top-1/2 -left-1/2 w-[200%] h-[200%] z-[1] opacity-[0.03] mix-blend-overlay pointer-events-none" />
             <CustomCursor />
             <ThemeToggle />
             <Navbar />
