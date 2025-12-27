@@ -7,7 +7,7 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import ThemeToggle from "@/components/ThemeToggle";
 
 export const metadata: Metadata = {
-  title: "Awwwards Portfolio | High-End Chaos",
+  title: "Anderdev - Portfolio",
   description: "Brutalist Interactive Portfolio",
 };
 
