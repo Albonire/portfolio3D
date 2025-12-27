@@ -83,10 +83,9 @@ export const EDUCATION = [
     year: "2022",
     title: "Systems Engineering",
     institution: "Pamplona University",
-    description:
-      "Formal education in software engineering and computer science.",
+    description: "Formal education in software engineering and computer science.",
     type: "ongoing degree",
-    link: "https://example.com/certificate4",
+    link: "#", // PASTE CERTIFICATE URL HERE
   },
   {
     id: 3,
@@ -95,7 +94,7 @@ export const EDUCATION = [
     institution: "Programming Academy",
     description: "JavaScript, React, Node.js & databases",
     type: "course",
-    link: "https://example.com/certificate3",
+    link: "#", // PASTE CERTIFICATE URL HERE
   },
   {
     id: 4,
@@ -104,7 +103,7 @@ export const EDUCATION = [
     institution: "IT Technical Institute",
     description: "Focus on electronics and industrial mechanics",
     type: "degree",
-    link: "https://example.com/certificate1",
+    link: "#", // PASTE CERTIFICATE URL HERE
   },
   {
     id: 5,
@@ -113,7 +112,7 @@ export const EDUCATION = [
     institution: "SENA",
     description: "Hardware & Networking",
     type: "certification",
-    link: "https://example.com/certificate2",
+    link: "#", // PASTE CERTIFICATE URL HERE
   },
 ];
 
