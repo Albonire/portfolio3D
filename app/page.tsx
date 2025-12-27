@@ -46,21 +46,28 @@ export default function Home() {
           [ READY TO START? ]
         </p>
 
-        <h2 className="font-display text-[15vw] leading-[0.8] text-center cursor-none z-10 group relative">
-          <span className="block group-hover:scale-110 transition-transform duration-700 ease-in-out">
-            LET'S
-          </span>
-          <span className="block group-hover:-scale-x-110 transition-transform duration-700 ease-in-out text-transparent stroke-text dark:stroke-neon stroke-black">
-            TALK
-          </span>
-        </h2>
+                        <h2 className="font-display text-[15vw] leading-[0.8] text-center cursor-none z-10 group relative">
+
+                          <span className="block group-hover:scale-110 transition-transform duration-700 ease-in-out">
+
+                            LET'S
+
+                          </span>
+
+                          <span className="block group-hover:-scale-x-110 transition-transform duration-700 ease-in-out text-transparent [-webkit-text-stroke:2px_black] dark:[-webkit-text-stroke:2px_#CCFF00]">
+
+                            TALK
+
+                          </span>
+
+                        </h2>
 
         <div className="mt-20 flex gap-8 md:gap-20 font-display text-xl md:text-3xl z-10">
           <a
-            href="mailto:contact@fabian.dev"
+            href="mailto:fabianagcris@gmail.com"
             className="hover:line-through decoration-4 decoration-black dark:decoration-neon transition-all"
           >
-            CONTACT@FABIAN.DEV
+            FABIANAGCRIS@GMAIL.COM
           </a>
         </div>
       </section>
