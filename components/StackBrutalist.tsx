@@ -3,6 +3,7 @@ import { useRef, useState, useEffect } from 'react';
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
 import { SKILLS } from "@/data/content";
+import TiltCard from './TiltCard';
 
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);
@@ -120,10 +121,11 @@ function StackCard({ skill, index }: { skill: typeof SKILLS[0], index: number })
   const [hover, setHover] = useState(false);
 
   return (
-    <div 
-      className="stack-card relative bg-[var(--color-dark)] border border-current/10 p-6 h-48 flex flex-col justify-between transition-all duration-300 group hover:border-neon-readable hover:-translate-y-1 hover:shadow-[0_10px_30px_-10px_rgba(0,0,0,0.5)] overflow-hidden"
+    <TiltCard 
+      className="stack-card relative bg-[var(--color-dark)] border border-current/10 p-6 h-48 flex flex-col justify-between group hover:border-neon-readable hover:shadow-[0_10px_30px_-10px_rgba(0,0,0,0.5)] overflow-hidden"
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
+      intensity={20}
     >
       {/* Hover Background Fill */}
       <div className="absolute inset-0 bg-neon-readable translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] z-0" />
@@ -166,6 +168,6 @@ function StackCard({ skill, index }: { skill: typeof SKILLS[0], index: number })
       {/* Corner Accents */}
       <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-current opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 group-hover:border-white dark:group-hover:border-black" />
       <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-current opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 group-hover:border-white dark:group-hover:border-black" />
-    </div>
+    </TiltCard>
   );
 }
