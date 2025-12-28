@@ -94,13 +94,30 @@
               </h2>
             </a>
           </Magnetic>
-          <div className="flex justify-between items-center w-[90vw] md:w-[800px] mx-auto mt-8 px-6 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-500 delay-100 bg-black/40 backdrop-blur-md p-3 border border-white/10 rounded">
-            <div className="flex gap-3 flex-wrap">
-              {project.tech.map(t => (
-                <span key={t} className="font-mono text-[10px] md:text-xs bg-neon-readable text-white dark:text-black px-3 py-1 uppercase tracking-wider font-bold">{t}</span>
-              ))}
+          
+          <div className="flex flex-col w-[90vw] md:w-[800px] mx-auto mt-8 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-500 delay-100 bg-black/60 backdrop-blur-xl border border-white/10 rounded-sm overflow-hidden">
+            
+            {/* Description Area - System Log Style */}
+            <div className="p-4 md:p-6 border-b border-white/10 text-left">
+              <span className="font-mono text-[10px] text-neon-readable mb-2 block tracking-widest">[ SYSTEM_DESCRIPTION ]</span>
+              <p className="font-mono text-xs md:text-sm text-gray-300 leading-relaxed max-w-2xl">
+                {project.description}
+              </p>
             </div>
-            <span className="font-mono text-neon-readable text-xl font-black">{project.year}</span>
+
+            {/* Footer Area - Tags & Year */}
+            <div className="flex justify-between items-center p-3 md:p-4 bg-white/5">
+              <div className="flex gap-2 flex-wrap">
+                {project.tech.map(t => (
+                  <span key={t} className="font-mono text-[9px] md:text-[10px] bg-white/10 text-white px-2 py-1 uppercase tracking-wider hover:bg-neon-readable hover:text-black transition-colors duration-300">
+                    {t}
+                  </span>
+                ))}
+              </div>
+              <span className="font-mono text-neon-readable text-lg font-black tracking-tighter ml-4">
+                {project.year}
+              </span>
+            </div>
           </div>
         </div>
         
