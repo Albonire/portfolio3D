@@ -48,8 +48,8 @@
           {/* Border effect */}
           <div className="absolute inset-0 border-2 border-transparent group-hover:border-neon-readable pointer-events-none z-50 transition-colors duration-500" />
   
-          {/* Subtle dark overlay that fades out on hover */}
-          <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500 z-30 pointer-events-none" />
+          {/* Subtle overlay to help title pop, but keeping video clear */}
+          <div className="absolute inset-0 bg-black/10 group-hover:bg-black/30 transition-colors duration-500 z-30 pointer-events-none" />
           
           {project.video ? (
             <>
@@ -85,40 +85,40 @@
           <div className="glitch-layer hidden group-hover:block absolute inset-0 z-20 bg-transparent mix-blend-overlay opacity-30" />
         </TiltCard>
   
-        {/* Info - Refined animation */}
-        <div className="absolute z-40 pointer-events-none top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center w-full mix-blend-difference text-white">
+        {/* Info - Title stays central but slightly higher */}
+        <div className="absolute z-40 pointer-events-none top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 text-center w-full mix-blend-difference text-white">
           <Magnetic>
             <a href={project.link} target="_blank" className="pointer-events-auto cursor-none block">
-              <h2 className="font-display text-[8vw] leading-none uppercase tracking-tighter translate-y-[20%] group-hover:translate-y-[-10%] transition-transform duration-700 cubic-bezier(0.23, 1, 0.32, 1) hover:text-neon-readable">
+              <h2 className="font-display text-[8vw] leading-none uppercase tracking-tighter transition-transform duration-700 hover:text-neon-readable">
                 {project.title}
               </h2>
             </a>
           </Magnetic>
-          
-          <div className="flex flex-col w-[90vw] md:w-[800px] mx-auto mt-8 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-500 delay-100 bg-black/60 backdrop-blur-xl border border-white/10 rounded-sm overflow-hidden">
-            
-            {/* Description Area - System Log Style */}
-            <div className="p-4 md:p-6 border-b border-white/10 text-left">
-              <span className="font-mono text-[10px] text-neon-readable mb-2 block tracking-widest">[ SYSTEM_DESCRIPTION ]</span>
-              <p className="font-mono text-xs md:text-sm text-gray-300 leading-relaxed max-w-2xl">
-                {project.description}
-              </p>
-            </div>
+        </div>
 
-            {/* Footer Area - Tags & Year */}
-            <div className="flex justify-between items-center p-3 md:p-4 bg-white/5">
-              <div className="flex gap-2 flex-wrap">
-                {project.tech.map(t => (
-                  <span key={t} className="font-mono text-[9px] md:text-[10px] bg-white/10 text-white px-2 py-1 uppercase tracking-wider hover:bg-neon-readable hover:text-black transition-colors duration-300">
-                    {t}
-                  </span>
-                ))}
-              </div>
-              <span className="font-mono text-neon-readable text-lg font-black tracking-tighter ml-4">
-                {project.year}
-              </span>
+        {/* Technical Spec Module - Bottom Right Corner */}
+        <div className="absolute bottom-10 right-10 z-50 w-[300px] md:w-[400px] opacity-0 group-hover:opacity-100 translate-x-10 group-hover:translate-x-0 transition-all duration-700 delay-200 pointer-events-none">
+          <div className="bg-white dark:bg-black border-l-2 border-neon-readable p-6 shadow-[20px_20px_60px_rgba(0,0,0,0.1)] dark:shadow-[20px_20px_60px_rgba(0,0,0,0.5)]">
+            <div className="flex justify-between items-start mb-4">
+              <span className="font-mono text-[10px] text-neon-readable tracking-[0.2em] uppercase">Project_Spec_v2</span>
+              <span className="font-mono text-black/40 dark:text-white/40 text-[10px]">{project.year}</span>
+            </div>
+            
+            <p className="font-mono text-sm text-black/80 dark:text-white/90 leading-relaxed mb-6">
+              {project.description}
+            </p>
+
+            <div className="flex gap-2 flex-wrap">
+              {project.tech.map(t => (
+                <span key={t} className="font-mono text-[9px] border border-black/10 dark:border-white/20 text-black/60 dark:text-white/60 px-2 py-0.5 uppercase tracking-wider">
+                  {t}
+                </span>
+              ))}
             </div>
           </div>
+          
+          {/* Decorative corner element */}
+          <div className="absolute -top-2 -right-2 w-4 h-4 border-t-2 border-r-2 border-neon-readable" />
         </div>
         
         <div className="absolute bottom-10 left-10 font-mono opacity-5 text-[12rem] -z-10 select-none font-display text-[var(--color-text)]">
