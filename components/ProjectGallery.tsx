@@ -36,13 +36,15 @@
     }, [isActive]);
   
     return (
-      <div className="w-screen h-screen flex flex-col justify-center items-center relative group shrink-0 border-r border-current/10 bg-[var(--color-dark)]">
+      <div 
+        className="w-screen h-screen flex flex-col justify-center items-center relative group shrink-0 border-r border-current/10 bg-[var(--color-dark)]"
+        onMouseEnter={() => onHover(project.id)}
+        onMouseLeave={onLeave}
+      >
         
         {/* Media Container - 16:9 Aspect Ratio */}
         <TiltCard
           className="relative w-[90vw] md:w-[800px] aspect-video overflow-hidden bg-gray-900 border border-current/10 z-10 shadow-[0_20px_50px_rgba(0,0,0,0.3)] group-hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
-          onMouseEnter={() => onHover(project.id)}
-          onMouseLeave={onLeave}
           intensity={10}
         >
           {/* Border effect */}
