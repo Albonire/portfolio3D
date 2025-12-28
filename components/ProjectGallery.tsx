@@ -42,9 +42,9 @@
         onMouseLeave={onLeave}
       >
         
-        {/* Media Container - 16:9 Aspect Ratio */}
+        {/* Media Container - Responsive Aspect Ratio */}
         <TiltCard
-          className="relative w-[90vw] md:w-[800px] aspect-video overflow-hidden bg-gray-900 border border-current/10 z-10 shadow-[0_20px_50px_rgba(0,0,0,0.3)] group-hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
+          className="relative w-[92vw] md:w-[800px] aspect-[4/3] md:aspect-video overflow-hidden bg-gray-900 border border-current/10 z-10 shadow-[0_20px_50px_rgba(0,0,0,0.3)] group-hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
           intensity={10}
         >
           {/* Border effect */}
@@ -167,9 +167,8 @@
     }, []);
   
     return (
-      // PARENT CONTAINER: Defines the SCROLL DURATION via height.
-      // 500vh means user scrolls 5 screen heights to finish the gallery.
-      <section ref={containerRef} className="relative h-[500vh] bg-[var(--color-dark)] z-20">
+      // PARENT CONTAINER: Optimized height for mobile to avoid dead space
+      <section ref={containerRef} className="relative h-[250vh] md:h-[500vh] bg-[var(--color-dark)] z-20">
         
         {/* STICKY VIEWPORT: Stays fixed while scrolling the parent */}
         <div ref={stickyRef} className="sticky top-0 h-screen overflow-hidden">
