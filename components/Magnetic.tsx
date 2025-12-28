@@ -35,6 +35,8 @@ export default function Magnetic({ children }: { children: React.ReactNode }) {
     }, [])
 
     return (
-        React.cloneElement(children as React.ReactElement, { ref: magnetic })
+      <div ref={magnetic}>
+        {children}
+      </div>
     )
 }
