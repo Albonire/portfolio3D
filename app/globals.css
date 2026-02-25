@@ -7,8 +7,8 @@
   --color-neon-hover: #B3E600;
   --color-neon-readable: var(--color-neon-readable);
   
-  --font-display: 'Clash Display', sans-serif;
-  --font-body: 'Satoshi', sans-serif;
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
 
   --animate-pulse-fast: pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
