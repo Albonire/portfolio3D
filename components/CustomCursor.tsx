@@ -6,50 +6,50 @@ export default function CustomCursor() {
   const cursorRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (window.matchMedia("(pointer: coarse)").matches) return; // Exit if touch device
+
     const cursor = cursorRef.current;
     if (!cursor) return;
     
-    const xTo = gsap.quickTo(cursor, "x", {duration: 0.4, ease: "power3"});
-    const yTo = gsap.quickTo(cursor, "y", {duration: 0.4, ease: "power3"});
+    const xTo = gsap.quickTo(cursor, "x", {duration: 0.3, ease: "power3"});
+    const yTo = gsap.quickTo(cursor, "y", {duration: 0.3, ease: "power3"});
 
     const moveCursor = (e: MouseEvent) => {
       xTo(e.clientX);
       yTo(e.clientY);
     };
 
-    const handleMouseEnter = () => {
-      gsap.to(cursor, {
-        scale: 1.5,
-        duration: 0.3,
-        ease: "power2.out"
-      });
+    // Performance: Use Event Delegation instead of multiple listeners
+    const handleOver = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (target.closest('a, button, .cursor-pointer')) {
+        gsap.to(cursor, {
+          scale: 1.5,
+          duration: 0.3,
+          ease: "power2.out"
+        });
+      }
     };
 
-    const handleMouseLeave = () => {
-      gsap.to(cursor, {
-        scale: 1,
-        duration: 0.3,
-        ease: "power2.out"
-      });
-    };
-
-    const updateListeners = () => {
-      const links = document.querySelectorAll('a, button, .cursor-pointer');
-      links.forEach(link => {
-        link.addEventListener('mouseenter', handleMouseEnter);
-        link.addEventListener('mouseleave', handleMouseLeave);
-      });
+    const handleOut = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (target.closest('a, button, .cursor-pointer')) {
+        gsap.to(cursor, {
+          scale: 1,
+          duration: 0.3,
+          ease: "power2.out"
+        });
+      }
     };
 
     window.addEventListener('mousemove', moveCursor);
-    updateListeners();
-    
-    const observer = new MutationObserver(updateListeners);
-    observer.observe(document.body, { childList: true, subtree: true });
+    window.addEventListener('mouseover', handleOver);
+    window.addEventListener('mouseout', handleOut);
 
     return () => {
       window.removeEventListener('mousemove', moveCursor);
-      observer.disconnect();
+      window.removeEventListener('mouseover', handleOver);
+      window.removeEventListener('mouseout', handleOut);
     };
   }, []);
 
