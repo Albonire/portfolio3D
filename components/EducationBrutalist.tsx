@@ -2,10 +2,10 @@ import { EDUCATION } from "@/data/content";
 
 export default function EducationBrutalist() {
   return (
-    <section className="py-32 px-6 md:px-20 border-b border-current/10 bg-[var(--color-dark)] text-[var(--color-text)] transition-colors duration-500">
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-10 md:gap-20">
+    <section className="py-16 md:py-32 px-6 md:px-20 border-b border-current/10 bg-[var(--color-dark)] text-[var(--color-text)] transition-colors duration-500">
+      <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-12 md:gap-20">
         <div className="md:w-1/3">
-          <h3 className="font-display text-4xl md:text-6xl uppercase leading-[0.8] relative md:sticky md:top-32">
+          <h3 className="font-display text-4xl md:text-6xl uppercase leading-[0.8] relative md:sticky md:top-32 mb-8 md:mb-0">
             ACADEMIC<br/>DATA<span className="text-neon-readable">.LOG</span>
           </h3>
         </div>
