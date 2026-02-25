@@ -8,27 +8,21 @@ export default function Preloader() {
   const [isComplete, setIsComplete] = useState(false);
 
   useEffect(() => {
-    const tl = gsap.timeline({
-      onComplete: () => {
-        setIsComplete(true);
-        // Dispatch event to notify Hero animations to start if needed
-        window.dispatchEvent(new CustomEvent("preloader-complete"));
-      }
-    });
-
-    // Disable scroll initially
+    // Disable scroll during preload
     document.body.style.overflow = "hidden";
 
-    // Counter Animation
     const counter = { value: 0 };
-    
+    const tl = gsap.timeline({
+      onComplete: () => setIsComplete(true)
+    });
+
     tl.to(counter, {
       value: 100,
-      duration: 2,
+      duration: 1.2,
       ease: "power2.inOut",
       onUpdate: () => {
         if (percentRef.current) {
-          percentRef.current.innerText = Math.round(counter.value).toString();
+          percentRef.current.innerText = Math.floor(counter.value).toString();
         }
       }
     });
@@ -87,7 +81,7 @@ export default function Preloader() {
         </div>
       </div>
 
-      {/* Background Grid (Optional Detail) */}
+      {/* Background Grid */}
       <div className="absolute inset-0 pointer-events-none opacity-[0.05]" 
            style={{ 
              backgroundImage: 'linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)', 
