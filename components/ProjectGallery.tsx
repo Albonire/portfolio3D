@@ -1,12 +1,14 @@
   "use client";
-  import { useEffect, useRef, useState } from 'react';
+  import { useRef, useState, useEffect } from 'react';
   import gsap from 'gsap';
+  import { useGSAP } from '@gsap/react';
   import ScrollTrigger from 'gsap/ScrollTrigger';
   import { PROJECTS } from '@/data/content';
   import Image from 'next/image';
   import TiltCard from './TiltCard';
   import MaskText from './MaskText';
   import Magnetic from './Magnetic';  
+  
   if (typeof window !== 'undefined') {
       gsap.registerPlugin(ScrollTrigger);
   }
@@ -60,8 +62,9 @@
                 alt={project.title}
                 fill
                 className={`object-cover transition-all duration-700 ${isActive ? 'opacity-0 scale-110' : 'opacity-100 grayscale-[0.5] group-hover:grayscale-0'}`}
-                priority={false}
-                loading="lazy"
+                priority={project.id === 1}
+                loading={project.id === 1 ? "eager" : "lazy"}
+                sizes="(max-width: 768px) 92vw, 800px"
               />
               <video 
                 ref={videoRef}
@@ -80,6 +83,9 @@
               src={project.image} 
               alt={project.title}
               fill
+              priority={project.id === 1}
+              loading={project.id === 1 ? "eager" : "lazy"}
+              sizes="(max-width: 768px) 92vw, 800px"
               className="object-cover grayscale-[0.5] group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700 ease-in-out"
             />
           )}
@@ -88,31 +94,31 @@
         </TiltCard>
   
         {/* Info - Title stays central but slightly higher */}
-        <div className="absolute z-40 pointer-events-none top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 text-center w-full mix-blend-difference text-white">
+        <div className="absolute z-40 pointer-events-none top-[35%] md:top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 text-center w-full mix-blend-difference text-white px-4">
           <Magnetic>
             <a href={project.link} target="_blank" className="pointer-events-auto cursor-none block">
-              <h2 className="font-display text-[8vw] leading-none uppercase tracking-tighter transition-transform duration-700 hover:text-neon-readable">
+              <h2 className="font-display text-[10vw] md:text-[8vw] leading-none uppercase tracking-tighter transition-transform duration-700 hover:text-neon-readable break-words">
                 {project.title}
               </h2>
             </a>
           </Magnetic>
         </div>
 
-        {/* Technical Spec Module - Bottom Right Corner */}
-        <div className="absolute bottom-10 right-10 z-50 w-[300px] md:w-[400px] opacity-0 group-hover:opacity-100 translate-x-10 group-hover:translate-x-0 transition-all duration-700 delay-200 pointer-events-none">
-          <div className="bg-white dark:bg-black border-l-2 border-neon-readable p-6 shadow-[20px_20px_60px_rgba(0,0,0,0.1)] dark:shadow-[20px_20px_60px_rgba(0,0,0,0.5)]">
-            <div className="flex justify-between items-start mb-4">
-              <span className="font-mono text-[10px] text-neon-readable tracking-[0.2em] uppercase">Project_Spec_v2</span>
-              <span className="font-mono text-black/40 dark:text-white/40 text-[10px]">{project.year}</span>
+        {/* Technical Spec Module - Adaptive for Mobile */}
+        <div className="absolute bottom-10 left-6 right-6 md:left-auto md:right-10 z-50 w-auto md:w-[400px] opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 md:translate-x-10 md:group-hover:translate-x-0 transition-all duration-700 delay-200 pointer-events-none">
+          <div className="bg-white/95 dark:bg-black/95 backdrop-blur-sm border-l-2 border-neon-readable p-4 md:p-6 shadow-[20px_20px_60px_rgba(0,0,0,0.1)] dark:shadow-[20px_20px_60px_rgba(0,0,0,0.5)]">
+            <div className="flex justify-between items-start mb-2 md:mb-4">
+              <span className="font-mono text-[9px] md:text-[10px] text-neon-readable tracking-[0.2em] uppercase">Project_Spec_v2</span>
+              <span className="font-mono text-black/40 dark:text-white/40 text-[9px] md:text-[10px]">{project.year}</span>
             </div>
             
-            <p className="font-mono text-sm text-black/80 dark:text-white/90 leading-relaxed mb-6">
+            <p className="font-mono text-xs md:text-sm text-black/80 dark:text-white/90 leading-relaxed mb-4 md:mb-6 line-clamp-3 md:line-clamp-none">
               {project.description}
             </p>
 
-            <div className="flex gap-2 flex-wrap">
+            <div className="flex gap-1.5 md:gap-2 flex-wrap">
               {project.tech.map(t => (
-                <span key={t} className="font-mono text-[9px] border border-black/10 dark:border-white/20 text-black/60 dark:text-white/60 px-2 py-0.5 uppercase tracking-wider">
+                <span key={t} className="font-mono text-[8px] md:text-[9px] border border-black/10 dark:border-white/20 text-black/60 dark:text-white/60 px-1.5 py-0.5 uppercase tracking-wider">
                   {t}
                 </span>
               ))}
@@ -136,39 +142,32 @@
     const sliderRef = useRef<HTMLDivElement>(null);    // The horizontal slider
     const [activeVideo, setActiveVideo] = useState<number | null>(null);
   
-    // Slides including intro slide
-    const slides = [0, ...PROJECTS]; 
-  
-    useEffect(() => {
-      if (!containerRef.current || !sliderRef.current || !stickyRef.current) return;
-  
-      const ctx = gsap.context(() => {
-        const slider = sliderRef.current!;
-        const container = containerRef.current!;
-        
-        // Calculate total movable width
-        // (Slider Width - Viewport Width)
-        const maxScroll = -(slider.scrollWidth - window.innerWidth);
-  
-        gsap.to(slider, {
-          x: maxScroll,
-          ease: "none",
-          scrollTrigger: {
-            trigger: container, // Trigger based on the tall parent
-            start: "top top",
-            end: "bottom bottom", // Scroll until the parent finishes
-            scrub: 1,             // Smooth scrubbing
-            invalidateOnRefresh: true,
-          }
-        });
+    useGSAP(() => {
+      if (!sliderRef.current || !containerRef.current) return;
+
+      const slider = sliderRef.current;
+      const container = containerRef.current;
+      
+      // Calculate total movable width
+      // (Slider Width - Viewport Width)
+      const maxScroll = -(slider.scrollWidth - window.innerWidth);
+
+      gsap.to(slider, {
+        x: maxScroll,
+        ease: "none",
+        scrollTrigger: {
+          trigger: container, // Trigger based on the tall parent
+          start: "top top",
+          end: "bottom bottom", // Scroll until the parent finishes
+          scrub: 1,             // Smooth scrubbing
+          invalidateOnRefresh: true,
+        }
       });
-  
-      return () => ctx.revert();
-    }, []);
+    }, { scope: containerRef });
   
     return (
       // PARENT CONTAINER: Optimized height for mobile to avoid dead space
-      <section ref={containerRef} className="relative h-[250vh] md:h-[500vh] bg-[var(--color-dark)] z-20">
+      <section ref={containerRef} id="work" className="relative h-[250vh] md:h-[500vh] bg-[var(--color-dark)] z-20">
         
         {/* STICKY VIEWPORT: Stays fixed while scrolling the parent */}
         <div ref={stickyRef} className="sticky top-0 h-screen overflow-hidden">
@@ -195,7 +194,7 @@
                         </MaskText>
                       </div>  
             {/* SLIDES 1..N: PROJECTS */}
-            {PROJECTS.map((project, index) => (
+            {PROJECTS.map((project) => (
               <ProjectCard 
                 key={project.id}
                 project={project}
