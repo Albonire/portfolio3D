@@ -6,13 +6,14 @@ import * as THREE from 'three';
 import { useTheme } from 'next-themes';
 
 function LiquidShape() {
-  const meshRef = useRef<THREE.Mesh>(null);
-  const materialRef = useRef<THREE.Material>(null);
+  const meshRef = useRef<any>(null);
+  const materialRef = useRef<any>(null);
   const { theme } = useTheme();
   const { viewport } = useThree();
   
   const isMobile = viewport.width < 6;
   const responsiveScale = isMobile ? 0.9 : 1.8;
+  // Properly typed segments for Sphere [radius, widthSegments, heightSegments]
   const segments: [number, number, number] = isMobile ? [1, 64, 64] : [1, 128, 128];
   
   useFrame((state) => {
