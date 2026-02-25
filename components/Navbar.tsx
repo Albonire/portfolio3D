@@ -25,6 +25,19 @@ export default function Navbar() {
             </Magnetic>
           </li>
         ))}
+        <li>
+          <Magnetic>
+            <button
+              onClick={() => window.dispatchEvent(new CustomEvent('open-cmd-palette'))}
+              className="px-4 py-2.5 ml-1 transition-all duration-300 border-l border-current/10"
+              aria-label="Open Command Palette"
+            >
+              <span className="font-mono text-xs font-bold opacity-40 group-hover:opacity-100 hover:text-neon-readable transition-all uppercase tracking-tighter">
+                ⌘ K
+              </span>
+            </button>
+          </Magnetic>
+        </li>
       </ul>
     </nav>
   );
