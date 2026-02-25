@@ -1,6 +1,7 @@
 "use client";
 import { useRef, useState, useEffect } from 'react';
 import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 import ScrollTrigger from 'gsap/ScrollTrigger';
 import { SKILLS } from "@/data/content";
 import TiltCard from './TiltCard';
@@ -38,8 +39,10 @@ const ScrambleText = ({ text, active }: { text: string; active: boolean }) => {
         iteration += 1 / 2; // Speed of decode
       }, 30);
     } else {
-      setDisplay(text);
-      clearInterval(intervalRef.current!);
+      setTimeout(() => {
+        setDisplay(text);
+        clearInterval(intervalRef.current!);
+      }, 0);
     }
 
     return () => clearInterval(intervalRef.current!);
@@ -51,44 +54,40 @@ const ScrambleText = ({ text, active }: { text: string; active: boolean }) => {
 export default function StackBrutalist() {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      // Animate Grid Lines Entry
-      gsap.fromTo(
-        ".grid-line",
-        { scaleX: 0, opacity: 0 },
-        { 
-          scaleX: 1, 
-          opacity: 1, 
-          duration: 1.5, 
-          stagger: 0.1, 
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: "top 80%",
-          }
+  useGSAP(() => {
+    // Animate Grid Lines Entry
+    gsap.fromTo(
+      ".grid-line",
+      { scaleX: 0, opacity: 0 },
+      { 
+        scaleX: 1, 
+        opacity: 1, 
+        duration: 1.5, 
+        stagger: 0.1, 
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top 80%",
         }
-      );
+      }
+    );
 
-      // Animate Cards Entry
-      gsap.fromTo(
-        ".stack-card",
-        { y: 50, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.8,
-          stagger: 0.05,
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: "top 70%",
-          }
+    // Animate Cards Entry
+    gsap.fromTo(
+      ".stack-card",
+      { y: 50, opacity: 0 },
+      {
+        y: 0,
+        opacity: 1,
+        duration: 0.8,
+        stagger: 0.05,
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top 70%",
         }
-      );
-    }, containerRef);
-
-    return () => ctx.revert();
-  }, []);
+      }
+    );
+  }, { scope: containerRef });
 
   return (
     <section ref={containerRef} className="relative z-30 py-8 md:py-32 px-6 md:px-20 border-b border-current/10 bg-[var(--color-dark)] text-[var(--color-text)] transition-colors duration-500 overflow-hidden">
@@ -136,7 +135,7 @@ function StackCard({ skill, index }: { skill: typeof SKILLS[0], index: number })
         {/* Header */}
         <div className="flex justify-between items-start">
           <span className="font-mono text-[10px] opacity-60 group-hover:opacity-100 transition-opacity">
-            0{index + 1} // {skill.category.toUpperCase()}
+            0{index + 1} {'//'} {skill.category.toUpperCase()}
           </span>
           {/* Signal Icon */}
           <div className="flex gap-0.5 items-end h-3">
