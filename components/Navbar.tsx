@@ -10,15 +10,15 @@ export default function Navbar() {
 
   return (
     <nav className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50">
-      <ul className="flex gap-1 p-1.5 bg-white/20 dark:bg-black/30 backdrop-blur-[7px] border border-white/40 dark:border-white/10 rounded-full shadow-[0_4px_24px_-1px_rgba(0,0,0,0.1)] dark:shadow-[0_4px_24px_-1px_rgba(0,0,0,0.5)]">
+      <ul className="flex items-center gap-2 p-2 bg-[var(--bg-primary)]/80 backdrop-blur-md border border-[var(--color-border)] rounded-full shadow-sm">
         {navItems.map((item) => (
           <li key={item.label}>
             <Magnetic>
               <a 
                 href={item.href}
-                className="block px-6 py-2.5 rounded-full text-sm font-mono font-bold uppercase transition-all duration-300
-                  text-black dark:text-white
-                  hover:bg-neon-readable hover:text-white dark:hover:text-black"
+                className="block px-6 py-2 rounded-full text-xs font-body tracking-widest uppercase transition-colors duration-200
+                  text-[var(--color-muted)]
+                  hover:bg-[var(--color-accent)] hover:text-white"
               >
                 {item.label}
               </a>
@@ -29,10 +29,10 @@ export default function Navbar() {
           <Magnetic>
             <button
               onClick={() => window.dispatchEvent(new CustomEvent('open-cmd-palette'))}
-              className="px-4 py-2.5 ml-1 transition-all duration-300 border-l border-current/10"
+              className="px-4 py-2 ml-2 transition-colors duration-200 border-l border-[var(--color-border)] text-[var(--color-muted)] hover:text-[var(--color-accent)]"
               aria-label="Open Command Palette"
             >
-              <span className="font-mono text-xs font-bold opacity-40 group-hover:opacity-100 hover:text-neon-readable transition-all uppercase tracking-tighter">
+              <span className="font-sans text-[10px] sm:text-xs font-medium uppercase tracking-tighter">
                 ⌘ K
               </span>
             </button>

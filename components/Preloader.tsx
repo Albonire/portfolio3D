@@ -54,30 +54,29 @@ export default function Preloader() {
       className="fixed inset-0 z-[99999] bg-[#050505] text-white flex flex-col justify-between p-10 cursor-wait"
     >
       {/* Top Header */}
-      <div className="flex justify-between items-start font-mono text-xs uppercase tracking-widest opacity-50">
-        <span>System Boot // V.2.0</span>
-        <span className="animate-pulse">Loading Modules...</span>
+      <div className="flex justify-between items-start font-sans text-xs uppercase tracking-widest text-[var(--color-muted)]">
+        <span>System Boot</span>
+        <span className="transition-opacity">Loading</span>
       </div>
 
       {/* Center Counter */}
       <div className="flex flex-col items-center justify-center">
         <div className="relative">
-          <h1 className="font-display text-[20vw] leading-none tracking-tighter">
+          <h1 className="font-display font-medium text-7xl md:text-9xl leading-none tracking-tight">
             <span ref={percentRef}>0</span>
-            <span className="text-[5vw] align-top text-neon-readable">%</span>
+            <span className="text-2xl align-top text-[var(--color-accent)]">%</span>
           </h1>
         </div>
       </div>
 
       {/* Bottom Footer */}
-      <div className="flex justify-between items-end font-mono text-xs uppercase tracking-widest opacity-50">
+      <div className="flex justify-between items-end font-sans text-xs uppercase tracking-widest text-[var(--color-muted)]">
         <div className="flex gap-4">
           <span>Mem: OK</span>
           <span>Net: OK</span>
-          <span>GPU: OK</span>
         </div>
         <div>
-          [ INITIALIZING ENVIRONMENT ]
+          Initializing
         </div>
       </div>
 

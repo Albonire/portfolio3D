@@ -15,7 +15,7 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-      className="fixed top-8 right-8 z-[100] font-mono text-sm uppercase mix-blend-difference text-white hover:text-neon transition-colors"
+      className="fixed top-6 right-6 md:top-8 md:right-8 z-[100] font-sans text-xs tracking-widest uppercase text-[var(--color-muted)] hover:text-[var(--color-accent)] transition-colors duration-200"
     >
       [{theme === "dark" ? "LIGHT MODE" : "DARK MODE"}]
     </button>

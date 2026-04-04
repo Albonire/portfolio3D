@@ -1,6 +1,6 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import { Syne, Inter } from "next/font/google";
+import { Fraunces, Manrope } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import CustomCursor from "@/components/CustomCursor";
 import SmoothScroll from "@/components/SmoothScroll";
@@ -9,13 +9,13 @@ import ThemeToggle from "@/components/ThemeToggle";
 import Preloader from "@/components/Preloader";
 import CommandPalette from "@/components/CommandPalette";
 
-const syne = Syne({
+const fraunces = Fraunces({
   subsets: ["latin"],
   variable: "--font-display",
   display: "swap",
 });
 
-const inter = Inter({
+const manrope = Manrope({
   subsets: ["latin"],
   variable: "--font-body",
   display: "swap",
@@ -80,7 +80,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       {/* Forced dark mode preference in class */}
-      <body className={`antialiased bg-[var(--color-dark)] text-[var(--color-text)] overflow-x-hidden selection:bg-neon selection:text-black transition-colors duration-500 ${syne.variable} ${inter.variable}`} suppressHydrationWarning>
+      <body className={`antialiased bg-[var(--color-dark)] text-[var(--color-text)] overflow-x-hidden selection:bg-[var(--color-accent)] selection:text-white transition-colors duration-500 max-w-[100vw] ${fraunces.variable} ${manrope.variable}`} suppressHydrationWarning>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
           <SmoothScroll>
             <Preloader />

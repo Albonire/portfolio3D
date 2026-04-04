@@ -124,40 +124,40 @@ export default function CommandPalette() {
     >
       <div
         ref={panelRef}
-        className="w-full max-w-xl bg-[var(--color-dark)] border border-current/20 shadow-[0_0_50px_-10px_rgba(0,0,0,0.2)] overflow-hidden text-[var(--color-text)]"
+        className="w-full max-w-xl bg-[var(--bg-primary)] border border-[var(--color-border)] shadow-md overflow-hidden text-[var(--color-text)] rounded-sm"
       >
         {/* Header / Input */}
-        <div className="flex items-center gap-3 px-4 py-4 border-b border-current/10">
-          <span className="font-mono text-neon-readable text-lg animate-pulse">{">"}</span>
+        <div className="flex items-center gap-3 px-4 py-4 border-b border-[var(--color-border)]">
+          <span className="font-sans text-[var(--color-accent)] text-lg transition-opacity">{">"}</span>
           <input
             ref={inputRef}
-            className="flex-1 bg-transparent font-mono text-lg text-current placeholder-current/30 outline-none uppercase"
-            placeholder="TYPE A COMMAND..."
+            className="flex-1 bg-transparent font-body text-base text-[var(--color-text)] placeholder-[var(--color-muted)] outline-none"
+            placeholder="Type a command..."
             value={query}
             onChange={(e) => { setQuery(e.target.value); setSelectedIndex(0); }}
             onKeyDown={handleNavigationKey}
           />
-          <span className="font-mono text-xs text-current/50 bg-current/5 px-2 py-1 rounded">ESC</span>
+          <span className="font-sans text-[10px] text-[var(--color-muted)] bg-[var(--color-border)]/50 px-2 py-1 rounded">ESC</span>
         </div>
 
         {/* Results */}
         <div className="max-h-[300px] overflow-y-auto py-2">
           {filteredCommands.length === 0 ? (
-            <div className="px-4 py-8 text-center font-mono text-current/30 text-sm">
-              [ NO COMMANDS FOUND ]
+            <div className="px-4 py-8 text-center font-sans tracking-widest text-[var(--color-muted)] text-xs uppercase">
+              No commands found
             </div>
           ) : (
             filteredCommands.map((cmd, i) => (
               <button
                 key={cmd.id}
-                className={`w-full flex items-center justify-between px-4 py-3 text-left font-mono text-sm transition-all duration-200
-                  ${i === selectedIndex ? "bg-neon-readable text-black" : "text-current/70 hover:bg-current/5"}
+                className={`w-full flex items-center justify-between px-4 py-3 text-left font-sans text-sm transition-all duration-200
+                  ${i === selectedIndex ? "bg-[var(--color-accent)] text-white" : "text-[var(--color-text)] hover:bg-[var(--color-border)]/20"}
                 `}
                 onClick={() => { cmd.action(); }}
                 onMouseEnter={() => setSelectedIndex(i)}
               >
                 <div className="flex items-center gap-3">
-                  <span className={`text-[10px] uppercase tracking-widest opacity-50 ${i === selectedIndex ? "text-black" : "text-neon-readable"}`}>
+                  <span className={`text-[10px] uppercase tracking-widest opacity-80 ${i === selectedIndex ? "text-white/80" : "text-[var(--color-accent)]"}`}>
                     {cmd.category}
                   </span>
                   <span>{cmd.label}</span>
@@ -171,12 +171,12 @@ export default function CommandPalette() {
         </div>
 
         {/* Footer */}
-        <div className="bg-current/5 px-4 py-2 border-t border-current/10 flex justify-between items-center">
+        <div className="bg-[var(--color-border)]/20 px-4 py-2 border-t border-[var(--color-border)] flex justify-between items-center">
           <div className="flex gap-4">
-            <span className="font-mono text-[10px] text-current/40">Select ↑↓</span>
-            <span className="font-mono text-[10px] text-current/40">Open ↵</span>
+            <span className="font-sans text-[10px] text-[var(--color-muted)]">Select ↑↓</span>
+            <span className="font-sans text-[10px] text-[var(--color-muted)]">Open ↵</span>
           </div>
-          <span className="font-mono text-[10px] text-neon-readable">SYSTEM_READY</span>
+          <span className="font-sans tracking-widest uppercase text-[10px] text-[var(--color-accent)]">System_Ready</span>
         </div>
       </div>
     </div>

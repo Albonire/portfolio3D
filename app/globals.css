@@ -3,9 +3,9 @@
 @theme {
   --color-dark: var(--bg-primary);
   --color-text: var(--text-primary);
-  --color-neon: #CCFF00;
-  --color-neon-hover: #B3E600;
-  --color-neon-readable: var(--color-neon-readable);
+  --color-accent: var(--color-accent);
+  --color-muted: var(--color-muted);
+  --color-border: var(--color-border);
   
   --font-display: var(--font-display);
   --font-body: var(--font-body);
@@ -17,20 +17,24 @@
 
 @layer base {
   :root {
-    --bg-primary: #EAEAEA;
-    --text-primary: #050505;
-    --color-neon-readable: #4A6B00; /* Darker green for white bg */
+    --bg-primary: #FAF9F6;      /* Off-white warm */
+    --text-primary: #1A1A18;    /* Extremely dark stone */
+    --color-accent: #445640;    /* Darker Sage Green for good contrast */
+    --color-muted: #5C5B56;     /* Darker muted text */
+    --color-border: #E5E4E0;
   }
 
   [data-theme='dark'], .dark {
-    --bg-primary: #050505;
-    --text-primary: #FFFFFF;
-    --color-neon-readable: #CCFF00; /* Pure neon for dark bg */
+    --bg-primary: #1A1A18;      /* Matte dark stone */
+    --text-primary: #F5F5F3;    /* Off-white */
+    --color-accent: #B8C9B2;    /* Lighter pastel Sage for dark mode */
+    --color-muted: #A3A29D;     /* Lighter muted text */
+    --color-border: #2D2D2A;
   }
 
   [data-theme='light'], .light {
-    --bg-primary: #F2F2F2;
-    --text-primary: #050505;
+    --bg-primary: #FAF9F6;
+    --text-primary: #1C1C1A;
   }
 
   body {

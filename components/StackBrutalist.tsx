@@ -99,11 +99,11 @@ export default function StackBrutalist() {
 
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="flex items-center gap-4 mb-16">
-          <div className="w-2 h-2 bg-neon-readable animate-pulse" />
-          <h3 className="font-mono text-neon-readable text-sm tracking-widest uppercase">
-            [ SYSTEM ARCHITECTURE_V2.0 ]
+          <div className="w-1.5 h-1.5 bg-[var(--color-accent)] rounded-full" />
+          <h3 className="font-sans text-[var(--color-muted)] text-[10px] md:text-xs tracking-widest uppercase">
+            Technical Stack
           </h3>
-          <div className="h-px flex-grow bg-current/20 grid-line origin-left" />
+          <div className="h-px flex-grow bg-[var(--color-border)] grid-line origin-left" />
         </div>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
@@ -121,21 +121,21 @@ function StackCard({ skill, index }: { skill: typeof SKILLS[0], index: number })
 
   return (
     <TiltCard 
-      className="stack-card relative bg-[var(--color-dark)] border border-current/10 p-6 h-48 flex flex-col justify-between group hover:border-neon-readable hover:shadow-[0_10px_30px_-10px_rgba(0,0,0,0.5)] overflow-hidden"
+      className="stack-card relative bg-[var(--bg-primary)] border border-[var(--color-border)] rounded-sm p-6 h-48 flex flex-col justify-between group hover:border-[var(--color-accent)]/50 hover:shadow-sm overflow-hidden"
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       intensity={20}
     >
       {/* Hover Background Fill */}
-      <div className="absolute inset-0 bg-neon-readable translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] z-0" />
+      <div className="absolute inset-0 bg-[var(--color-border)]/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out z-0" />
       
       {/* Content */}
-      <div className="relative z-10 flex flex-col h-full justify-between group-hover:text-white dark:group-hover:text-black transition-colors duration-300">
+      <div className="relative z-10 flex flex-col h-full justify-between transition-colors duration-300">
         
         {/* Header */}
         <div className="flex justify-between items-start">
-          <span className="font-mono text-[10px] opacity-60 group-hover:opacity-100 transition-opacity">
-            0{index + 1} {'//'} {skill.category.toUpperCase()}
+          <span className="font-sans text-[10px] text-[var(--color-muted)] tracking-widest uppercase">
+            0{index + 1} &middot; {skill.category}
           </span>
           {/* Signal Icon */}
           <div className="flex gap-0.5 items-end h-3">
@@ -151,22 +151,16 @@ function StackCard({ skill, index }: { skill: typeof SKILLS[0], index: number })
 
         {/* Main Title */}
         <div>
-          <h4 className="font-display text-2xl font-bold uppercase leading-none mb-2">
+          <h4 className="font-display font-medium text-2xl tracking-tight leading-none mb-2">
             <ScrambleText text={skill.name} active={hover} />
           </h4>
           
           {/* Dynamic Progress Bar */}
-          <div className="w-full h-0.5 bg-current/10 mt-4 overflow-hidden relative">
-            <div className={`absolute inset-0 bg-current transition-transform duration-1000 ${hover ? 'translate-x-0' : '-translate-x-full'}`} />
-            {/* Glitch bar */}
-            <div className={`absolute inset-0 bg-white mix-blend-difference translate-x-full ${hover ? 'animate-pulse' : ''}`} style={{ animationDuration: '0.2s' }} />
+          <div className="w-full h-px bg-[var(--color-border)] mt-4 overflow-hidden relative">
+            <div className={`absolute inset-0 bg-[var(--color-accent)] transition-transform duration-1000 ease-out ${hover ? 'translate-x-0' : '-translate-x-full'}`} />
           </div>
         </div>
       </div>
-
-      {/* Corner Accents */}
-      <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-current opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 group-hover:border-white dark:group-hover:border-black" />
-      <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-current opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 group-hover:border-white dark:group-hover:border-black" />
     </TiltCard>
   );
 }
