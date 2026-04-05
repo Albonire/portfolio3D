@@ -3,7 +3,7 @@ import { EDUCATION } from "@/data/content";
 export default function EducationBrutalist() {
   return (
     <section className="py-16 md:py-32 px-6 md:px-20 border-b border-[var(--color-border)] bg-[var(--bg-primary)] text-[var(--color-text)] transition-colors duration-500">
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-12 md:gap-20">
+      <div className="max-w-7xl mx-auto w-full flex flex-col md:flex-row gap-12 md:gap-20">
         <div className="md:w-1/3">
           <h3 className="font-display font-medium text-4xl md:text-5xl tracking-tight leading-[1] relative md:sticky md:top-32 mb-8 md:mb-0">
             Academic<br/>Background<span className="text-[var(--color-accent)] italic">.</span>

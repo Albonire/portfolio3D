@@ -97,7 +97,7 @@ export default function StackBrutalist() {
            style={{ backgroundImage: 'linear-gradient(currentColor 1px, transparent 1px), linear-gradient(90deg, currentColor 1px, transparent 1px)', backgroundSize: '40px 40px' }} 
       />
 
-      <div className="max-w-7xl mx-auto relative z-10">
+      <div className="max-w-7xl mx-auto w-full relative z-10">
         <div className="flex items-center gap-4 mb-16">
           <div className="w-1.5 h-1.5 bg-[var(--color-accent)] rounded-full" />
           <h3 className="font-sans text-[var(--color-muted)] text-[10px] md:text-xs tracking-widest uppercase">

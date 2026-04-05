@@ -3,6 +3,7 @@ import StackBrutalist from "@/components/StackBrutalist";
 import EducationBrutalist from "@/components/EducationBrutalist";
 import IntroScroll from "@/components/IntroScroll";
 import HeroSection from "@/components/Hero3D";
+import Contact from "@/components/Contact";
 import { ABOUT } from "@/data/content";
 
 export default function Home() {
@@ -10,7 +11,7 @@ export default function Home() {
     <>
       <HeroSection />
       <section id="about" className="min-h-[60vh] flex flex-col justify-center py-24 px-6 md:px-20 border-b border-current/10">
-        <div className="max-w-7xl">
+        <div className="max-w-7xl mx-auto w-full">
           <p className="font-mono text-xs mb-8 opacity-50 tracking-widest uppercase">
             {'//'} {ABOUT.subtitle}
           </p>
@@ -20,6 +21,7 @@ export default function Home() {
       <ProjectGallery />
       <StackBrutalist />
       <EducationBrutalist />
+      <Contact />
     </>
   );
 }
