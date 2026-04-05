@@ -21,8 +21,8 @@ export default function HeroSection() {
         <div className="will-change-transform max-w-2xl md:max-w-3xl lg:max-w-4xl relative z-10">
           <MaskText priority={true}>
             <h1 className="font-display font-medium text-5xl md:text-7xl lg:text-[7.5rem] leading-[1.05] tracking-tight text-[var(--color-text)] drop-shadow-sm">
-              Digital craft <br />
-              <span className="text-[var(--color-accent)] italic">& engineering.</span>
+              Digital engineering <br />
+              <span className="text-[var(--color-accent)] italic">& creativity.</span>
             </h1>
           </MaskText>
         </div>
