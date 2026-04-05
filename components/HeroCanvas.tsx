@@ -1,9 +1,17 @@
 "use client";
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
+import { Canvas, useFrame, useThree, type ThreeEvent } from '@react-three/fiber';
 import { useRef, useState, useCallback, Suspense, useMemo } from 'react';
 import * as THREE from 'three';
 import { useTheme } from 'next-themes';
 import { useGLTF, Float, Center, Environment, Edges } from '@react-three/drei';
+
+type MeshData = {
+  geometry: THREE.BufferGeometry;
+  material: THREE.Material;
+  position: THREE.Vector3;
+  rotation: THREE.Euler;
+  scale: THREE.Vector3;
+};
 
 // ============================================================
 // VOXEL FLOWER MODEL — Definitive Fix: Vertical & Edges
@@ -22,16 +30,24 @@ function VoxelFlowerModel() {
 
   // Extract meshes and ensure materials are high-impact
   const meshes = useMemo(() => {
-    const result: any[] = [];
+    const result: MeshData[] = [];
     scene.traverse((child) => {
       if ((child as THREE.Mesh).isMesh) {
         const mesh = child as THREE.Mesh;
-        const mat = mesh.material as THREE.MeshStandardMaterial;
-        
-        mat.metalness = 0.4;
-        mat.roughness = 0.2;
-        mat.envMapIntensity = 1.5;
-        
+        const originalMaterial = mesh.material as THREE.Material;
+        const mat = (originalMaterial.clone() as THREE.MeshStandardMaterial);
+
+        mat.metalness = 0.0;
+        mat.roughness = 0.5;
+        mat.envMapIntensity = 0.35;
+
+        mat.transparent = false;
+        mat.opacity = 1;
+        mat.side = THREE.DoubleSide;
+
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+
         result.push({
           geometry: mesh.geometry,
           material: mat,
@@ -53,14 +69,14 @@ function VoxelFlowerModel() {
     groupRef.current.rotation.y = THREE.MathUtils.lerp(groupRef.current.rotation.y, rotationRef.current.y, 0.1);
   });
 
-  const onDown = useCallback((e: any) => {
+  const onDown = useCallback((e: ThreeEvent<PointerEvent>) => {
     e.stopPropagation();
     setDragging(true);
     lastMouse.current = { x: e.clientX, y: e.clientY };
     (e.target as HTMLElement).setPointerCapture(e.pointerId);
   }, []);
 
-  const onMove = useCallback((e: any) => {
+  const onMove = useCallback((e: ThreeEvent<PointerEvent>) => {
     if (!dragging) return;
     const deltaX = e.clientX - lastMouse.current.x;
     const deltaY = e.clientY - lastMouse.current.y;
@@ -69,7 +85,7 @@ function VoxelFlowerModel() {
     lastMouse.current = { x: e.clientX, y: e.clientY };
   }, [dragging]);
 
-  const onUp = useCallback((e: any) => {
+  const onUp = useCallback((e: ThreeEvent<PointerEvent>) => {
     setDragging(false);
     (e.target as HTMLElement).releasePointerCapture(e.pointerId);
   }, []);
@@ -99,7 +115,7 @@ function VoxelFlowerModel() {
                 rotation={m.rotation} 
                 scale={m.scale}
               >
-                <Edges threshold={15} color="#000000" />
+                <Edges threshold={10} color="#2A2A2A" />
               </mesh>
             ))}
           </group>
@@ -117,19 +133,22 @@ export default function HeroCanvas() {
     <Canvas
       camera={{ position: [0, 0, 5], fov: 35 }}
       dpr={[1, 2]}
+      shadows
       gl={{ 
         antialias: true, 
         alpha: true,
         toneMapping: THREE.ACESFilmicToneMapping,
-        toneMappingExposure: 1.2
+        toneMappingExposure: 0.9
       }}
       style={{ cursor: 'grab' }}
     >
       <Suspense fallback={null}>
-        <Environment preset="city" />
-        <ambientLight intensity={isDark ? 0.7 : 0.5} />
-        <pointLight position={[5, 5, 5]} intensity={2} />
-        <spotLight position={[-5, 10, 2]} angle={0.2} intensity={2.5} />
+        <Environment preset="city" background={false} />
+        <hemisphereLight args={["#ffffff", "#6f6f6f", 0.16]} />
+        <ambientLight intensity={isDark ? 0.35 : 0.22} />
+        <pointLight position={[5, 5, 5]} intensity={1.0} />
+        <directionalLight position={[0, 5, 10]} intensity={0.8} />
+        <spotLight position={[-5, 10, 2]} angle={0.22} intensity={1.0} penumbra={0.35} />
         <VoxelFlowerModel />
       </Suspense>
     </Canvas>

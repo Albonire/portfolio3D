@@ -84,7 +84,6 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
           <SmoothScroll>
             <Preloader />
-            <div className="bg-noise fixed -top-1/2 -left-1/2 w-[200%] h-[200%] z-[1] opacity-[0.03] mix-blend-overlay pointer-events-none" />
             <CustomCursor />
             <ThemeToggle />
             <CommandPalette />

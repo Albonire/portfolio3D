@@ -3,6 +3,35 @@
 import { ABOUT } from "@/data/content";
 import Magnetic from "./Magnetic";
 
+const EditorialArrow = ({ className = "" }: { className?: string }) => (
+  <svg aria-hidden="true" viewBox="0 0 24 24" className={`h-5 w-5 ${className}`}>
+    <path d="M4 12h11"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="square"
+    />
+    <path d="M15 6.5 22 12 15 17.5"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinejoin="miter"
+    />
+    <path d="M4 6.5v11"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="square"
+    />
+    <path d="M4 6.5 8 12 4 17.5"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinejoin="miter"
+    />
+  </svg>
+);
+
 export default function Contact() {
   const email = ABOUT.social.find(s => s.label === "EMAIL")?.url.replace('mailto:', '');
 
@@ -11,7 +40,7 @@ export default function Contact() {
       <div className="max-w-7xl mx-auto w-full flex flex-col md:flex-row justify-between gap-16 md:gap-24">
         
         {/* Left Column - Big Typography */}
-        <div className="flex-1 flex flex-col justify-between">
+        <div className="flex-1 flex flex-col justify-between md:pr-12">
           <div>
             <p className="font-mono text-xs mb-8 text-[var(--color-muted)] tracking-widest uppercase">
               {'//'} Let&apos;s talk
@@ -32,14 +61,19 @@ export default function Contact() {
                 className="inline-flex items-center gap-3 font-sans text-[var(--color-text)] hover:text-[var(--color-accent)] transition-colors duration-300 group"
               >
                 <span className="text-xl md:text-2xl border-b border-[var(--color-border)] group-hover:border-[var(--color-accent)] transition-colors duration-300 pb-1">{email}</span>
-                <span className="text-sm opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">↗</span>
+                <span className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
+                  <EditorialArrow />
+                </span>
               </a>
             </Magnetic>
+            <p className="font-mono text-xs uppercase tracking-[0.45em] text-[var(--color-muted)]">
+              Available for remote & hybrid work
+            </p>
           </div>
         </div>
 
         {/* Right Column - Social Links */}
-        <div className="md:w-1/3 flex flex-col justify-between md:justify-end">
+        <div className="md:w-1/3 flex flex-col justify-between md:justify-end md:border-l md:border-[var(--color-border)] md:pl-12">
           <div className="flex flex-col gap-6">
             <h3 className="font-sans text-xs font-medium tracking-[0.2em] text-[var(--color-muted)] uppercase mb-4">
               Connect
@@ -55,8 +89,8 @@ export default function Contact() {
                       className="group flex items-center justify-between font-display text-2xl md:text-3xl text-[var(--color-text)] hover:text-[var(--color-accent)] transition-colors duration-300"
                     >
                       <span>{social.label}</span>
-                      <span className="font-sans text-sm opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
-                        ↗
+                      <span className="opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
+                        <EditorialArrow />
                       </span>
                     </a>
                   </Magnetic>
