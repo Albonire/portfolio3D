@@ -90,7 +90,7 @@ export default function StackBrutalist() {
   }, { scope: containerRef });
 
   return (
-    <section ref={containerRef} className="relative z-30 py-8 md:py-32 px-6 md:px-20 border-b border-current/10 bg-[var(--color-dark)] text-[var(--color-text)] transition-colors duration-500 overflow-hidden">
+    <section ref={containerRef} className="relative z-30 py-8 md:py-32 px-6 md:px-20 border-b border-[var(--color-border)] bg-[var(--bg-primary)] text-[var(--color-text)] transition-colors duration-500 overflow-hidden">
       
       {/* Background Grid Decoration */}
       <div className="absolute inset-0 z-0 pointer-events-none opacity-[0.03]" 

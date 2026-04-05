@@ -22,24 +22,27 @@
     const videoRef = useRef<HTMLVideoElement>(null);
   
     useEffect(() => {
-      if (!videoRef.current) return;
+      const video = videoRef.current;
+      if (!video) return;
+
+      let cancelled = false;
       
       if (isActive) {
-        const playPromise = videoRef.current.play();
-        if (playPromise !== undefined) {
-          playPromise.catch((error) => {
-            console.log("Video play prevented:", error);
-          });
-        }
+        // Small delay to avoid play/pause race condition
+        const timer = setTimeout(() => {
+          if (cancelled) return;
+          video.play().catch(() => {});
+        }, 50);
+        return () => { cancelled = true; clearTimeout(timer); };
       } else {
-        videoRef.current.pause();
-        videoRef.current.currentTime = 0;
+        video.pause();
+        video.currentTime = 0;
       }
     }, [isActive]);
   
     return (
       <div 
-        className="w-screen h-screen flex flex-col justify-center items-center relative group shrink-0 border-r border-current/10 bg-[var(--color-dark)]"
+        className="w-screen h-screen flex flex-col justify-center items-center relative group shrink-0 border-r border-[var(--color-border)] bg-[var(--bg-primary)]"
         onMouseEnter={() => onHover(project.id)}
         onMouseLeave={onLeave}
       >
@@ -92,32 +95,32 @@
   
         </TiltCard>
   
-        {/* Info - Title stays central but slightly higher */}
-        <div className="absolute z-40 pointer-events-none top-[35%] md:top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 text-center w-full mix-blend-difference text-white px-4">
+        {/* Title overlay */}
+        <div className="absolute z-40 pointer-events-none top-[35%] md:top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 text-center w-full px-4">
           <Magnetic>
-            <a href={project.link} target="_blank" className="pointer-events-auto cursor-none block">
-              <h2 className="font-display font-medium text-[8vw] md:text-[6vw] leading-none tracking-tight transition-colors duration-700 hover:text-[var(--color-accent)] break-words">
+            <a href={project.link} target="_blank" className="pointer-events-auto block">
+              <h2 className="font-display font-medium text-[8vw] md:text-[5vw] leading-none tracking-tight text-[var(--color-text)] mix-blend-difference transition-colors duration-500 hover:text-[var(--color-accent)] break-words">
                 {project.title}
               </h2>
             </a>
           </Magnetic>
         </div>
 
-        {/* Technical Spec Module - Adaptive for Mobile */}
-        <div className="absolute bottom-10 left-6 right-6 md:left-auto md:right-10 z-50 w-auto md:w-[400px] opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 md:translate-x-4 md:group-hover:translate-x-0 transition-all duration-700 delay-100 pointer-events-none">
-          <div className="bg-[var(--bg-primary)]/90 backdrop-blur-md border border-[var(--color-border)] p-5 md:p-8 shadow-sm">
-            <div className="flex justify-between items-center mb-3">
-              <span className="font-sans font-medium text-[10px] md:text-xs text-[var(--color-accent)] tracking-widest uppercase">Project Spec</span>
-              <span className="font-sans text-[var(--color-muted)] text-xs">{project.year}</span>
+        {/* Project Info Banner — Editorial Calm Glassmorphism */}
+        <div className="absolute bottom-8 left-6 right-6 md:left-6 md:right-auto z-50 w-auto md:w-[380px] opacity-0 group-hover:opacity-100 translate-y-6 group-hover:translate-y-0 transition-all duration-700 delay-150 pointer-events-none">
+          <div className="bg-[var(--bg-primary)] dark:bg-[#1a1a18]/95 backdrop-blur-lg border border-[var(--color-border)] rounded-sm p-5 md:p-6 shadow-md">
+            <div className="flex justify-between items-center mb-4">
+              <span className="font-sans font-medium text-[10px] text-[var(--color-accent)] tracking-[0.2em] uppercase">Project</span>
+              <span className="font-sans text-[var(--color-muted)] text-xs font-medium">{project.year}</span>
             </div>
             
-            <p className="font-body text-sm text-[var(--color-text)] leading-relaxed mb-6 line-clamp-3 md:line-clamp-none">
+            <p className="font-body text-sm text-[var(--color-text)] leading-relaxed mb-5 line-clamp-3 md:line-clamp-none">
               {project.description}
             </p>
 
-            <div className="flex gap-2 flex-wrap">
+            <div className="flex gap-1.5 flex-wrap">
               {project.tech.map(t => (
-                <span key={t} className="font-sans text-[10px] text-[var(--color-muted)] px-2 py-1 bg-[var(--color-border)]/50 rounded-sm">
+                <span key={t} className="font-sans text-[10px] text-[var(--color-muted)] px-2 py-1 border border-[var(--color-border)] rounded-sm">
                   {t}
                 </span>
               ))}
@@ -163,7 +166,7 @@
   
     return (
       // PARENT CONTAINER: Optimized height for mobile to avoid dead space
-      <section ref={containerRef} id="work" className="relative h-[250vh] md:h-[500vh] bg-[var(--color-dark)] z-20">
+      <section ref={containerRef} id="work" className="relative h-[250vh] md:h-[500vh] bg-[var(--bg-primary)] z-20">
         
         {/* STICKY VIEWPORT: Stays fixed while scrolling the parent */}
         <div ref={stickyRef} className="sticky top-0 h-screen overflow-hidden">
