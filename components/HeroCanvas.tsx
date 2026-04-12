@@ -29,7 +29,7 @@ function VoxelFlowerModel() {
   const rotationRef = useRef({ x: 0, y: 0 });
 
   // Theme-aware colors
-  const edgeColor = isDark ? "#B8C9B2" : "#2D3A2A";
+  const edgeColor = isDark ? "#B8C9B2" : "#1A1A18";
 
   // Refined materials (Deep Matte for Dark Mode)
   const meshes = useMemo(() => {
@@ -39,22 +39,24 @@ function VoxelFlowerModel() {
         const mesh = child as THREE.Mesh;
         const originalColor = (mesh.material as THREE.MeshStandardMaterial).color.clone();
         
-        // RICH EDITORIAL for Dark Mode across ALL colors
+        // RICH EDITORIAL across ALL colors
         if (isDark) {
-          originalColor.multiplyScalar(0.6); // Muted but vibrant enough for character
+          originalColor.multiplyScalar(0.6); // Muted for character in dark mode
+        } else {
+          originalColor.multiplyScalar(0.85); // Slightly deeper for contrast in light mode
         }
 
         const mat = new THREE.MeshPhysicalMaterial({
           color: originalColor,
-          roughness: 0.45, // Soft, non-glassy finish
-          metalness: 0.1, // Slight metallic depth
+          roughness: isDark ? 0.45 : 0.7, // Matte finish to avoid white glare in light mode
+          metalness: isDark ? 0.1 : 0.05, 
           transmission: 0.0, 
           opacity: 1,
           transparent: false,
           side: THREE.DoubleSide,
-          envMapIntensity: 0.5, // Better environment integration
-          clearcoat: 0.1, // Subtle layer depth
-          sheen: 0.3, // "Premium fabric" / velvet-like bloom
+          envMapIntensity: isDark ? 0.5 : 0.22, // Reduced reflections in light mode
+          clearcoat: 0.1, 
+          sheen: isDark ? 0.3 : 0.1, 
           sheenColor: isDark ? new THREE.Color("#445640") : new THREE.Color("#FFFFFF"),
         });
         mesh.castShadow = true;
@@ -89,10 +91,10 @@ function VoxelFlowerModel() {
     <Float speed={1.0} rotationIntensity={0.1} floatIntensity={0.15}>
       <group
         ref={groupRef}
-        position={[isMobile ? 0 : 1.8, 0.2, 0]}
+        position={[isMobile ? 0 : 1.5, isMobile ? 0.8 : 0, 0]}
       >
         <Center>
-          <group rotation={[-Math.PI / 2, 0, 0]} scale={isMobile ? 0.13 : 0.22}>
+          <group rotation={[-Math.PI / 2, 0, 0]} scale={isMobile ? 0.09 : 0.22}>
             {meshes.map((m, i) => (
               <mesh 
                 key={i} 
@@ -102,7 +104,7 @@ function VoxelFlowerModel() {
                 rotation={m.rotation} 
                 scale={m.scale}
               >
-                <Edges threshold={15} color={edgeColor} opacity={isDark ? 0.04 : 0.08} transparent />
+                <Edges threshold={15} color={edgeColor} opacity={isDark ? 0.04 : 0.18} transparent />
               </mesh>
             ))}
           </group>

@@ -1,6 +1,7 @@
 "use client";
 import dynamic from 'next/dynamic';
 import MaskText from './MaskText';
+import Magnetic from './Magnetic';
 
 // Lazy load ONLY the heavy 3D canvas
 const HeroCanvas = dynamic(() => import('./HeroCanvas'), { 
@@ -20,7 +21,7 @@ export default function HeroSection() {
       <div className="relative z-10 w-full max-w-7xl mx-auto h-full pointer-events-none select-none flex flex-col items-start justify-center">
         <div className="will-change-transform max-w-2xl md:max-w-3xl lg:max-w-4xl relative z-10">
           <MaskText priority={true}>
-            <h1 className="font-display font-medium text-[11vw] sm:text-6xl md:text-7xl lg:text-[7.5rem] leading-[1.05] tracking-tight text-[var(--color-text)] drop-shadow-sm">
+            <h1 className="font-display font-medium text-[8.5vw] sm:text-6xl md:text-7xl lg:text-[7.5rem] leading-[1.05] tracking-tight text-[var(--color-text)] drop-shadow-sm">
               Digital engineering <br />
               <span className="text-[var(--color-accent)] italic">& creativity.</span>
             </h1>
@@ -28,13 +29,13 @@ export default function HeroSection() {
         </div>
         <div className="will-change-transform mt-6 md:mt-10 max-w-sm md:max-w-lg relative z-10">
           <MaskText delay={0.1} priority={true}>
-            <p className="font-body text-base md:text-lg lg:text-xl text-[var(--color-text)]/80 leading-relaxed font-light">
+            <p className="font-body text-base md:text-lg lg:text-xl text-[var(--color-text)]/80 leading-relaxed font-light mb-8">
               Transforming complex systems into calm, intellectual, and highly functional web experiences.
             </p>
           </MaskText>
         </div>
         
-        <div className="absolute bottom-6 md:bottom-10 left-0 font-sans text-[var(--color-text)]/60 text-[10px] md:text-xs uppercase tracking-widest z-20">
+        <div className="absolute bottom-24 md:bottom-10 left-0 font-sans text-[var(--color-text)]/60 text-[10px] md:text-xs uppercase tracking-widest z-20">
           Scroll to explore &darr;
         </div>
       </div>

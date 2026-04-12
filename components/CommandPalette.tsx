@@ -176,7 +176,6 @@ export default function CommandPalette() {
             <span className="font-sans text-[10px] text-[var(--color-muted)]">Select ↑↓</span>
             <span className="font-sans text-[10px] text-[var(--color-muted)]">Open ↵</span>
           </div>
-          <span className="font-sans tracking-widest uppercase text-[10px] text-[var(--color-accent)]">System_Ready</span>
         </div>
       </div>
     </div>

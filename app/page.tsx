@@ -4,6 +4,7 @@ import EducationBrutalist from "@/components/EducationBrutalist";
 import IntroScroll from "@/components/IntroScroll";
 import HeroSection from "@/components/Hero3D";
 import Contact from "@/components/Contact";
+import FloatingCV from "@/components/FloatingCV";
 import { ABOUT } from "@/data/content";
 
 export default function Home() {
@@ -22,6 +23,7 @@ export default function Home() {
       <StackBrutalist />
       <EducationBrutalist />
       <Contact />
+      <FloatingCV />
     </>
   );
 }

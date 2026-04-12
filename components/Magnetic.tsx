@@ -15,8 +15,8 @@ export default function Magnetic({ children }: { children: React.ReactNode }) {
             const { height, width, left, top } = magnetic.current.getBoundingClientRect();
             const x = clientX - (left + width / 2)
             const y = clientY - (top + height / 2)
-            xTo(x * 0.35);
-            yTo(y * 0.35);
+            xTo(x * 0.15);
+            yTo(y * 0.15);
         }
 
         const handleMouseLeave = () => {

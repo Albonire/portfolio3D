@@ -66,7 +66,8 @@ export default function Contact() {
                 </span>
               </a>
             </Magnetic>
-            <p className="font-mono text-xs uppercase tracking-[0.45em] text-[var(--color-muted)]">
+
+            <p className="font-mono text-xs uppercase tracking-[0.45em] text-[var(--color-muted)] mt-12 block">
               Available for remote & hybrid work
             </p>
           </div>
