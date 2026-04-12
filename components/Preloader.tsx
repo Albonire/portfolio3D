@@ -8,12 +8,21 @@ export default function Preloader() {
   const [isComplete, setIsComplete] = useState(false);
 
   useEffect(() => {
+    const hasSeenBoot = sessionStorage.getItem("boot_sequence_seen");
+    if (hasSeenBoot) {
+      setIsComplete(true);
+      return;
+    }
+
     // Disable scroll during preload
     document.body.style.overflow = "hidden";
 
     const counter = { value: 0 };
     const tl = gsap.timeline({
-      onComplete: () => setIsComplete(true)
+      onComplete: () => {
+        setIsComplete(true);
+        sessionStorage.setItem("boot_sequence_seen", "true");
+      }
     });
 
     tl.to(counter, {

@@ -3,7 +3,7 @@ import { Canvas, useFrame, useThree, type ThreeEvent } from '@react-three/fiber'
 import { useRef, useState, useCallback, Suspense, useMemo } from 'react';
 import * as THREE from 'three';
 import { useTheme } from 'next-themes';
-import { useGLTF, Float, Center, Environment, Edges } from '@react-three/drei';
+import { useGLTF, Float, Center, Environment, Edges, ContactShadows } from '@react-three/drei';
 
 type MeshData = {
   geometry: THREE.BufferGeometry;
@@ -21,33 +21,44 @@ function VoxelFlowerModel() {
   const { scene } = useGLTF('/models/voxel_style_flower.glb');
   const groupRef = useRef<THREE.Group>(null);
   const { viewport } = useThree();
+  const { theme } = useTheme();
+  const isDark = theme === 'dark' || theme === 'system';
   const isMobile = viewport.width < 6;
 
   // Interaction state
-  const [dragging, setDragging] = useState(false);
   const rotationRef = useRef({ x: 0, y: 0 });
-  const lastMouse = useRef({ x: 0, y: 0 });
 
-  // Extract meshes and ensure materials are high-impact
+  // Theme-aware colors
+  const edgeColor = isDark ? "#B8C9B2" : "#2D3A2A";
+
+  // Refined materials (Deep Matte for Dark Mode)
   const meshes = useMemo(() => {
     const result: MeshData[] = [];
     scene.traverse((child) => {
       if ((child as THREE.Mesh).isMesh) {
         const mesh = child as THREE.Mesh;
-        const originalMaterial = mesh.material as THREE.Material;
-        const mat = (originalMaterial.clone() as THREE.MeshStandardMaterial);
+        const originalColor = (mesh.material as THREE.MeshStandardMaterial).color.clone();
+        
+        // RICH EDITORIAL for Dark Mode across ALL colors
+        if (isDark) {
+          originalColor.multiplyScalar(0.6); // Muted but vibrant enough for character
+        }
 
-        mat.metalness = 0.0;
-        mat.roughness = 0.5;
-        mat.envMapIntensity = 0.35;
-
-        mat.transparent = false;
-        mat.opacity = 1;
-        mat.side = THREE.DoubleSide;
-
+        const mat = new THREE.MeshPhysicalMaterial({
+          color: originalColor,
+          roughness: 0.45, // Soft, non-glassy finish
+          metalness: 0.1, // Slight metallic depth
+          transmission: 0.0, 
+          opacity: 1,
+          transparent: false,
+          side: THREE.DoubleSide,
+          envMapIntensity: 0.5, // Better environment integration
+          clearcoat: 0.1, // Subtle layer depth
+          sheen: 0.3, // "Premium fabric" / velvet-like bloom
+          sheenColor: isDark ? new THREE.Color("#445640") : new THREE.Color("#FFFFFF"),
+        });
         mesh.castShadow = true;
         mesh.receiveShadow = true;
-
         result.push({
           geometry: mesh.geometry,
           material: mat,
@@ -58,54 +69,30 @@ function VoxelFlowerModel() {
       }
     });
     return result;
-  }, [scene]);
+  }, [scene, isDark]);
 
-  useFrame((_, delta) => {
+  useFrame((state, delta) => {
     if (!groupRef.current) return;
-    if (!dragging) {
-      rotationRef.current.y += delta * 0.08;
-    }
-    groupRef.current.rotation.x = THREE.MathUtils.lerp(groupRef.current.rotation.x, rotationRef.current.x, 0.1);
-    groupRef.current.rotation.y = THREE.MathUtils.lerp(groupRef.current.rotation.y, rotationRef.current.y, 0.1);
+    
+    // Auto-rotation combined with Parallax from mouse pointer
+    rotationRef.current.y += delta * 0.15; // smooth constant rotation
+    
+    // Subtle reaction to mouse pointer (Parallax)
+    const targetX = state.pointer.y * 0.5; // Up/down affects X rotation slightly
+    const targetY = rotationRef.current.y + (state.pointer.x * 0.5); 
+    
+    groupRef.current.rotation.x = THREE.MathUtils.lerp(groupRef.current.rotation.x, targetX, 0.05);
+    groupRef.current.rotation.y = THREE.MathUtils.lerp(groupRef.current.rotation.y, targetY, 0.05);
   });
 
-  const onDown = useCallback((e: ThreeEvent<PointerEvent>) => {
-    e.stopPropagation();
-    setDragging(true);
-    lastMouse.current = { x: e.clientX, y: e.clientY };
-    (e.target as HTMLElement).setPointerCapture(e.pointerId);
-  }, []);
-
-  const onMove = useCallback((e: ThreeEvent<PointerEvent>) => {
-    if (!dragging) return;
-    const deltaX = e.clientX - lastMouse.current.x;
-    const deltaY = e.clientY - lastMouse.current.y;
-    rotationRef.current.y += deltaX * 0.01;
-    rotationRef.current.x += deltaY * 0.008;
-    lastMouse.current = { x: e.clientX, y: e.clientY };
-  }, [dragging]);
-
-  const onUp = useCallback((e: ThreeEvent<PointerEvent>) => {
-    setDragging(false);
-    (e.target as HTMLElement).releasePointerCapture(e.pointerId);
-  }, []);
-
   return (
-    <Float speed={1.0} rotationIntensity={0.1} floatIntensity={0.2}>
+    <Float speed={1.0} rotationIntensity={0.1} floatIntensity={0.15}>
       <group
         ref={groupRef}
-        position={[isMobile ? 0 : 1.5, 0, 0]}
-        onPointerDown={onDown}
-        onPointerMove={onMove}
-        onPointerUp={onUp}
-        onPointerLeave={onUp}
+        position={[isMobile ? 0 : 1.8, 0.2, 0]}
       >
         <Center>
-          {/* 
-            COMPENSATION ROTATION:
-            We rotate the inner group -90deg on X to counteract the GLB's horizontal export 
-          */}
-          <group rotation={[-Math.PI / 2, 0, 0]} scale={isMobile ? 0.13 : 0.24}>
+          <group rotation={[-Math.PI / 2, 0, 0]} scale={isMobile ? 0.13 : 0.22}>
             {meshes.map((m, i) => (
               <mesh 
                 key={i} 
@@ -115,7 +102,7 @@ function VoxelFlowerModel() {
                 rotation={m.rotation} 
                 scale={m.scale}
               >
-                <Edges threshold={10} color="#2A2A2A" />
+                <Edges threshold={15} color={edgeColor} opacity={isDark ? 0.04 : 0.08} transparent />
               </mesh>
             ))}
           </group>
@@ -138,17 +125,29 @@ export default function HeroCanvas() {
         antialias: true, 
         alpha: true,
         toneMapping: THREE.ACESFilmicToneMapping,
-        toneMappingExposure: 0.9
+        toneMappingExposure: 0.7 // Balanced exposure for editorial feel
       }}
       style={{ cursor: 'grab' }}
     >
       <Suspense fallback={null}>
-        <Environment preset="city" background={false} />
-        <hemisphereLight args={["#ffffff", "#6f6f6f", 0.16]} />
-        <ambientLight intensity={isDark ? 0.35 : 0.22} />
-        <pointLight position={[5, 5, 5]} intensity={1.0} />
-        <directionalLight position={[0, 5, 10]} intensity={0.8} />
-        <spotLight position={[-5, 10, 2]} angle={0.22} intensity={1.0} penumbra={0.35} />
+        <Environment preset="apartment" blur={1.0} />
+        
+        <hemisphereLight args={isDark ? ["#445640", "#1A1A18", 0.08] : ["#ffffff", "#6f6f6f", 0.1]} />
+        <ambientLight intensity={isDark ? 0.15 : 0.2} />
+        
+        <ContactShadows 
+          position={[1.8, -2.5, 0]} 
+          opacity={isDark ? 0.12 : 0.06} 
+          scale={10} 
+          blur={4} 
+          far={5} 
+        />
+
+        {isDark && <spotLight position={[5, 10, 5]} angle={0.25} penumbra={1} intensity={1.5} color="#B8C9B2" />}
+        {!isDark && <pointLight position={[5, 10, 5]} intensity={0.4} color="#FFFFFF" />}
+        
+        <directionalLight position={[0, 5, 10]} intensity={isDark ? 0.25 : 0.3} />
+        
         <VoxelFlowerModel />
       </Suspense>
     </Canvas>

@@ -6,8 +6,8 @@ export default function Magnetic({ children }: { children: React.ReactNode }) {
     const magnetic = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        const xTo = gsap.quickTo(magnetic.current, "x", { duration: 1, ease: "elastic.out(1, 0.3)" })
-        const yTo = gsap.quickTo(magnetic.current, "y", { duration: 1, ease: "elastic.out(1, 0.3)" })
+        const xTo = gsap.quickTo(magnetic.current, "x", { duration: 0.8, ease: "power3.out" })
+        const yTo = gsap.quickTo(magnetic.current, "y", { duration: 0.8, ease: "power3.out" })
 
         const handleMouseMove = (e: MouseEvent) => {
             if (!magnetic.current) return;

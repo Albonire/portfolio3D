@@ -48,15 +48,16 @@
       >
         
         {/* Media Container - Responsive Aspect Ratio */}
-        <TiltCard
-          className="relative w-[92vw] md:w-[800px] aspect-[4/3] md:aspect-video overflow-hidden bg-[var(--color-border)] border border-[var(--color-border)] z-10 shadow-sm group-hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] dark:group-hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.4)] transition-shadow duration-700"
-          intensity={5}
-        >
-          {/* Elegant soft border on hover instead of neon */}
-          <div className="absolute inset-0 border border-transparent group-hover:border-[var(--color-accent)]/30 pointer-events-none z-50 transition-colors duration-700" />
+        <a href={project.link} target="_blank" className="block relative z-10 cursor-pointer">
+          <TiltCard
+            className="relative w-[85vw] md:w-[800px] aspect-[4/3] md:aspect-video overflow-hidden bg-[var(--color-border)] border border-[var(--color-border)] shadow-sm group-hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] dark:group-hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.4)] transition-shadow duration-700"
+            intensity={5}
+          >
+            {/* Elegant soft border on hover instead of neon */}
+            <div className="absolute inset-0 border border-transparent group-hover:border-[var(--color-accent)]/30 pointer-events-none z-50 transition-colors duration-700" />
   
           {/* Subtle overlay to help title pop, but keeping video clear */}
-          <div className="absolute inset-0 bg-black/5 group-hover:bg-black/20 transition-colors duration-500 z-30 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500 z-30 pointer-events-none" />
           
           {project.video ? (
             <>
@@ -93,21 +94,20 @@
             />
           )}
   
-        </TiltCard>
+          </TiltCard>
+        </a>
   
         {/* Title overlay */}
-        <div className="absolute z-40 pointer-events-none top-[35%] md:top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 text-center w-full px-4">
+        <div className="absolute z-40 pointer-events-none top-[35%] md:top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 text-center w-full px-4 drop-shadow-[0_4px_12px_rgba(0,0,0,0.3)]">
           <Magnetic>
-            <a href={project.link} target="_blank" className="pointer-events-auto block">
-              <h2 className="font-display font-medium text-[8vw] md:text-[5vw] leading-none tracking-tight text-[var(--color-text)] mix-blend-difference transition-colors duration-500 hover:text-[var(--color-accent)] break-words">
+              <h2 className="font-display font-medium text-[8vw] md:text-[5vw] leading-none tracking-tight text-[var(--color-text)] mix-blend-difference transition-colors duration-500 group-hover:text-[var(--color-accent)] break-words">
                 {project.title}
               </h2>
-            </a>
           </Magnetic>
         </div>
 
         {/* Project Info Banner — Editorial Calm Glassmorphism */}
-        <div className="absolute bottom-8 left-6 right-6 md:left-6 md:right-auto z-50 w-auto md:w-[380px] opacity-0 group-hover:opacity-100 translate-y-6 group-hover:translate-y-0 transition-all duration-700 delay-150 pointer-events-none">
+        <div className="absolute bottom-8 left-5 right-5 md:left-6 md:right-auto z-50 w-auto md:w-[380px] opacity-0 group-hover:opacity-100 translate-y-6 group-hover:translate-y-0 transition-all duration-700 delay-150 pointer-events-none">
           <div className="bg-[var(--bg-primary)] dark:bg-[#1a1a18]/95 backdrop-blur-lg border border-[var(--color-border)] rounded-sm p-5 md:p-6 shadow-md">
             <div className="flex justify-between items-center mb-4">
               <span className="font-sans font-medium text-[10px] text-[var(--color-accent)] tracking-[0.2em] uppercase">Project</span>

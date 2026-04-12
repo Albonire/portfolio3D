@@ -24,8 +24,8 @@ export default function CustomCursor() {
       const target = e.target as HTMLElement;
       if (target.closest('a, button, .cursor-pointer')) {
         gsap.to(cursor, {
-          scale: 1.5,
-          duration: 0.3,
+          scale: 1.8,
+          duration: 0.4,
           ease: "power2.out"
         });
       }
@@ -36,8 +36,8 @@ export default function CustomCursor() {
       if (target.closest('a, button, .cursor-pointer')) {
         gsap.to(cursor, {
           scale: 1,
-          duration: 0.3,
-          ease: "power2.out"
+          duration: 0.4,
+          ease: "power3.out"
         });
       }
     };

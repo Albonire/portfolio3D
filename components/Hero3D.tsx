@@ -20,7 +20,7 @@ export default function HeroSection() {
       <div className="relative z-10 w-full max-w-7xl mx-auto h-full pointer-events-none select-none flex flex-col items-start justify-center">
         <div className="will-change-transform max-w-2xl md:max-w-3xl lg:max-w-4xl relative z-10">
           <MaskText priority={true}>
-            <h1 className="font-display font-medium text-5xl md:text-7xl lg:text-[7.5rem] leading-[1.05] tracking-tight text-[var(--color-text)] drop-shadow-sm">
+            <h1 className="font-display font-medium text-[11vw] sm:text-6xl md:text-7xl lg:text-[7.5rem] leading-[1.05] tracking-tight text-[var(--color-text)] drop-shadow-sm">
               Digital engineering <br />
               <span className="text-[var(--color-accent)] italic">& creativity.</span>
             </h1>
