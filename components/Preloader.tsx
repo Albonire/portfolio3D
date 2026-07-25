@@ -7,18 +7,29 @@ export default function Preloader() {
   const percentRef = useRef<HTMLDivElement>(null);
   const statusRef = useRef<HTMLSpanElement>(null);
   const progressLineRef = useRef<HTMLDivElement>(null);
-  const [isComplete, setIsComplete] = useState(false);
+  const [isComplete, setIsComplete] = useState(() => {
+    if (typeof window === "undefined") return false;
+    try {
+      return !!sessionStorage.getItem("boot_sequence_seen");
+    } catch {
+      return false;
+    }
+  });
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
 
   const handleSkip = useCallback(() => {
-    sessionStorage.setItem("boot_sequence_seen", "true");
+    try {
+      sessionStorage.setItem("boot_sequence_seen", "true");
+    } catch {
+      // ignore
+    }
     if (timelineRef.current) {
       timelineRef.current.kill();
     }
     if (containerRef.current) {
       gsap.to(containerRef.current, {
         yPercent: -100,
-        duration: 0.5,
+        duration: 0.4,
         ease: "power3.inOut",
         onComplete: () => {
           document.body.style.overflow = "";
@@ -34,14 +45,6 @@ export default function Preloader() {
   useEffect(() => {
     if (isComplete) return;
 
-    const hasSeenBoot = sessionStorage.getItem("boot_sequence_seen");
-    if (hasSeenBoot) {
-      const raf = requestAnimationFrame(() => {
-        setIsComplete(true);
-      });
-      return () => cancelAnimationFrame(raf);
-    }
-
     // Disable scroll during preload
     document.body.style.overflow = "hidden";
 
@@ -53,62 +56,82 @@ export default function Preloader() {
     };
     window.addEventListener("keydown", onKeyDown);
 
-    const counter = { value: 0 };
-    const statuses = [
-      "SYSTEM BOOT",
-      "COMPILING SHADERS",
-      "LOADING 3D SCENE",
-      "OPTIMIZING MEMORY",
-      "SYSTEM READY"
-    ];
-
-    const tl = gsap.timeline({
-      onComplete: () => {
+    // Safety fallback timer ensuring the preloader NEVER blocks the screen indefinitely
+    const safetyTimer = setTimeout(() => {
+      try {
         sessionStorage.setItem("boot_sequence_seen", "true");
-        setIsComplete(true);
+      } catch {
+        // ignore
       }
-    });
-
-    timelineRef.current = tl;
-
-    tl.to(counter, {
-      value: 100,
-      duration: 1.4,
-      ease: "power2.inOut",
-      onUpdate: () => {
-        const val = Math.floor(counter.value);
-        if (percentRef.current) {
-          percentRef.current.innerText = val.toString().padStart(2, "0");
-        }
-        if (progressLineRef.current) {
-          progressLineRef.current.style.width = `${val}%`;
-        }
-        if (statusRef.current) {
-          const statusIdx = Math.min(
-            Math.floor((val / 100) * statuses.length),
-            statuses.length - 1
-          );
-          statusRef.current.innerText = statuses[statusIdx];
-        }
-      }
-    });
-
-    // Elegant curtain raise exit
-    tl.to(containerRef.current, {
-      yPercent: -100,
-      duration: 0.9,
-      ease: "power4.inOut",
-      delay: 0.1
-    });
-
-    // Re-enable scroll early during slide up
-    tl.add(() => {
       document.body.style.overflow = "";
-    }, "-=0.7");
+      setIsComplete(true);
+    }, 2200);
+
+    const ctx = gsap.context(() => {
+      const counter = { value: 0 };
+      const statuses = [
+        "SYSTEM BOOT",
+        "COMPILING SHADERS",
+        "LOADING 3D SCENE",
+        "OPTIMIZING MEMORY",
+        "SYSTEM READY"
+      ];
+
+      const tl = gsap.timeline({
+        onComplete: () => {
+          clearTimeout(safetyTimer);
+          try {
+            sessionStorage.setItem("boot_sequence_seen", "true");
+          } catch {
+            // ignore
+          }
+          document.body.style.overflow = "";
+          setIsComplete(true);
+        }
+      });
+
+      timelineRef.current = tl;
+
+      tl.to(counter, {
+        value: 100,
+        duration: 1.1,
+        ease: "power2.inOut",
+        onUpdate: () => {
+          const val = Math.floor(counter.value);
+          if (percentRef.current) {
+            percentRef.current.innerText = val.toString().padStart(2, "0");
+          }
+          if (progressLineRef.current) {
+            progressLineRef.current.style.width = `${val}%`;
+          }
+          if (statusRef.current) {
+            const statusIdx = Math.min(
+              Math.floor((val / 100) * statuses.length),
+              statuses.length - 1
+            );
+            statusRef.current.innerText = statuses[statusIdx];
+          }
+        }
+      });
+
+      if (containerRef.current) {
+        tl.to(containerRef.current, {
+          yPercent: -100,
+          duration: 0.6,
+          ease: "power4.inOut",
+          delay: 0.1
+        });
+      }
+
+      tl.add(() => {
+        document.body.style.overflow = "";
+      }, "-=0.4");
+    }, containerRef);
 
     return () => {
       window.removeEventListener("keydown", onKeyDown);
-      tl.kill();
+      clearTimeout(safetyTimer);
+      ctx.revert();
       document.body.style.overflow = "";
     };
   }, [isComplete, handleSkip]);

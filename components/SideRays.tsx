@@ -35,8 +35,8 @@ export interface SideRaysProps {
 
 export default function SideRays({
   speed = 2.5,
-  rayColor1 = '#EAB308',
-  rayColor2 = '#96c8ff',
+  rayColor1 = '#fb923c',
+  rayColor2 = '#f59e0b',
   intensity = 2,
   spread = 2,
   origin = 'top-right',
