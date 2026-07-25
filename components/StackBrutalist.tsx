@@ -5,6 +5,8 @@ import { useGSAP } from '@gsap/react';
 import ScrollTrigger from 'gsap/ScrollTrigger';
 import { SKILLS } from "@/data/content";
 import TiltCard from './TiltCard';
+import { InteractiveGridPattern } from "@/components/ui/interactive-grid-pattern";
+import { cn } from "@/lib/utils";
 
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);
@@ -72,41 +74,57 @@ export default function StackBrutalist() {
       }
     );
 
-    // Animate Cards Entry
+    // Animate Cards Entry with subtle 3D stagger
     gsap.fromTo(
       ".stack-card",
-      { y: 50, opacity: 0 },
+      { y: 60, opacity: 0, rotateX: -15 },
       {
         y: 0,
         opacity: 1,
+        rotateX: 0,
         duration: 0.8,
-        stagger: 0.05,
+        stagger: 0.06,
+        ease: "power2.out",
         scrollTrigger: {
           trigger: containerRef.current,
-          start: "top 70%",
+          start: "top 75%",
         }
       }
     );
   }, { scope: containerRef });
 
   return (
-    <section ref={containerRef} className="relative z-30 py-8 md:py-32 px-6 md:px-20 border-b border-[var(--color-border)] bg-[var(--bg-primary)] text-[var(--color-text)] transition-colors duration-500 overflow-hidden">
+    <section ref={containerRef} className="relative z-30 py-16 md:py-36 px-6 md:px-20 bg-[var(--bg-primary)] text-[var(--color-text)] transition-colors duration-500 overflow-hidden">
       
-      {/* Background Grid Decoration */}
-      <div className="absolute inset-0 z-0 pointer-events-none opacity-[0.03]" 
-           style={{ backgroundImage: 'linear-gradient(currentColor 1px, transparent 1px), linear-gradient(90deg, currentColor 1px, transparent 1px)', backgroundSize: '40px 40px' }} 
-      />
+      {/* Top & Bottom Seamless Blend Overlays - Erases sharp section borders completely */}
+      <div className="absolute top-0 inset-x-0 h-40 bg-gradient-to-b from-[var(--bg-primary)] via-[var(--bg-primary)]/80 to-transparent pointer-events-none z-10" />
+      <div className="absolute bottom-0 inset-x-0 h-40 bg-gradient-to-t from-[var(--bg-primary)] via-[var(--bg-primary)]/80 to-transparent pointer-events-none z-10" />
+
+      {/* Interactive Grid Background - Seamless gradient fade in at top and fade out at bottom */}
+      <div className="absolute inset-0 z-0 pointer-events-auto overflow-hidden opacity-60 dark:opacity-40">
+        <InteractiveGridPattern
+          width={110}
+          height={110}
+          squares={[35, 35]}
+          className={cn(
+            "absolute inset-x-0 -top-[35%] h-[175%] w-full skew-y-12 stroke-[var(--color-border)] opacity-85",
+            "[mask-image:linear-gradient(to_bottom,transparent_0%,white_25%,white_65%,transparent_98%)]"
+          )}
+          squaresClassName="hover:fill-[var(--color-accent)]/30 transition-colors duration-150"
+        />
+      </div>
 
       <div className="max-w-7xl mx-auto w-full relative z-10">
-        <div className="flex items-center gap-4 mb-16">
-          <div className="w-1.5 h-1.5 bg-[var(--color-accent)] rounded-full" />
-          <h3 className="font-sans text-[var(--color-muted)] text-[10px] md:text-xs tracking-widest uppercase">
+        {/* Ultra-Clean Minimalist Header */}
+        <div className="flex items-center gap-3 mb-16">
+          <div className="w-1.5 h-1.5 bg-[var(--color-accent)] rounded-full animate-pulse" />
+          <h3 className="font-sans text-[var(--color-muted)] text-[10px] md:text-xs tracking-[0.25em] uppercase font-medium">
             Technical Stack
           </h3>
-          <div className="h-px flex-grow bg-[var(--color-border)] grid-line origin-left" />
         </div>
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+        {/* 3D Perspective Card Layout aligned with angled grid plane */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 [perspective:1000px]">
           {SKILLS.map((skill, i) => (
             <StackCard key={skill.name} skill={skill} index={i} />
           ))}
@@ -121,13 +139,13 @@ function StackCard({ skill, index }: { skill: typeof SKILLS[0], index: number })
 
   return (
     <TiltCard 
-      className="stack-card relative bg-[var(--bg-primary)] border border-[var(--color-border)] rounded-sm p-6 h-48 flex flex-col justify-between group hover:border-[var(--color-accent)]/50 hover:shadow-sm overflow-hidden"
+      className="stack-card relative bg-[var(--bg-primary)]/80 backdrop-blur-md border border-[var(--color-border)] rounded-sm p-6 h-52 flex flex-col justify-between group hover:border-[var(--color-accent)]/70 hover:shadow-xl [transform-style:preserve-3d] transition-all duration-300 overflow-hidden"
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
-      intensity={20}
+      intensity={25}
     >
-      {/* Hover Background Fill */}
-      <div className="absolute inset-0 bg-[var(--color-border)]/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out z-0" />
+      {/* Hover Background Accent Fill */}
+      <div className="absolute inset-0 bg-[var(--color-accent)]/10 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out z-0" />
       
       {/* Content */}
       <div className="relative z-10 flex flex-col h-full justify-between transition-colors duration-300">
@@ -137,19 +155,9 @@ function StackCard({ skill, index }: { skill: typeof SKILLS[0], index: number })
           <span className="font-sans text-[10px] text-[var(--color-muted)] tracking-widest uppercase">
             0{index + 1} &middot; {skill.category}
           </span>
-          {/* Signal Icon */}
-          <div className="flex gap-0.5 items-end h-3">
-            {[1,2,3].map(bar => (
-              <div 
-                key={bar} 
-                className={`w-1 bg-current transition-all duration-300 ${hover ? 'animate-bounce' : ''}`} 
-                style={{ height: `${bar * 30}%`, animationDelay: `${bar * 0.1}s` }}
-              />
-            ))}
-          </div>
         </div>
 
-        {/* Main Title */}
+        {/* Main Skill Title & Progress */}
         <div>
           <h4 className="font-display font-medium text-2xl tracking-tight leading-none mb-2">
             <ScrambleText text={skill.name} active={hover} />
@@ -157,7 +165,7 @@ function StackCard({ skill, index }: { skill: typeof SKILLS[0], index: number })
           
           {/* Dynamic Progress Bar */}
           <div className="w-full h-px bg-[var(--color-border)] mt-4 overflow-hidden relative">
-            <div className={`absolute inset-0 bg-[var(--color-accent)] transition-transform duration-1000 ease-out ${hover ? 'translate-x-0' : '-translate-x-full'}`} />
+            <div className={`absolute inset-0 bg-[var(--color-accent)] transition-transform duration-700 ease-out ${hover ? 'translate-x-0' : '-translate-x-full'}`} />
           </div>
         </div>
       </div>
