@@ -42,9 +42,6 @@ export default function Contact() {
         {/* Left Column - Big Typography */}
         <div className="flex-1 flex flex-col justify-between md:pr-12">
           <div>
-            <p className="font-mono text-xs mb-8 text-[var(--color-muted)] tracking-widest uppercase">
-              {'//'} Let&apos;s talk
-            </p>
             <h2 className="font-display text-5xl md:text-7xl lg:text-[8rem] leading-none tracking-tight text-[var(--color-text)] mb-6">
               Get in<br />
               <span className="text-[var(--color-muted)] italic">Touch.</span>
@@ -53,7 +50,7 @@ export default function Contact() {
           
           <div className="mt-12 md:mt-24 space-y-6 max-w-md">
             <p className="font-body text-lg md:text-xl text-[var(--color-muted)] leading-relaxed">
-              I am always looking forward to exploring new opportunities and collaborating on high-performance projects.
+              常に新しい機会を探求し、ハイパフォーマンスなプロジェクトでコラボレーションできることを楽しみにしています。
             </p>
             <Magnetic>
               <a 
