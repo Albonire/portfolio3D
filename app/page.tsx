@@ -1,7 +1,7 @@
 import ProjectGallery from "@/components/ProjectGallery";
 import StackBrutalist from "@/components/StackBrutalist";
 import EducationBrutalist from "@/components/EducationBrutalist";
-import IntroScroll from "@/components/IntroScroll";
+import ScrollReveal from "@/components/ScrollReveal";
 import HeroSection from "@/components/Hero3D";
 import Contact from "@/components/Contact";
 import FloatingCV from "@/components/FloatingCV";
@@ -16,7 +16,15 @@ export default function Home() {
           <p className="font-mono text-xs mb-8 opacity-50 tracking-widest uppercase">
             {'//'} {ABOUT.subtitle}
           </p>
-          <IntroScroll description={ABOUT.description} />
+          <ScrollReveal
+            baseOpacity={0.1}
+            enableBlur={true}
+            baseRotation={3}
+            blurStrength={4}
+            textClassName="font-display text-4xl md:text-7xl lg:text-8xl leading-[0.9] text-[var(--color-text)] uppercase"
+          >
+            {ABOUT.description}
+          </ScrollReveal>
         </div>
       </section>
       <ProjectGallery />
