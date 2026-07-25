@@ -110,7 +110,7 @@ function Scene({
   }, [dotMaterial, pixelColor]);
 
   const [trail, onMove] = useTrailTexture({
-    size: 512,
+    size: 256,
     radius: trailSize,
     maxAge: maxAge,
     interpolate: interpolate || 0.1,
@@ -149,7 +149,7 @@ function Scene({
   const scale = Math.max(viewport.width, viewport.height) / 2;
 
   return (
-    <mesh scale={[scale, scale, 1]} onPointerMove={onMove}>
+    <mesh scale={[scale, scale, 1]}>
       <planeGeometry args={[2, 2]} />
       <primitive
         object={dotMaterial}
@@ -162,16 +162,18 @@ function Scene({
 }
 
 export default function PixelTrail({
-  gridSize = 40,
-  trailSize = 0.1,
-  maxAge = 250,
-  interpolate = 5,
+  gridSize = 80,
+  trailSize = 0.04,
+  maxAge = 200,
+  interpolate = 3,
   easingFunction = (x: number) => x,
   canvasProps = {},
   glProps = {
     antialias: false,
     powerPreference: 'high-performance',
-    alpha: true
+    alpha: true,
+    depth: false,
+    stencil: false
   },
   gooeyFilter,
   color = '#ffffff',
@@ -181,6 +183,7 @@ export default function PixelTrail({
     <>
       {gooeyFilter && <GooeyFilter id={gooeyFilter.id} strength={gooeyFilter.strength} />}
       <Canvas
+        dpr={[1, 1.25]}
         {...canvasProps}
         gl={glProps}
         className={`pixel-canvas ${className}`}

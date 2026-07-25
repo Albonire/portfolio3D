@@ -21,18 +21,17 @@ export default function CustomCursor() {
   if (!mounted || !isFinePointer) return null;
 
   const isDark = resolvedTheme === 'dark';
-  // White/off-white for dark mode, dark stone for light mode
-  const trailColor = isDark ? '#ffffff' : '#1a1a18';
+  // Crisp white for dark mode, sleek dark slate for light mode
+  const trailColor = isDark ? '#ffffff' : '#18181b';
 
   return (
     <div className="fixed inset-0 pointer-events-none z-[9999] overflow-hidden">
       <PixelTrail
-        gridSize={50}
-        trailSize={0.12}
-        maxAge={250}
-        interpolate={5}
+        gridSize={95}
+        trailSize={0.035}
+        maxAge={180}
+        interpolate={3}
         color={trailColor}
-        gooeyFilter={{ id: "custom-goo-filter", strength: 3 }}
       />
     </div>
   );
