@@ -12,8 +12,10 @@ const STATUSES = [
 
 export default function Preloader() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [percent, setPercent] = useState(0);
-  const [statusText, setStatusText] = useState("SYSTEM BOOT");
+  const percentRef = useRef<HTMLSpanElement>(null);
+  const statusRef = useRef<HTMLSpanElement>(null);
+  const progressBarRef = useRef<HTMLDivElement>(null);
+
   const [isComplete, setIsComplete] = useState(() => {
     if (typeof window === "undefined") return false;
     try {
@@ -22,11 +24,13 @@ export default function Preloader() {
       return false;
     }
   });
-  const [isExiting, setIsExiting] = useState(false);
+
+  const isExitingRef = useRef(false);
 
   const handleFinish = useCallback(() => {
-    if (isExiting) return;
-    setIsExiting(true);
+    if (isExitingRef.current) return;
+    isExitingRef.current = true;
+
     try {
       sessionStorage.setItem("boot_sequence_seen", "true");
     } catch {
@@ -47,14 +51,13 @@ export default function Preloader() {
       document.body.style.overflow = "";
       setIsComplete(true);
     }
-  }, [isExiting]);
+  }, []);
 
   useEffect(() => {
     if (isComplete) return;
 
     document.body.style.overflow = "hidden";
 
-    // Handle ESC key
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         handleFinish();
@@ -62,45 +65,40 @@ export default function Preloader() {
     };
     window.addEventListener("keydown", onKeyDown);
 
-    // Smooth JS counter using requestAnimationFrame
-    let startTime: number | null = null;
-    const duration = 1100; // 1.1s total counting duration
-    let animationFrameId: number;
+    const counter = { val: 0 };
 
-    const step = (timestamp: number) => {
-      if (!startTime) startTime = timestamp;
-      const elapsed = timestamp - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-
-      // Easing: easeOutCubic
-      const easedProgress = 1 - Math.pow(1 - progress, 3);
-      const currentVal = Math.floor(easedProgress * 100);
-
-      setPercent(currentVal);
-
-      const statusIdx = Math.min(
-        Math.floor(progress * STATUSES.length),
-        STATUSES.length - 1
-      );
-      setStatusText(STATUSES[statusIdx]);
-
-      if (progress < 1) {
-        animationFrameId = requestAnimationFrame(step);
-      } else {
+    const tween = gsap.to(counter, {
+      val: 100,
+      duration: 1.1,
+      ease: "power2.inOut",
+      onUpdate: () => {
+        const v = Math.floor(counter.val);
+        if (percentRef.current) {
+          percentRef.current.innerText = v.toString().padStart(2, "0");
+        }
+        if (progressBarRef.current) {
+          progressBarRef.current.style.width = `${v}%`;
+        }
+        if (statusRef.current) {
+          const idx = Math.min(
+            Math.floor((v / 100) * STATUSES.length),
+            STATUSES.length - 1
+          );
+          statusRef.current.innerText = STATUSES[idx];
+        }
+      },
+      onComplete: () => {
         handleFinish();
       }
-    };
+    });
 
-    animationFrameId = requestAnimationFrame(step);
-
-    // Hard fallback timeout (1.8s max)
     const fallbackTimer = setTimeout(() => {
       handleFinish();
-    }, 1800);
+    }, 2000);
 
     return () => {
       window.removeEventListener("keydown", onKeyDown);
-      cancelAnimationFrame(animationFrameId);
+      tween.kill();
       clearTimeout(fallbackTimer);
       document.body.style.overflow = "";
     };
@@ -117,7 +115,7 @@ export default function Preloader() {
       <div className="flex justify-between items-center font-mono text-[10px] md:text-xs uppercase tracking-widest text-[var(--color-muted)]">
         <div className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-[var(--color-accent)] animate-pulse" />
-          <span>{statusText}</span>
+          <span ref={statusRef}>SYSTEM BOOT</span>
         </div>
         
         <button
@@ -133,15 +131,15 @@ export default function Preloader() {
       {/* Center Counter & Progress Line */}
       <div className="flex flex-col items-center justify-center relative my-auto">
         <h1 className="font-display font-medium text-7xl sm:text-9xl md:text-[12rem] leading-none tracking-tight">
-          <span>{percent.toString().padStart(2, "0")}</span>
+          <span ref={percentRef}>00</span>
           <span className="text-2xl md:text-4xl align-top text-[var(--color-accent)] ml-1">%</span>
         </h1>
 
         {/* Minimal Progress Line */}
         <div className="w-48 sm:w-64 h-[2px] bg-[var(--color-border)] mt-8 relative overflow-hidden rounded-full">
           <div 
-            className="h-full bg-[var(--color-accent)] transition-all duration-75"
-            style={{ width: `${percent}%` }}
+            ref={progressBarRef}
+            className="h-full bg-[var(--color-accent)] w-0"
           />
         </div>
       </div>
