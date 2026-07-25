@@ -28,12 +28,12 @@ export default function ScrollReveal({
   scrollContainerRef,
   enableBlur = true,
   baseOpacity = 0.05,
-  baseRotation = 4,
-  blurStrength = 12,
+  baseRotation = 3,
+  blurStrength = 6,
   containerClassName = '',
   textClassName = '',
-  rotationEnd = 'bottom 20%',
-  wordAnimationEnd = 'bottom 15%'
+  rotationEnd = 'top 20%',
+  wordAnimationEnd = 'top 20%'
 }: ScrollRevealProps) {
   const containerRef = useRef<HTMLHeadingElement>(null);
 
@@ -66,9 +66,9 @@ export default function ScrollReveal({
         scrollTrigger: {
           trigger: el,
           scroller,
-          start: 'top 85%',
+          start: 'top 90%',
           end: wordAnimationEnd,
-          scrub: 0.8
+          scrub: 0.3
         }
       });
 
@@ -80,24 +80,24 @@ export default function ScrollReveal({
         0
       );
 
-      // Unified animation for word elements
+      // Optimized stagger amount so initial words finish rapidly when entering
       const wordVarsFrom: gsap.TweenVars = {
         opacity: baseOpacity,
-        transform: 'translate3d(0, 10px, 0)',
-        willChange: 'opacity, filter, transform',
-        force3D: true
+        transform: 'translate3d(0, 8px, 0)',
+        willChange: 'opacity, filter, transform'
       };
 
       const wordVarsTo: gsap.TweenVars = {
         opacity: 1,
         transform: 'translate3d(0, 0px, 0)',
-        stagger: 0.05,
-        ease: 'none',
-        duration: 1
+        stagger: {
+          amount: 0.5
+        },
+        ease: 'power1.out',
+        duration: 0.35
       };
 
       if (enableBlur) {
-        // Cap max blur at 8px to prevent GPU filter rasterization bottlenecks on large fonts
         const optimizedBlur = Math.min(blurStrength, 8);
         wordVarsFrom.filter = `blur(${optimizedBlur}px)`;
         wordVarsTo.filter = 'blur(0px)';
