@@ -59,59 +59,51 @@ export default function ScrollReveal({
         : window;
 
     const ctx = gsap.context(() => {
-      gsap.fromTo(
-        el,
-        { transformOrigin: '0% 50%', rotate: baseRotation },
-        {
-          ease: 'none',
-          rotate: 0,
-          scrollTrigger: {
-            trigger: el,
-            scroller,
-            start: 'top 85%',
-            end: rotationEnd,
-            scrub: 1
-          }
-        }
-      );
-
       const wordElements = el.querySelectorAll('.word');
 
-      gsap.fromTo(
-        wordElements,
-        { opacity: baseOpacity, willChange: 'opacity' },
-        {
-          ease: 'none',
-          opacity: 1,
-          stagger: 0.08,
-          scrollTrigger: {
-            trigger: el,
-            scroller,
-            start: 'top 80%',
-            end: wordAnimationEnd,
-            scrub: 1
-          }
+      // Single timeline with unified ScrollTrigger to eliminate duplicate scroll listeners & recalculations
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: el,
+          scroller,
+          start: 'top 85%',
+          end: wordAnimationEnd,
+          scrub: 0.8
         }
+      });
+
+      // Animate rotation on container
+      tl.fromTo(
+        el,
+        { transformOrigin: '0% 50%', rotate: baseRotation },
+        { rotate: 0, ease: 'none', duration: 1 },
+        0
       );
 
+      // Unified animation for word elements
+      const wordVarsFrom: gsap.TweenVars = {
+        opacity: baseOpacity,
+        transform: 'translate3d(0, 10px, 0)',
+        willChange: 'opacity, filter, transform',
+        force3D: true
+      };
+
+      const wordVarsTo: gsap.TweenVars = {
+        opacity: 1,
+        transform: 'translate3d(0, 0px, 0)',
+        stagger: 0.05,
+        ease: 'none',
+        duration: 1
+      };
+
       if (enableBlur) {
-        gsap.fromTo(
-          wordElements,
-          { filter: `blur(${blurStrength}px)` },
-          {
-            ease: 'none',
-            filter: 'blur(0px)',
-            stagger: 0.08,
-            scrollTrigger: {
-              trigger: el,
-              scroller,
-              start: 'top 80%',
-              end: wordAnimationEnd,
-              scrub: 1
-            }
-          }
-        );
+        // Cap max blur at 8px to prevent GPU filter rasterization bottlenecks on large fonts
+        const optimizedBlur = Math.min(blurStrength, 8);
+        wordVarsFrom.filter = `blur(${optimizedBlur}px)`;
+        wordVarsTo.filter = 'blur(0px)';
       }
+
+      tl.fromTo(wordElements, wordVarsFrom, wordVarsTo, 0);
     }, containerRef);
 
     return () => {

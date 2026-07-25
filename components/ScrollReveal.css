@@ -1,5 +1,6 @@
 .scroll-reveal {
   margin: 30px 0;
+  contain: layout style;
 }
 
 .scroll-reveal-text {
@@ -11,6 +12,10 @@
 .word {
   display: inline-block;
   margin-right: 0.3em;
-  will-change: opacity, filter, transform;
+  will-change: transform, opacity, filter;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
 }
+
 
