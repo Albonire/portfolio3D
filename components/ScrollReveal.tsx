@@ -27,13 +27,13 @@ export default function ScrollReveal({
   children,
   scrollContainerRef,
   enableBlur = true,
-  baseOpacity = 0.1,
-  baseRotation = 3,
-  blurStrength = 4,
+  baseOpacity = 0.05,
+  baseRotation = 4,
+  blurStrength = 12,
   containerClassName = '',
   textClassName = '',
-  rotationEnd = 'bottom bottom',
-  wordAnimationEnd = 'bottom bottom'
+  rotationEnd = 'bottom 20%',
+  wordAnimationEnd = 'bottom 15%'
 }: ScrollRevealProps) {
   const containerRef = useRef<HTMLHeadingElement>(null);
 
@@ -68,9 +68,9 @@ export default function ScrollReveal({
           scrollTrigger: {
             trigger: el,
             scroller,
-            start: 'top bottom',
+            start: 'top 85%',
             end: rotationEnd,
-            scrub: true
+            scrub: 1
           }
         }
       );
@@ -83,13 +83,13 @@ export default function ScrollReveal({
         {
           ease: 'none',
           opacity: 1,
-          stagger: 0.05,
+          stagger: 0.08,
           scrollTrigger: {
             trigger: el,
             scroller,
-            start: 'top bottom-=20%',
+            start: 'top 80%',
             end: wordAnimationEnd,
-            scrub: true
+            scrub: 1
           }
         }
       );
@@ -101,13 +101,13 @@ export default function ScrollReveal({
           {
             ease: 'none',
             filter: 'blur(0px)',
-            stagger: 0.05,
+            stagger: 0.08,
             scrollTrigger: {
               trigger: el,
               scroller,
-              start: 'top bottom-=20%',
+              start: 'top 80%',
               end: wordAnimationEnd,
-              scrub: true
+              scrub: 1
             }
           }
         );
