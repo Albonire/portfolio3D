@@ -1,62 +1,39 @@
 "use client";
-import { useEffect, useRef } from 'react';
-import gsap from 'gsap';
+import { useEffect, useState } from 'react';
+import { useTheme } from 'next-themes';
+import PixelTrail from './PixelTrail';
 
 export default function CustomCursor() {
-  const cursorRef = useRef<HTMLDivElement>(null);
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  const [isFinePointer, setIsFinePointer] = useState(false);
 
   useEffect(() => {
-    if (window.matchMedia("(pointer: coarse)").matches) return; // Exit if touch device
-
-    const cursor = cursorRef.current;
-    if (!cursor) return;
-    
-    const xTo = gsap.quickTo(cursor, "x", {duration: 0.3, ease: "power3"});
-    const yTo = gsap.quickTo(cursor, "y", {duration: 0.3, ease: "power3"});
-
-    const moveCursor = (e: MouseEvent) => {
-      xTo(e.clientX);
-      yTo(e.clientY);
-    };
-
-    // Performance: Use Event Delegation instead of multiple listeners
-    const handleOver = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      if (target.closest('a, button, .cursor-pointer')) {
-        gsap.to(cursor, {
-          scale: 1.5,
-          duration: 0.3,
-          ease: "power2.out"
-        });
+    const handle = requestAnimationFrame(() => {
+      setMounted(true);
+      if (window.matchMedia('(pointer: fine)').matches) {
+        setIsFinePointer(true);
       }
-    };
-
-    const handleOut = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      if (target.closest('a, button, .cursor-pointer')) {
-        gsap.to(cursor, {
-          scale: 1,
-          duration: 0.4,
-          ease: "power3.out"
-        });
-      }
-    };
-
-    window.addEventListener('mousemove', moveCursor);
-    window.addEventListener('mouseover', handleOver);
-    window.addEventListener('mouseout', handleOut);
-
-    return () => {
-      window.removeEventListener('mousemove', moveCursor);
-      window.removeEventListener('mouseover', handleOver);
-      window.removeEventListener('mouseout', handleOut);
-    };
+    });
+    return () => cancelAnimationFrame(handle);
   }, []);
 
+  if (!mounted || !isFinePointer) return null;
+
+  const isDark = resolvedTheme === 'dark';
+  // White/off-white for dark mode, dark stone for light mode
+  const trailColor = isDark ? '#ffffff' : '#1a1a18';
+
   return (
-    <div 
-      ref={cursorRef} 
-      className="fixed top-0 left-0 w-8 h-8 bg-white rounded-full pointer-events-none z-[10000] mix-blend-difference -translate-x-1/2 -translate-y-1/2 hidden [@media(pointer:fine)]:block"
-    />
+    <div className="fixed inset-0 pointer-events-none z-[9999] overflow-hidden">
+      <PixelTrail
+        gridSize={50}
+        trailSize={0.12}
+        maxAge={250}
+        interpolate={5}
+        color={trailColor}
+        gooeyFilter={{ id: "custom-goo-filter", strength: 3 }}
+      />
+    </div>
   );
 }
