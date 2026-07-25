@@ -21,8 +21,8 @@ export default function Home() {
             enableBlur={true}
             baseRotation={3}
             blurStrength={5}
-            wordAnimationEnd="bottom center"
-            rotationEnd="bottom center"
+            wordAnimationEnd="bottom 38%"
+            rotationEnd="bottom 38%"
             textClassName="font-display text-4xl sm:text-6xl md:text-8xl lg:text-[7rem] xl:text-[8rem] leading-[0.95] text-[var(--color-text)] uppercase font-bold tracking-tight"
           >
             {ABOUT.description}

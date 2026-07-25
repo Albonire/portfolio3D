@@ -32,8 +32,8 @@ export default function ScrollReveal({
   blurStrength = 4,
   containerClassName = '',
   textClassName = '',
-  rotationEnd = 'bottom center',
-  wordAnimationEnd = 'bottom center'
+  rotationEnd = 'bottom 38%',
+  wordAnimationEnd = 'bottom 38%'
 }: ScrollRevealProps) {
   const containerRef = useRef<HTMLHeadingElement>(null);
 
