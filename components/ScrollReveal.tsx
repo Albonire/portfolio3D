@@ -27,13 +27,13 @@ export default function ScrollReveal({
   children,
   scrollContainerRef,
   enableBlur = true,
-  baseOpacity = 0.05,
+  baseOpacity = 0.1,
   baseRotation = 3,
-  blurStrength = 6,
+  blurStrength = 4,
   containerClassName = '',
   textClassName = '',
-  rotationEnd = 'top 20%',
-  wordAnimationEnd = 'top 20%'
+  rotationEnd = 'bottom bottom',
+  wordAnimationEnd = 'bottom bottom'
 }: ScrollRevealProps) {
   const containerRef = useRef<HTMLHeadingElement>(null);
 
@@ -59,51 +59,50 @@ export default function ScrollReveal({
         : window;
 
     const ctx = gsap.context(() => {
+      // Rotation animation on container
+      gsap.fromTo(
+        el,
+        { transformOrigin: '0% 50%', rotate: baseRotation },
+        {
+          ease: 'none',
+          rotate: 0,
+          scrollTrigger: {
+            trigger: el,
+            scroller,
+            start: 'top bottom',
+            end: rotationEnd,
+            scrub: true
+          }
+        }
+      );
+
       const wordElements = el.querySelectorAll('.word');
 
-      // Single timeline with unified ScrollTrigger to eliminate duplicate scroll listeners & recalculations
-      const tl = gsap.timeline({
+      // Combined opacity & blur into a single optimized GSAP tween
+      const fromVars: gsap.TweenVars = {
+        opacity: baseOpacity,
+        willChange: 'opacity, filter'
+      };
+
+      const toVars: gsap.TweenVars = {
+        ease: 'none',
+        opacity: 1,
+        stagger: 0.05,
         scrollTrigger: {
           trigger: el,
           scroller,
-          start: 'top 90%',
+          start: 'top bottom-=20%',
           end: wordAnimationEnd,
-          scrub: 0.3
+          scrub: true
         }
-      });
-
-      // Animate rotation on container
-      tl.fromTo(
-        el,
-        { transformOrigin: '0% 50%', rotate: baseRotation },
-        { rotate: 0, ease: 'none', duration: 1 },
-        0
-      );
-
-      // Optimized stagger amount so initial words finish rapidly when entering
-      const wordVarsFrom: gsap.TweenVars = {
-        opacity: baseOpacity,
-        transform: 'translate3d(0, 8px, 0)',
-        willChange: 'opacity, filter, transform'
-      };
-
-      const wordVarsTo: gsap.TweenVars = {
-        opacity: 1,
-        transform: 'translate3d(0, 0px, 0)',
-        stagger: {
-          amount: 0.5
-        },
-        ease: 'power1.out',
-        duration: 0.35
       };
 
       if (enableBlur) {
-        const optimizedBlur = Math.min(blurStrength, 8);
-        wordVarsFrom.filter = `blur(${optimizedBlur}px)`;
-        wordVarsTo.filter = 'blur(0px)';
+        fromVars.filter = `blur(${blurStrength}px)`;
+        toVars.filter = 'blur(0px)';
       }
 
-      tl.fromTo(wordElements, wordVarsFrom, wordVarsTo, 0);
+      gsap.fromTo(wordElements, fromVars, toVars);
     }, containerRef);
 
     return () => {
@@ -125,3 +124,4 @@ export default function ScrollReveal({
     </h2>
   );
 }
+

@@ -17,11 +17,10 @@ export default function Home() {
             {'//'} {ABOUT.subtitle}
           </p>
           <ScrollReveal
-            baseOpacity={0.05}
+            baseOpacity={0.1}
             enableBlur={true}
             baseRotation={3}
-            blurStrength={6}
-            wordAnimationEnd="top 25%"
+            blurStrength={5}
             textClassName="font-display text-4xl sm:text-6xl md:text-8xl lg:text-[7rem] xl:text-[8rem] leading-[0.95] text-[var(--color-text)] uppercase font-bold tracking-tight"
           >
             {ABOUT.description}
