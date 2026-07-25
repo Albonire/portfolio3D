@@ -156,6 +156,51 @@ function VoxelFlowerModel() {
   );
 }
 
+function InteractiveTopRightLight({ isDark }: { isDark: boolean }) {
+  const spotLightRef = useRef<THREE.SpotLight>(null);
+  const pointLightRef = useRef<THREE.PointLight>(null);
+
+  useFrame((state) => {
+    if (!isDark) return;
+    
+    // Smooth zero-performance-cost light movement responding to cursor
+    if (spotLightRef.current) {
+      spotLightRef.current.position.x = 5.5 + state.pointer.x * 0.7;
+      spotLightRef.current.position.y = 8 - state.pointer.y * 0.4;
+      spotLightRef.current.intensity = 2.4 + Math.sin(state.clock.elapsedTime * 1.8) * 0.3;
+    }
+    if (pointLightRef.current) {
+      pointLightRef.current.position.x = 4 + state.pointer.x * 0.5;
+      pointLightRef.current.position.y = 5 - state.pointer.y * 0.3;
+    }
+  });
+
+  if (!isDark) return null;
+
+  return (
+    <>
+      {/* Primary Neutral White Spotlight matching SideRays rayColor1 (#F5F5F3) */}
+      <spotLight 
+        ref={spotLightRef} 
+        position={[5.5, 8, 4]} 
+        angle={0.4} 
+        penumbra={0.8} 
+        intensity={2.4} 
+        color="#F5F5F3" 
+        castShadow={false}
+      />
+      {/* Secondary Neutral Platinum Fill Light matching SideRays rayColor2 (#A3A29D) */}
+      <pointLight 
+        ref={pointLightRef}
+        position={[4, 5, 2]} 
+        intensity={1.2} 
+        color="#A3A29D" 
+        distance={10}
+      />
+    </>
+  );
+}
+
 export default function HeroCanvas() {
   const { theme, resolvedTheme } = useTheme();
   const isDark = resolvedTheme === 'dark' || theme === 'dark';
@@ -176,10 +221,10 @@ export default function HeroCanvas() {
       <Suspense fallback={null}>
         <Environment preset="apartment" blur={1.0} />
         
-        <hemisphereLight args={isDark ? ["#445640", "#1A1A18", 0.08] : ["#ffffff", "#6f6f6f", 0.1]} />
+        <hemisphereLight args={isDark ? ["#F5F5F3", "#1A1A18", 0.08] : ["#ffffff", "#6f6f6f", 0.1]} />
         <ambientLight intensity={isDark ? 0.15 : 0.2} />
 
-        {isDark && <spotLight position={[5, 10, 5]} angle={0.25} penumbra={1} intensity={1.5} color="#B8C9B2" />}
+        <InteractiveTopRightLight isDark={isDark} />
         {!isDark && <pointLight position={[5, 10, 5]} intensity={0.4} color="#FFFFFF" />}
         
         <directionalLight position={[0, 5, 10]} intensity={isDark ? 0.25 : 0.3} />

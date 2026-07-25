@@ -10,14 +10,7 @@ const STATUSES = [
 ];
 
 export default function Preloader() {
-  const [isDismissed, setIsDismissed] = useState(() => {
-    if (typeof window === "undefined") return false;
-    try {
-      return sessionStorage.getItem("boot_sequence_seen") === "true";
-    } catch {
-      return false;
-    }
-  });
+  const [isDismissed, setIsDismissed] = useState(false);
   const [percent, setPercent] = useState(0);
   const [isExiting, setIsExiting] = useState(false);
 
@@ -36,7 +29,14 @@ export default function Preloader() {
   }, []);
 
   useEffect(() => {
-    if (isDismissed) return;
+    try {
+      if (sessionStorage.getItem("boot_sequence_seen") === "true") {
+        setIsDismissed(true);
+        return;
+      }
+    } catch {
+      // ignore
+    }
 
     document.body.style.overflow = "hidden";
 
@@ -82,7 +82,7 @@ export default function Preloader() {
       window.removeEventListener("keydown", onKeyDown);
       document.body.style.overflow = "";
     };
-  }, [dismiss, isDismissed]);
+  }, [dismiss]);
 
   if (isDismissed) return null;
 

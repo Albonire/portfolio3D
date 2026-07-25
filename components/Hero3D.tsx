@@ -27,13 +27,13 @@ export default function HeroSection() {
 
   return (
     <section className="h-screen w-full relative flex items-center overflow-hidden bg-transparent px-6 md:px-20">
-      {/* SideRays - React Bits WebGL ray light active strictly in dark mode inside the Hero section */}
+      {/* SideRays - React Bits WebGL ray light active strictly in dark mode with neutral studio off-white & platinum rays */}
       {isDark && (
         <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden transition-opacity duration-700 opacity-90">
           <SideRays
             speed={2.5}
-            rayColor1="#fb923c"
-            rayColor2="#f59e0b"
+            rayColor1="#F5F5F3"
+            rayColor2="#A3A29D"
             intensity={2}
             spread={2}
             origin="top-right"
