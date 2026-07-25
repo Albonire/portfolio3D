@@ -2,7 +2,11 @@ export const ABOUT = {
   title: "FABIAN GONZÁLEZ",
   subtitle: "FULL STACK DEVELOPER & CREATIVE ENGINEER",
   description:
+<<<<<<< HEAD
     "Dedicated to building high-performance systems where AI meets intuitive design. I combine complex system architecture with polished frontend experiences to deliver optimized, modern web solutions.",
+=======
+    "Building high-performance systems where AI meets intuitive web design.",
+>>>>>>> 3f99fab (feat: integrate SideRays component in dark mode and refine hero UI)
   social: [
     { label: "GITHUB", url: "https://github.com/Albonire" },
     { label: "LINKEDIN", url: "https://linkedin.com/in/fabian-albonire" },

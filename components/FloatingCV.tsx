@@ -1,6 +1,9 @@
 "use client";
 import Magnetic from './Magnetic';
+<<<<<<< HEAD
 import { useRef } from 'react';
+=======
+>>>>>>> 3f99fab (feat: integrate SideRays component in dark mode and refine hero UI)
 
 export default function FloatingCV() {
   const enView = "https://drive.google.com/file/d/11lMDnIpVyGw1Wb7N24kRNlKkNPLeBXbD/view";

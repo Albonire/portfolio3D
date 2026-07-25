@@ -1,0 +1,6 @@
+{
+  "name": "Fabian González Portfolio 3D",
+  "description": "3D Interactive Developer Portfolio built with Next.js, Three.js, and GSAP.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
