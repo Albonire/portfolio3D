@@ -1,16 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { memo } from "react";
 import { cn } from "@/lib/utils";
 
 /**
- * InteractiveGridPattern is a component that renders a grid pattern with interactive squares.
- *
- * @param width - The width of each square.
- * @param height - The height of each square.
- * @param squares - The number of squares in the grid. The first element is the number of horizontal squares, and the second element is the number of vertical squares.
- * @param className - The class name of the grid.
- * @param squaresClassName - The class name of the squares.
+ * InteractiveGridPattern is an ultra-performant component that renders a grid pattern.
+ * Uses native CSS hover states to prevent unnecessary React re-renders during mouse movement.
  */
 export interface InteractiveGridPatternProps extends React.SVGProps<SVGSVGElement> {
   width?: number;
@@ -20,13 +15,7 @@ export interface InteractiveGridPatternProps extends React.SVGProps<SVGSVGElemen
   squaresClassName?: string;
 }
 
-/**
- * The InteractiveGridPattern component.
- *
- * @see InteractiveGridPatternProps for the props interface.
- * @returns A React component.
- */
-export function InteractiveGridPattern({
+export const InteractiveGridPattern = memo(function InteractiveGridPattern({
   width = 40,
   height = 40,
   squares = [24, 24],
@@ -35,14 +24,13 @@ export function InteractiveGridPattern({
   ...props
 }: InteractiveGridPatternProps) {
   const [horizontal, vertical] = squares;
-  const [hoveredSquare, setHoveredSquare] = useState<number | null>(null);
 
   return (
     <svg
       width={width * horizontal}
       height={height * vertical}
       className={cn(
-        "absolute inset-0 h-full w-full border border-current/20",
+        "absolute inset-0 h-full w-full border border-current/20 transform-gpu pointer-events-auto",
         className
       )}
       {...props}
@@ -58,15 +46,12 @@ export function InteractiveGridPattern({
             width={width}
             height={height}
             className={cn(
-              "stroke-current/15 transition-all duration-100 ease-in-out not-[&:hover]:duration-1000",
-              hoveredSquare === index ? "fill-current/20" : "fill-transparent",
+              "stroke-current/15 fill-transparent transition-colors duration-150 ease-out hover:fill-[var(--color-accent)]/30",
               squaresClassName
             )}
-            onMouseEnter={() => setHoveredSquare(index)}
-            onMouseLeave={() => setHoveredSquare(null)}
           />
         );
       })}
     </svg>
   );
-}
+});

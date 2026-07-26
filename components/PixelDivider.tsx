@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, memo } from "react";
 
 /**
  * PixelDivider — separadores y micro-plantas pixel-art entre y dentro de componentes.
@@ -314,7 +314,7 @@ function getDividerData(variant: DividerVariant, pixel: number, tone: "sobrio" |
   return result;
 }
 
-export default function PixelDivider({
+export default memo(function PixelDivider({
   variant = "pradera",
   pixel = 5,
   tone = "sobrio",
@@ -335,7 +335,7 @@ export default function PixelDivider({
       shapeRendering="crispEdges"
       preserveAspectRatio={preserveAspect}
       aria-hidden={ariaHidden}
-      className={`block w-full h-auto select-none pointer-events-none ${className}`}
+      className={`block w-full h-auto select-none pointer-events-none transform-gpu ${className}`}
       style={flip ? { transform: "scaleX(-1)" } : undefined}
     >
       {paths.map(([color, d]) => (
@@ -343,7 +343,7 @@ export default function PixelDivider({
       ))}
     </svg>
   );
-}
+});
 
 const STAMP_CACHE = new Map<string, { paths: [string, string][]; viewBox: string }>();
 
@@ -390,7 +390,7 @@ export function getStampData(type: PlantType, pixel = 4, tone: "sobrio" | "vivid
  * PixelPlant — micro-plantas y brotes pixel art independientes.
  * Úsalos para decorar esquinas de cards, líneas de tiempo o marcos estructurales (estilo bioclimático / Singapore green architecture).
  */
-export function PixelPlant({
+export const PixelPlant = memo(function PixelPlant({
   type = "clover",
   pixel = 4,
   tone = "sobrio",
@@ -417,7 +417,7 @@ export function PixelPlant({
       viewBox={viewBox}
       shapeRendering="crispEdges"
       aria-hidden={ariaHidden}
-      className={`inline-block select-none pointer-events-none ${className}`}
+      className={`inline-block select-none pointer-events-none transform-gpu ${className}`}
       style={{
         height: "1.25em",
         width: "auto",
@@ -429,4 +429,4 @@ export function PixelPlant({
       ))}
     </svg>
   );
-}
+});

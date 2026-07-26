@@ -1,5 +1,5 @@
 "use client";
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, memo } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import ScrollTrigger from 'gsap/ScrollTrigger';
@@ -150,7 +150,7 @@ const STACK_PLANTS: PlantType[] = [
   "leaf",
 ];
 
-function StackCard({ skill, index }: { skill: typeof SKILLS[0], index: number }) {
+const StackCard = memo(function StackCard({ skill, index }: { skill: typeof SKILLS[0], index: number }) {
   const [hover, setHover] = useState(false);
   const plantType = STACK_PLANTS[index % STACK_PLANTS.length];
 
@@ -194,4 +194,4 @@ function StackCard({ skill, index }: { skill: typeof SKILLS[0], index: number })
       </div>
     </TiltCard>
   );
-}
+});

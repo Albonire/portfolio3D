@@ -1,5 +1,5 @@
 "use client";
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, memo } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import ScrollTrigger from 'gsap/ScrollTrigger';
@@ -26,7 +26,7 @@ const PROJECT_PLANTS: PlantType[] = [
   "dfly",
 ];
 
-function ProjectCard({ project, isActive, onHover, onLeave }: { 
+const ProjectCard = memo(function ProjectCard({ project, isActive, onHover, onLeave }: { 
   project: typeof PROJECTS[0], 
   isActive: boolean,
   onHover: (id: number) => void,
@@ -152,7 +152,7 @@ function ProjectCard({ project, isActive, onHover, onLeave }: {
         </div>
       </div>
     );
-  }
+  });
   
   export default function ProjectGallery() {
     const containerRef = useRef<HTMLDivElement>(null); // The tall parent container
@@ -173,6 +173,7 @@ function ProjectCard({ project, isActive, onHover, onLeave }: {
       gsap.to(slider, {
         x: maxScroll,
         ease: "none",
+        force3D: true,
         scrollTrigger: {
           trigger: container, // Trigger based on the tall parent
           start: "top top",
