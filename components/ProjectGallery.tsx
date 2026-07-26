@@ -1,61 +1,70 @@
-  "use client";
-  import { useRef, useState, useEffect } from 'react';
-  import gsap from 'gsap';
-  import { useGSAP } from '@gsap/react';
-  import ScrollTrigger from 'gsap/ScrollTrigger';
-  import { PROJECTS } from '@/data/content';
-  import Image from 'next/image';
-  import TiltCard from './TiltCard';
-  import MaskText from './MaskText';
-  import Magnetic from './Magnetic';  
-  
-  if (typeof window !== 'undefined') {
-      gsap.registerPlugin(ScrollTrigger);
-  }
-  
-  function ProjectCard({ project, isActive, onHover, onLeave }: { 
-    project: typeof PROJECTS[0], 
-    isActive: boolean,
-    onHover: (id: number) => void,
-    onLeave: () => void
-  }) {
-    const videoRef = useRef<HTMLVideoElement>(null);
-  
-    useEffect(() => {
-      const video = videoRef.current;
-      if (!video) return;
+"use client";
+import { useRef, useState, useEffect } from 'react';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
+import ScrollTrigger from 'gsap/ScrollTrigger';
+import { PROJECTS } from '@/data/content';
+import Image from 'next/image';
+import TiltCard from './TiltCard';
+import MaskText from './MaskText';
+import Magnetic from './Magnetic';  
+import { PixelPlant, PlantType } from './PixelDivider';
 
-      let cancelled = false;
+if (typeof window !== 'undefined') {
+    gsap.registerPlugin(ScrollTrigger);
+}
+
+const PROJECT_PLANTS: PlantType[] = ["fernA", "clover", "tuft", "flowerY", "ladybug", "butterfly"];
+
+function ProjectCard({ project, isActive, onHover, onLeave }: { 
+  project: typeof PROJECTS[0], 
+  isActive: boolean,
+  onHover: (id: number) => void,
+  onLeave: () => void
+}) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    let cancelled = false;
+    
+    if (isActive) {
+      // Small delay to avoid play/pause race condition
+      const timer = setTimeout(() => {
+        if (cancelled) return;
+        video.play().catch(() => {});
+      }, 50);
+      return () => { cancelled = true; clearTimeout(timer); };
+    } else {
+      video.pause();
+      video.currentTime = 0;
+    }
+  }, [isActive]);
+
+  return (
+    <div 
+      className="w-screen h-screen flex flex-col justify-center items-center relative group shrink-0 border-r border-[var(--color-border)] bg-[var(--bg-primary)]"
+      onMouseEnter={() => onHover(project.id)}
+      onMouseLeave={onLeave}
+    >
       
-      if (isActive) {
-        // Small delay to avoid play/pause race condition
-        const timer = setTimeout(() => {
-          if (cancelled) return;
-          video.play().catch(() => {});
-        }, 50);
-        return () => { cancelled = true; clearTimeout(timer); };
-      } else {
-        video.pause();
-        video.currentTime = 0;
-      }
-    }, [isActive]);
-  
-    return (
-      <div 
-        className="w-screen h-screen flex flex-col justify-center items-center relative group shrink-0 border-r border-[var(--color-border)] bg-[var(--bg-primary)]"
-        onMouseEnter={() => onHover(project.id)}
-        onMouseLeave={onLeave}
-      >
-        
-        {/* Media Container - Responsive Aspect Ratio */}
-        <a href={project.link} target="_blank" className="block relative z-10 cursor-pointer">
-          <TiltCard
-            className="relative w-[85vw] md:w-[800px] aspect-[4/3] md:aspect-video overflow-hidden bg-[var(--color-border)] border border-[var(--color-border)] shadow-sm group-hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] dark:group-hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.4)] transition-shadow duration-700"
-            intensity={5}
-          >
-            {/* Elegant soft border on hover instead of neon */}
-            <div className="absolute inset-0 border border-transparent group-hover:border-[var(--color-accent)]/30 pointer-events-none z-50 transition-colors duration-700" />
-  
+      {/* Media Container - Responsive Aspect Ratio */}
+      <a href={project.link} target="_blank" className="block relative z-10 cursor-pointer">
+        {/* Biophilic sprout peeking over project card frame */}
+        <PixelPlant 
+          type={PROJECT_PLANTS[project.id % PROJECT_PLANTS.length]} 
+          flip={project.id % 2 === 1}
+          className="absolute -top-3.5 left-8 text-base opacity-80 group-hover:opacity-100 group-hover:-translate-y-1 transition-all duration-500 pointer-events-none z-50 drop-shadow-sm" 
+        />
+        <TiltCard
+          className="relative w-[85vw] md:w-[800px] aspect-[4/3] md:aspect-video overflow-hidden bg-[var(--color-border)] border border-[var(--color-border)] shadow-sm group-hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] dark:group-hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.4)] transition-shadow duration-700"
+          intensity={5}
+        >
+          {/* Elegant soft border on hover instead of neon */}
+          <div className="absolute inset-0 border border-transparent group-hover:border-[var(--color-accent)]/30 pointer-events-none z-50 transition-colors duration-700" />
+
           {/* Subtle overlay to help title pop, but keeping video clear */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500 z-30 pointer-events-none" />
           

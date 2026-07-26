@@ -5,6 +5,7 @@ import { useGSAP } from '@gsap/react';
 import ScrollTrigger from 'gsap/ScrollTrigger';
 import { SKILLS } from "@/data/content";
 import TiltCard from './TiltCard';
+import { PixelPlant, PlantType } from './PixelDivider';
 import { InteractiveGridPattern } from "@/components/ui/interactive-grid-pattern";
 import { cn } from "@/lib/utils";
 
@@ -134,8 +135,11 @@ export default function StackBrutalist() {
   );
 }
 
+const STACK_PLANTS: PlantType[] = ["clover", "tuftL", "fernC", "daisyS", "mushroom", "leaf", "ladybug", "seed"];
+
 function StackCard({ skill, index }: { skill: typeof SKILLS[0], index: number }) {
   const [hover, setHover] = useState(false);
+  const plantType = STACK_PLANTS[index % STACK_PLANTS.length];
 
   return (
     <TiltCard 
@@ -144,6 +148,12 @@ function StackCard({ skill, index }: { skill: typeof SKILLS[0], index: number })
       onMouseLeave={() => setHover(false)}
       intensity={25}
     >
+      {/* Biophilic sprout on card edge */}
+      <PixelPlant 
+        type={plantType} 
+        flip={index % 2 === 1}
+        className="absolute -top-1 right-3 text-sm opacity-65 group-hover:opacity-100 group-hover:-translate-y-0.5 transition-all duration-300 pointer-events-none z-20" 
+      />
       {/* Hover Background Accent Fill */}
       <div className="absolute inset-0 bg-[var(--color-accent)]/10 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out z-0" />
       

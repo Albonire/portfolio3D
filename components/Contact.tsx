@@ -2,6 +2,7 @@
 
 import { ABOUT } from "@/data/content";
 import Magnetic from "./Magnetic";
+import PixelDivider, { PixelPlant } from "./PixelDivider";
 
 const EditorialArrow = ({ className = "" }: { className?: string }) => (
   <svg aria-hidden="true" viewBox="0 0 24 24" className={`h-5 w-5 ${className}`}>
@@ -36,7 +37,7 @@ export default function Contact() {
   const email = ABOUT.social.find(s => s.label === "EMAIL")?.url.replace('mailto:', '');
 
   return (
-    <section id="contact" className="min-h-[80vh] flex flex-col justify-center py-24 px-6 md:px-20 border-t border-[var(--color-border)] bg-[var(--bg-primary)]">
+    <section id="contact" className="min-h-[80vh] flex flex-col justify-center py-24 px-6 md:px-20 bg-[var(--bg-primary)]">
       <div className="max-w-7xl mx-auto w-full flex flex-col md:flex-row justify-between gap-16 md:gap-24">
         
         {/* Left Column - Big Typography */}
@@ -55,8 +56,9 @@ export default function Contact() {
             <Magnetic>
               <a 
                 href={`mailto:${email}`}
-                className="inline-flex items-center gap-3 font-sans text-[var(--color-text)] hover:text-[var(--color-accent)] transition-colors duration-300 group"
+                className="inline-flex items-center gap-3 font-sans text-[var(--color-text)] hover:text-[var(--color-accent)] transition-colors duration-300 group relative"
               >
+                <PixelPlant type="butterfly" className="absolute -top-3.5 -left-3 text-xs opacity-70 group-hover:opacity-100 transition-opacity" />
                 <span className="text-xl md:text-2xl border-b border-[var(--color-border)] group-hover:border-[var(--color-accent)] transition-colors duration-300 pb-1">{email}</span>
                 <span className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
                   <EditorialArrow />

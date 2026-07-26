@@ -5,15 +5,18 @@ import ScrollReveal from "@/components/ScrollReveal";
 import HeroSection from "@/components/Hero3D";
 import Contact from "@/components/Contact";
 import FloatingCV from "@/components/FloatingCV";
+import PixelDivider, { PixelPlant } from "@/components/PixelDivider";
 import { ABOUT } from "@/data/content";
 
 export default function Home() {
   return (
     <>
       <HeroSection />
-      <section id="about" className="min-h-[85vh] flex flex-col justify-center py-32 md:py-48 px-6 md:px-20 border-b border-current/10">
+      <PixelDivider variant="horizonte" />
+      <section id="about" className="min-h-[85vh] flex flex-col justify-center py-32 md:py-48 px-6 md:px-20">
         <div className="max-w-7xl mx-auto w-full">
-          <p className="font-mono text-xs md:text-sm mb-12 opacity-60 tracking-widest uppercase">
+          <p className="font-mono text-xs md:text-sm mb-12 opacity-60 tracking-widest uppercase flex items-center gap-2">
+            <PixelPlant type="clover" className="text-base opacity-75" />
             {'//'} {ABOUT.subtitle}
           </p>
           <ScrollReveal
@@ -29,10 +32,15 @@ export default function Home() {
           </ScrollReveal>
         </div>
       </section>
+      <PixelDivider variant="sendero" />
       <ProjectGallery />
+      <PixelDivider variant="horizonte" />
       <StackBrutalist />
+      <PixelDivider variant="sendero" />
       <EducationBrutalist />
+      <PixelDivider variant="horizonte" />
       <Contact />
+      <PixelDivider variant="pradera" />
       <FloatingCV />
     </>
   );

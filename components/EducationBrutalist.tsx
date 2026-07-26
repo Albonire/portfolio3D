@@ -1,8 +1,11 @@
 import { EDUCATION } from "@/data/content";
+import { PixelPlant, PlantType } from "./PixelDivider";
+
+const EDU_PLANTS: PlantType[] = ["clover", "fernC", "mushroom", "daisyS"];
 
 export default function EducationBrutalist() {
   return (
-    <section className="py-16 md:py-32 px-6 md:px-20 border-b border-[var(--color-border)] bg-[var(--bg-primary)] text-[var(--color-text)] transition-colors duration-500">
+    <section className="py-16 md:py-32 px-6 md:px-20 bg-[var(--bg-primary)] text-[var(--color-text)] transition-colors duration-500">
       <div className="max-w-7xl mx-auto w-full flex flex-col md:flex-row gap-12 md:gap-20">
         <div className="md:w-1/3">
           <h3 className="font-display font-medium text-4xl md:text-5xl tracking-tight leading-[1] relative md:sticky md:top-32 mb-8 md:mb-0">
@@ -11,9 +14,14 @@ export default function EducationBrutalist() {
         </div>
         
         <div className="md:w-2/3 flex flex-col gap-12">
-          {EDUCATION.map((edu) => (
+          {EDUCATION.map((edu, i) => (
             <div key={edu.id} className="group relative pl-8 border-l border-[var(--color-border)] hover:border-[var(--color-accent)] transition-colors duration-300">
               <span className="absolute -left-[5px] top-0 w-2 h-2 bg-[var(--color-border)] group-hover:bg-[var(--color-accent)] transition-colors" />
+              <PixelPlant 
+                type={EDU_PLANTS[i % EDU_PLANTS.length]} 
+                flip={i % 2 === 1}
+                className="absolute -left-2.5 -top-3 text-sm opacity-70 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300 pointer-events-none" 
+              />
               
               <div className="flex justify-between items-baseline mb-2 flex-wrap gap-2">
                 <h4 className="font-display font-medium text-2xl md:text-3xl">{edu.title}</h4>

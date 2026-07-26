@@ -1,5 +1,6 @@
 "use client";
 import Magnetic from './Magnetic';
+import { PixelPlant } from './PixelDivider';
 
 export default function FloatingCV() {
   const enView = "https://drive.google.com/file/d/11lMDnIpVyGw1Wb7N24kRNlKkNPLeBXbD/view";
@@ -9,83 +10,69 @@ export default function FloatingCV() {
 
   return (
     <div className="fixed bottom-6 left-6 md:bottom-10 md:left-10 z-[100] group pointer-events-auto">
-      <div className="relative">
+      <div className="relative flex items-center">
         <Magnetic>
-          <div className="relative w-20 h-20 rounded-full border border-[var(--color-border)] flex items-center justify-center bg-[var(--bg-primary)]/80 backdrop-blur-md cursor-default transition-colors duration-500 hover:border-[var(--color-text)]">
-            
-            {/* Anillo de Texto SVG Giratorio */}
-            <svg 
-              className="absolute inset-0 w-full h-full animate-[spin_10s_linear_infinite] group-hover:[animation-play-state:paused] group-hover:opacity-20 transition-opacity duration-300 pointer-events-none" 
-              viewBox="0 0 100 100"
-            >
-              <path 
-                id="textPath" 
-                d="M 50, 50 m -35, 0 a 35,35 0 1,1 70,0 a 35,35 0 1,1 -70,0" 
-                fill="none" 
-              />
-              <text className="font-sans text-[10px] uppercase tracking-[0.25em] fill-[var(--color-text)]">
-                <textPath href="#textPath" startOffset="0%">
-                  • DOWNLOAD RESUME • CURRICULUM VITAE 
-                </textPath>
-              </text>
-            </svg>
-
-            {/* Centro Estático */}
-            <span className="font-display italic text-lg text-[var(--color-text)] drop-shadow-sm transition-opacity duration-300 group-hover:opacity-0 pointer-events-none">
+          {/* Floating Minimalist Capsule Dock */}
+          <div className="relative flex items-center gap-2 px-4 py-2.5 rounded-full border border-[var(--color-border)] bg-[var(--bg-primary)]/85 backdrop-blur-xl shadow-lg cursor-pointer transition-all duration-300 group-hover:border-[var(--color-accent)] group-hover:shadow-xl">
+            <PixelPlant type="clover" className="absolute -top-2.5 left-4 text-xs opacity-75 group-hover:opacity-100 group-hover:-translate-y-0.5 transition-all duration-300" />
+            <span className="font-mono text-xs tracking-[0.2em] uppercase font-medium text-[var(--color-text)]">
               CV
             </span>
-            <div className="absolute w-1.5 h-1.5 bg-[var(--color-accent)] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+            <span className="font-sans text-[10px] text-[var(--color-muted)] tracking-wider uppercase border-l border-[var(--color-border)] pl-2">
+              PDF
+            </span>
           </div>
         </Magnetic>
 
-        {/* Invisible bridge to maintain hover state between vinyl and menu */}
-        <div className="absolute top-0 left-full w-8 h-full bg-transparent pointer-events-auto z-0" />
+        {/* Bridge area for smooth hover state */}
+        <div className="absolute top-0 left-full w-4 h-full bg-transparent pointer-events-auto z-0" />
 
-        {/* Menú Desplegable (Pop-out Table) */}
-        <div className="absolute left-full top-1/2 -translate-y-1/2 translate-x-4 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:translate-x-2 group-hover:pointer-events-auto transition-all duration-500 ease-[cubic-bezier(0.19,1,0.22,1)] flex flex-col bg-[var(--bg-primary)]/90 backdrop-blur-xl shadow-2xl overflow-hidden min-w-[220px] z-10">
+        {/* Sharp Rectangular Pop-out Menu */}
+        <div className="absolute left-full top-1/2 -translate-y-1/2 translate-x-3 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:translate-x-1 group-hover:pointer-events-auto transition-all duration-300 ease-out flex flex-col rounded-none border border-[var(--color-border)] bg-[var(--bg-primary)]/95 backdrop-blur-2xl shadow-2xl overflow-hidden min-w-[210px] z-10">
           
-          <div className="flex border border-[var(--color-border)]">
-            <div className="px-3 py-3 border-r border-[var(--color-border)] font-sans text-[10px] tracking-widest uppercase font-semibold text-[var(--color-text)] flex items-center justify-center w-14 bg-[var(--color-text)]/5">
+          {/* English CV Row */}
+          <div className="flex items-center border-b border-[var(--color-border)]">
+            <div className="px-3 py-2.5 font-mono text-[10px] tracking-widest uppercase font-semibold text-[var(--color-muted)] border-r border-[var(--color-border)] w-12 text-center bg-[var(--color-border)]/20">
               EN
             </div>
             <a 
               href={enView} 
               target="_blank" 
               rel="noopener noreferrer"
-              className="flex-1 px-4 py-3 hover:bg-[var(--color-accent)] hover:text-white dark:hover:text-[#1A1A18] text-xs font-display italic text-center transition-colors duration-300"
+              className="flex-1 px-3 py-2.5 text-xs font-sans text-center text-[var(--color-text)] hover:bg-[var(--color-accent)] hover:text-white dark:hover:text-[#1A1A18] transition-colors duration-200"
             >
               View
             </a>
             <a 
               href={enDl} 
-              className="flex-1 px-4 py-3 border-l border-[var(--color-border)] hover:bg-[var(--color-accent)] hover:text-white dark:hover:text-[#1A1A18] text-xs font-display italic text-center transition-colors duration-300"
+              className="flex-1 px-3 py-2.5 text-xs font-sans text-center text-[var(--color-text)] border-l border-[var(--color-border)] hover:bg-[var(--color-accent)] hover:text-white dark:hover:text-[#1A1A18] transition-colors duration-200"
             >
               Save
             </a>
           </div>
 
-          <div className="flex border-x border-b border-[var(--color-border)]">
-            <div className="px-3 py-3 border-r border-[var(--color-border)] font-sans text-[10px] tracking-widest uppercase font-semibold text-[var(--color-text)] flex items-center justify-center w-14 bg-[var(--color-text)]/5">
+          {/* Spanish CV Row */}
+          <div className="flex items-center">
+            <div className="px-3 py-2.5 font-mono text-[10px] tracking-widest uppercase font-semibold text-[var(--color-muted)] border-r border-[var(--color-border)] w-12 text-center bg-[var(--color-border)]/20">
               ES
             </div>
             <a 
               href={esView} 
               target="_blank" 
               rel="noopener noreferrer"
-              className="flex-1 px-4 py-3 hover:bg-[var(--color-accent)] hover:text-white dark:hover:text-[#1A1A18] text-xs font-display italic text-center transition-colors duration-300"
+              className="flex-1 px-3 py-2.5 text-xs font-sans text-center text-[var(--color-text)] hover:bg-[var(--color-accent)] hover:text-white dark:hover:text-[#1A1A18] transition-colors duration-200"
             >
               Ver
             </a>
             <a 
               href={esDl} 
-              className="flex-1 px-4 py-3 border-l border-[var(--color-border)] hover:bg-[var(--color-accent)] hover:text-white dark:hover:text-[#1A1A18] text-xs font-display italic text-center transition-colors duration-300"
+              className="flex-1 px-3 py-2.5 text-xs font-sans text-center text-[var(--color-text)] border-l border-[var(--color-border)] hover:bg-[var(--color-accent)] hover:text-white dark:hover:text-[#1A1A18] transition-colors duration-200"
             >
-              Desc
+              Guardar
             </a>
           </div>
 
         </div>
-
       </div>
     </div>
   );
