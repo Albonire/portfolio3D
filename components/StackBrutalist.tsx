@@ -135,7 +135,20 @@ export default function StackBrutalist() {
   );
 }
 
-const STACK_PLANTS: PlantType[] = ["clover", "tuftL", "fernC", "daisyS", "mushroom", "leaf", "ladybug", "seed"];
+const STACK_PLANTS: PlantType[] = [
+  "clover",
+  "flowerY",
+  "snail",
+  "firefly",
+  "mushroom",
+  "ladybug",
+  "flowerV",
+  "bee",
+  "pebble",
+  "dandel",
+  "berry",
+  "leaf",
+];
 
 function StackCard({ skill, index }: { skill: typeof SKILLS[0], index: number }) {
   const [hover, setHover] = useState(false);

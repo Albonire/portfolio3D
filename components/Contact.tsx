@@ -2,7 +2,7 @@
 
 import { ABOUT } from "@/data/content";
 import Magnetic from "./Magnetic";
-import PixelDivider, { PixelPlant } from "./PixelDivider";
+import PixelDivider, { PixelPlant, PlantType } from "./PixelDivider";
 
 const EditorialArrow = ({ className = "" }: { className?: string }) => (
   <svg aria-hidden="true" viewBox="0 0 24 24" className={`h-5 w-5 ${className}`}>
@@ -32,6 +32,13 @@ const EditorialArrow = ({ className = "" }: { className?: string }) => (
     />
   </svg>
 );
+
+const SOCIAL_PLANTS: Record<string, PlantType> = {
+  GITHUB: "ant",
+  LINKEDIN: "bee",
+  TWITTER: "dfly",
+  EMAIL: "firefly",
+};
 
 export default function Contact() {
   const email = ABOUT.social.find(s => s.label === "EMAIL")?.url.replace('mailto:', '');
@@ -75,8 +82,9 @@ export default function Contact() {
         {/* Right Column - Social Links */}
         <div className="md:w-1/3 flex flex-col justify-between md:justify-end md:border-l md:border-[var(--color-border)] md:pl-12">
           <div className="flex flex-col gap-6">
-            <h3 className="font-sans text-xs font-medium tracking-[0.2em] text-[var(--color-muted)] uppercase mb-4">
-              Connect
+            <h3 className="font-sans text-xs font-medium tracking-[0.2em] text-[var(--color-muted)] uppercase mb-4 flex items-center gap-2">
+              <span>Connect</span>
+              <PixelPlant type="ladybug" className="text-xs opacity-75" />
             </h3>
             <ul className="flex flex-col gap-4">
               {ABOUT.social.map((social) => (
@@ -88,7 +96,10 @@ export default function Contact() {
                       rel="noopener noreferrer"
                       className="group flex items-center justify-between font-display text-2xl md:text-3xl text-[var(--color-text)] hover:text-[var(--color-accent)] transition-colors duration-300"
                     >
-                      <span>{social.label}</span>
+                      <span className="flex items-center gap-2.5">
+                        <PixelPlant type={SOCIAL_PLANTS[social.label] || "leaf"} className="text-xs opacity-50 group-hover:opacity-100 transition-opacity" />
+                        <span>{social.label}</span>
+                      </span>
                       <span className="opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
                         <EditorialArrow />
                       </span>

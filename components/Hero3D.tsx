@@ -3,6 +3,7 @@ import dynamic from 'next/dynamic';
 import MaskText from './MaskText';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
+import { PixelPlant } from './PixelDivider';
 
 // Lazy load heavy canvas and WebGL components
 const HeroCanvas = dynamic(() => import('./HeroCanvas'), { 
@@ -70,8 +71,9 @@ export default function HeroSection() {
           </MaskText>
         </div>
         
-        <div className="absolute bottom-8 md:bottom-12 left-0 font-sans text-[var(--color-text)]/60 text-[10px] md:text-xs uppercase tracking-widest z-20">
-          Scroll to explore &darr;
+        <div className="absolute bottom-8 md:bottom-12 left-0 font-sans text-[var(--color-text)]/60 text-[10px] md:text-xs uppercase tracking-widest z-20 flex items-center gap-2">
+          <span>Scroll to explore &darr;</span>
+          <PixelPlant type="firefly" className="text-xs opacity-75 animate-pulse" />
         </div>
       </div>
     </section>

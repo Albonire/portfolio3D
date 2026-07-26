@@ -32,8 +32,9 @@ export default function EducationBrutalist() {
               <p className="font-body text-base text-[var(--color-text)]/90 leading-relaxed max-w-xl">{edu.description}</p>
               
               {edu.link && (
-                <a href={edu.link} target="_blank" className="inline-block mt-6 font-sans tracking-widest uppercase text-[10px] border border-[var(--color-border)] px-4 py-2 text-[var(--color-muted)] hover:bg-[var(--color-accent)] hover:text-white hover:border-[var(--color-accent)] transition-all">
-                  View Certificate
+                <a href={edu.link} target="_blank" className="inline-flex items-center gap-2 mt-6 font-sans tracking-widest uppercase text-[10px] border border-[var(--color-border)] px-4 py-2 text-[var(--color-muted)] hover:bg-[var(--color-accent)] hover:text-white hover:border-[var(--color-accent)] transition-all group/btn">
+                  <PixelPlant type="seed" className="text-xs opacity-70 group-hover/btn:opacity-100 transition-opacity" />
+                  <span>View Certificate</span>
                 </a>
               )}
             </div>

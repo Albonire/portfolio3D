@@ -14,7 +14,17 @@ if (typeof window !== 'undefined') {
     gsap.registerPlugin(ScrollTrigger);
 }
 
-const PROJECT_PLANTS: PlantType[] = ["fernA", "clover", "tuft", "flowerY", "ladybug", "butterfly"];
+const PROJECT_PLANTS: PlantType[] = [
+  "fernA",
+  "flowerP",
+  "mushroom",
+  "berry",
+  "dandel",
+  "butterfly2",
+  "ladybug",
+  "snail",
+  "dfly",
+];
 
 function ProjectCard({ project, isActive, onHover, onLeave }: { 
   project: typeof PROJECTS[0], 
@@ -185,7 +195,8 @@ function ProjectCard({ project, isActive, onHover, onLeave }: {
             
                       {/* SLIDE 0: INTRO */}
                       <div className="w-screen h-screen flex flex-col justify-center items-center shrink-0 border-r border-[var(--color-border)] bg-[var(--bg-primary)] text-[var(--color-text)]">
-                        <div className="text-center max-w-lg">
+                        <div className="text-center max-w-lg relative">
+                          <PixelPlant type="frog" className="absolute -top-6 right-4 text-base opacity-80 pointer-events-none" />
                           <MaskText>
                             <h2 className="font-display font-medium text-4xl md:text-6xl leading-[1.1] tracking-tight">
                               Selected
