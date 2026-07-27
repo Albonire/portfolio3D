@@ -17,11 +17,11 @@
 
 @layer base {
   :root {
-    --bg-primary: #EBE7E2;      /* Soft stone with subtle warmth */
-    --text-primary: #1A1A18;    /* Extremely dark stone */
-    --color-accent: #445640;    /* Darker Sage Green for good contrast */
-    --color-muted: #5C5B56;     /* Darker muted text */
-    --color-border: #D6CFC9;
+    --bg-primary: #1A1A18;      /* Matte dark stone (default) */
+    --text-primary: #F5F5F3;    /* Off-white */
+    --color-accent: #B8C9B2;    /* Lighter pastel Sage for dark mode */
+    --color-muted: #C0BFBA;     /* Contrast improved for readability */
+    --color-border: #2D2D2A;
   }
 
   [data-theme='dark'], .dark {
@@ -33,8 +33,11 @@
   }
 
   [data-theme='light'], .light {
-    --bg-primary: #EBE7E2;
-    --text-primary: #1C1C1A;
+    --bg-primary: #EBE7E2;      /* Soft stone with subtle warmth */
+    --text-primary: #1C1C1A;    /* Extremely dark stone */
+    --color-accent: #445640;    /* Darker Sage Green for good contrast */
+    --color-muted: #5C5B56;     /* Darker muted text */
+    --color-border: #D6CFC9;
   }
 
   body {

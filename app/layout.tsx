@@ -78,7 +78,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className="dark" suppressHydrationWarning>
       {/* Forced dark mode preference in class */}
       <body className={`antialiased bg-[var(--color-dark)] text-[var(--color-text)] overflow-x-hidden selection:bg-[var(--color-accent)] selection:text-white transition-colors duration-500 max-w-[100vw] ${fraunces.variable} ${manrope.variable}`} suppressHydrationWarning>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
