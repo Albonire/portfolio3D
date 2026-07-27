@@ -117,8 +117,8 @@ export default function StackBrutalist() {
 
       <div className="max-w-7xl mx-auto w-full relative z-10">
         {/* Ultra-Clean Minimalist Header */}
-        <div className="flex items-center gap-3 mb-16">
-          <div className="w-1.5 h-1.5 bg-[var(--color-accent)] rounded-full animate-pulse" />
+        <div className="flex items-center gap-2.5 mb-16">
+          <PixelPlant type="clover" className="text-sm opacity-80" />
           <h3 className="font-sans text-[var(--color-muted)] text-[10px] md:text-xs tracking-[0.25em] uppercase font-medium">
             Technical Stack
           </h3>
@@ -135,24 +135,37 @@ export default function StackBrutalist() {
   );
 }
 
-const STACK_PLANTS: PlantType[] = [
-  "clover",
-  "flowerY",
-  "snail",
-  "firefly",
-  "mushroom",
-  "ladybug",
-  "flowerV",
-  "bee",
-  "pebble",
-  "dandel",
-  "berry",
-  "leaf",
+// Unique plant type per category with matching proportions & vertical stems
+const CATEGORY_PLANTS: Record<string, PlantType> = {
+  frontend: "fernC",   // Small green fern sprout (5x6)
+  backend:  "flowerY", // Yellow flower sprout (3x5)
+  database: "flowerC", // Cyan flower sprout (3x4)
+  tools:    "clover",  // Clover sprout (5x3)
+};
+
+// Diagonal grid layout pattern & UNIFORM scale (text-sm) for all cards
+const LAYOUT_POSITIONS: { pos: "tr" | "bl"; size: string }[] = [
+  // Row 1 (index 0..3) — top-right
+  { pos: "tr", size: "text-sm" },
+  { pos: "tr", size: "text-sm" },
+  { pos: "tr", size: "text-sm" },
+  { pos: "tr", size: "text-sm" },
+  // Row 2 (index 4..7) — alternating bl / tr
+  { pos: "bl", size: "text-sm" },
+  { pos: "tr", size: "text-sm" },
+  { pos: "bl", size: "text-sm" },
+  { pos: "tr", size: "text-sm" },
+  // Row 3 (index 8..11) — bottom-left
+  { pos: "bl", size: "text-sm" },
+  { pos: "bl", size: "text-sm" },
+  { pos: "bl", size: "text-sm" },
+  { pos: "bl", size: "text-sm" },
 ];
 
 const StackCard = memo(function StackCard({ skill, index }: { skill: typeof SKILLS[0], index: number }) {
   const [hover, setHover] = useState(false);
-  const plantType = STACK_PLANTS[index % STACK_PLANTS.length];
+  const plantType = CATEGORY_PLANTS[skill.category] || "clover";
+  const layout = LAYOUT_POSITIONS[index] || LAYOUT_POSITIONS[0];
 
   return (
     <TiltCard 
@@ -161,14 +174,20 @@ const StackCard = memo(function StackCard({ skill, index }: { skill: typeof SKIL
       onMouseLeave={() => setHover(false)}
       intensity={25}
     >
-      {/* Biophilic sprout on card edge */}
+      {/* 1 plant type per category, placed with diagonal grid pattern */}
       <PixelPlant 
         type={plantType} 
         flip={index % 2 === 1}
-        className="absolute -top-1 right-3 text-sm opacity-65 group-hover:opacity-100 group-hover:-translate-y-0.5 transition-all duration-300 pointer-events-none z-20" 
+        className={cn(
+          "absolute opacity-75 group-hover:opacity-100 transition-all duration-300 pointer-events-none z-20 drop-shadow-sm",
+          layout.size,
+          layout.pos === "tr"
+            ? "top-2.5 right-4 group-hover:-translate-y-0.5"
+            : "bottom-2.5 left-4 group-hover:translate-y-0.5"
+        )}
       />
       {/* Hover Background Accent Fill */}
-      <div className="absolute inset-0 bg-[var(--color-accent)]/10 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out z-0" />
+      <div className="absolute inset-0 bg-[var(--color-accent)]/10 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out z-0 pointer-events-none" />
       
       {/* Content */}
       <div className="relative z-10 flex flex-col h-full justify-between transition-colors duration-300">

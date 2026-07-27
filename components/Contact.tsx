@@ -96,10 +96,7 @@ export default function Contact() {
                       rel="noopener noreferrer"
                       className="group flex items-center justify-between font-display text-2xl md:text-3xl text-[var(--color-text)] hover:text-[var(--color-accent)] transition-colors duration-300"
                     >
-                      <span className="flex items-center gap-2.5">
-                        <PixelPlant type={SOCIAL_PLANTS[social.label] || "leaf"} className="text-xs opacity-50 group-hover:opacity-100 transition-opacity" />
-                        <span>{social.label}</span>
-                      </span>
+                      <span>{social.label}</span>
                       <span className="opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
                         <EditorialArrow />
                       </span>

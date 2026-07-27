@@ -69,6 +69,8 @@ type Props = {
   flip?: boolean;
   className?: string;
   ariaHidden?: boolean;
+  customViewBox?: string;
+  preserveAspectRatio?: string;
 };
 
 const PALETTES = {
@@ -321,21 +323,23 @@ export default memo(function PixelDivider({
   flip = false,
   className = "",
   ariaHidden = true,
+  customViewBox,
+  preserveAspectRatio: propPreserveAspect,
 }: Props) {
   const { paths, viewBox } = useMemo(
     () => getDividerData(variant, pixel, tone),
     [variant, pixel, tone]
   );
 
-  const preserveAspect = variant === "dosel" ? "xMidYMin meet" : "xMidYMax meet";
+  const preserveAspect = propPreserveAspect || (variant === "dosel" ? "xMidYMin meet" : "xMidYMax meet");
 
   return (
     <svg
-      viewBox={viewBox}
+      viewBox={customViewBox || viewBox}
       shapeRendering="crispEdges"
       preserveAspectRatio={preserveAspect}
       aria-hidden={ariaHidden}
-      className={`block w-full h-auto select-none pointer-events-none transform-gpu ${className}`}
+      className={`block select-none pointer-events-none transform-gpu ${className}`}
       style={flip ? { transform: "scaleX(-1)" } : undefined}
     >
       {paths.map(([color, d]) => (

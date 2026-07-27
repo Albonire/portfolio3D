@@ -8,7 +8,7 @@ import Image from 'next/image';
 import TiltCard from './TiltCard';
 import MaskText from './MaskText';
 import Magnetic from './Magnetic';  
-import { PixelPlant, PlantType } from './PixelDivider';
+import PixelDivider, { PixelPlant, PlantType } from './PixelDivider';
 
 if (typeof window !== 'undefined') {
     gsap.registerPlugin(ScrollTrigger);
@@ -62,59 +62,62 @@ const ProjectCard = memo(function ProjectCard({ project, isActive, onHover, onLe
       
       {/* Media Container - Responsive Aspect Ratio */}
       <a href={project.link} target="_blank" className="block relative z-10 cursor-pointer">
-        {/* Biophilic sprout peeking over project card frame */}
-        <PixelPlant 
-          type={PROJECT_PLANTS[project.id % PROJECT_PLANTS.length]} 
-          flip={project.id % 2 === 1}
-          className="absolute -top-3.5 left-8 text-base opacity-80 group-hover:opacity-100 group-hover:-translate-y-1 transition-all duration-500 pointer-events-none z-50 drop-shadow-sm" 
-        />
         <TiltCard
-          className="relative w-[85vw] md:w-[800px] aspect-[4/3] md:aspect-video overflow-hidden bg-[var(--color-border)] border border-[var(--color-border)] shadow-sm group-hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] dark:group-hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.4)] transition-shadow duration-700"
+          className="relative w-[85vw] md:w-[800px] aspect-[4/3] md:aspect-video bg-[var(--color-border)] border border-[var(--color-border)] shadow-sm group-hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] dark:group-hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.4)] transition-shadow duration-700"
           intensity={5}
         >
-          {/* Elegant soft border on hover instead of neon */}
-          <div className="absolute inset-0 border border-transparent group-hover:border-[var(--color-accent)]/30 pointer-events-none z-50 transition-colors duration-700" />
+          {/* Biophilic sprout anchored directly onto video frame top edge */}
+          <PixelPlant 
+            type={PROJECT_PLANTS[project.id % PROJECT_PLANTS.length]} 
+            flip={project.id % 2 === 1}
+            className="absolute -top-4 left-8 text-base opacity-90 group-hover:opacity-100 group-hover:-translate-y-1 transition-all duration-500 pointer-events-none z-[70] drop-shadow-md" 
+          />
 
-          {/* Subtle overlay to help title pop, but keeping video clear */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500 z-30 pointer-events-none" />
-          
-          {project.video ? (
-            <>
+          {/* Inner clipped video frame */}
+          <div className="absolute inset-0 overflow-hidden">
+            {/* Elegant soft border on hover instead of neon */}
+            <div className="absolute inset-0 border border-transparent group-hover:border-[var(--color-accent)]/30 pointer-events-none z-50 transition-colors duration-700" />
+
+            {/* Subtle overlay to help title pop, but keeping video clear */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500 z-30 pointer-events-none" />
+            
+            {project.video ? (
+              <>
+                <Image 
+                  src={project.image} 
+                  alt={project.title}
+                  fill
+                  className={`object-cover transition-all duration-700 ${isActive ? 'opacity-0 scale-110' : 'opacity-100 grayscale-[0.5] group-hover:grayscale-0'}`}
+                  priority={project.id === 1}
+                  loading={project.id === 1 ? "eager" : "lazy"}
+                  sizes="(max-width: 768px) 92vw, 800px"
+                />
+                <video 
+                  ref={videoRef}
+                  src={project.video}
+                  loop 
+                  muted 
+                  playsInline
+                  preload="none"
+                  crossOrigin="anonymous"
+                  suppressHydrationWarning
+                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${isActive ? 'opacity-100' : 'opacity-0'}`}
+                />
+              </>
+            ) : (
               <Image 
                 src={project.image} 
                 alt={project.title}
                 fill
-                className={`object-cover transition-all duration-700 ${isActive ? 'opacity-0 scale-110' : 'opacity-100 grayscale-[0.5] group-hover:grayscale-0'}`}
                 priority={project.id === 1}
                 loading={project.id === 1 ? "eager" : "lazy"}
                 sizes="(max-width: 768px) 92vw, 800px"
+                className="object-cover grayscale-[0.5] group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700 ease-in-out"
               />
-              <video 
-                ref={videoRef}
-                src={project.video}
-                loop 
-                muted 
-                playsInline
-                preload="none"
-                crossOrigin="anonymous"
-                suppressHydrationWarning
-                className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${isActive ? 'opacity-100' : 'opacity-0'}`}
-              />
-            </>
-          ) : (
-            <Image 
-              src={project.image} 
-              alt={project.title}
-              fill
-              priority={project.id === 1}
-              loading={project.id === 1 ? "eager" : "lazy"}
-              sizes="(max-width: 768px) 92vw, 800px"
-              className="object-cover grayscale-[0.5] group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700 ease-in-out"
-            />
-          )}
-  
-          </TiltCard>
-        </a>
+            )}
+          </div>
+        </TiltCard>
+      </a>
   
         {/* Title overlay */}
         <div className="absolute z-40 pointer-events-none top-[35%] md:top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 text-center w-full px-4 drop-shadow-[0_4px_12px_rgba(0,0,0,0.3)]">
@@ -194,25 +197,101 @@ const ProjectCard = memo(function ProjectCard({ project, isActive, onHover, onLe
           {/* SLIDER: The actual horizontal content */}
           <div ref={sliderRef} className="flex h-full w-max will-change-transform">
             
-                      {/* SLIDE 0: INTRO */}
-                      <div className="w-screen h-screen flex flex-col justify-center items-center shrink-0 border-r border-[var(--color-border)] bg-[var(--bg-primary)] text-[var(--color-text)]">
-                        <div className="text-center max-w-lg relative">
-                          <PixelPlant type="frog" className="absolute -top-6 right-4 text-base opacity-80 pointer-events-none" />
-                          <MaskText>
-                            <h2 className="font-display font-medium text-4xl md:text-6xl leading-[1.1] tracking-tight">
-                              Selected
-                            </h2>
-                          </MaskText>
-                          <MaskText delay={0.1}>
-                            <h2 className="font-display font-medium text-4xl md:text-6xl leading-[1.1] tracking-tight text-[var(--color-accent)] italic">
-                              Works.
-                            </h2>
-                          </MaskText>
-                        </div>
-                        <MaskText delay={0.4}>
-                          <p className="font-sans text-[var(--color-muted)] text-sm tracking-widest uppercase mt-12 transition-opacity duration-1000">Scroll to explore</p>
-                        </MaskText>
-                      </div>  
+            {/* SLIDE 0: INTRO */}
+            <div className="w-screen h-screen flex flex-col justify-center items-center shrink-0 border-r border-[var(--color-border)] bg-[var(--bg-primary)] text-[var(--color-text)]">
+              <div className="text-center max-w-4xl relative flex flex-col items-center gap-3">
+                
+                {/* Line 1: Selected — consecutive sliced dosel canopy, w-full = letter width */}
+                <MaskText>
+                  <div className="font-display font-medium text-6xl md:text-8xl leading-none tracking-tight flex items-baseline justify-center gap-[0.03em] pb-4">
+                    {/* S */}
+                    <span className="relative inline-block">
+                      <span>S</span>
+                      <span className="absolute top-[92%] left-0 w-full h-6 md:h-10 overflow-visible pointer-events-none z-20"><PixelDivider variant="dosel" customViewBox="0 0 60 60" preserveAspectRatio="none" /></span>
+                    </span>
+                    {/* e */}
+                    <span className="relative inline-block">
+                      <span>e</span>
+                      <span className="absolute top-[92%] left-0 w-full h-6 md:h-10 overflow-visible pointer-events-none z-20"><PixelDivider variant="dosel" customViewBox="60 0 50 60" preserveAspectRatio="none" /></span>
+                    </span>
+                    {/* l */}
+                    <span className="relative inline-block">
+                      <span>l</span>
+                      <span className="absolute top-[92%] left-0 w-full h-6 md:h-10 overflow-visible pointer-events-none z-20"><PixelDivider variant="dosel" customViewBox="110 0 30 60" preserveAspectRatio="none" /></span>
+                    </span>
+                    {/* e */}
+                    <span className="relative inline-block">
+                      <span>e</span>
+                      <span className="absolute top-[92%] left-0 w-full h-6 md:h-10 overflow-visible pointer-events-none z-20"><PixelDivider variant="dosel" customViewBox="140 0 50 60" preserveAspectRatio="none" /></span>
+                    </span>
+                    {/* c */}
+                    <span className="relative inline-block">
+                      <span>c</span>
+                      <span className="absolute top-[92%] left-0 w-full h-6 md:h-10 overflow-visible pointer-events-none z-20"><PixelDivider variant="dosel" customViewBox="190 0 50 60" preserveAspectRatio="none" /></span>
+                    </span>
+                    {/* t */}
+                    <span className="relative inline-block">
+                      <span>t</span>
+                      <span className="absolute top-[92%] left-0 w-full h-6 md:h-10 overflow-visible pointer-events-none z-20"><PixelDivider variant="dosel" customViewBox="240 0 40 60" preserveAspectRatio="none" /></span>
+                    </span>
+                    {/* e */}
+                    <span className="relative inline-block">
+                      <span>e</span>
+                      <span className="absolute top-[92%] left-0 w-full h-6 md:h-10 overflow-visible pointer-events-none z-20"><PixelDivider variant="dosel" customViewBox="280 0 50 60" preserveAspectRatio="none" /></span>
+                    </span>
+                    {/* d */}
+                    <span className="relative inline-block">
+                      <span>d</span>
+                      <span className="absolute top-[92%] left-0 w-full h-6 md:h-10 overflow-visible pointer-events-none z-20"><PixelDivider variant="dosel" customViewBox="330 0 55 60" preserveAspectRatio="none" /></span>
+                    </span>
+                  </div>
+                </MaskText>
+
+                {/* Line 2: Works. — W & k have TWO feet each */}
+                <MaskText delay={0.1}>
+                  <div className="font-display font-medium text-6xl md:text-8xl leading-none tracking-tight text-[var(--color-accent)] italic flex items-baseline justify-center gap-[0.03em] mt-4 pb-4">
+                    {/* W — two bottom points, each gets ~42% width at left/right */}
+                    <span className="relative inline-block">
+                      <span>W</span>
+                      <span className="absolute top-[92%] left-[4%] w-[42%] h-6 md:h-10 overflow-visible pointer-events-none z-20"><PixelDivider variant="dosel" customViewBox="385 0 45 60" preserveAspectRatio="none" /></span>
+                      <span className="absolute top-[92%] right-[4%] w-[42%] h-6 md:h-10 overflow-visible pointer-events-none z-20"><PixelDivider variant="dosel" customViewBox="430 0 45 60" preserveAspectRatio="none" /></span>
+                    </span>
+                    {/* o */}
+                    <span className="relative inline-block">
+                      <span>o</span>
+                      <span className="absolute top-[92%] left-0 w-full h-6 md:h-10 overflow-visible pointer-events-none z-20"><PixelDivider variant="dosel" customViewBox="475 0 50 60" preserveAspectRatio="none" /></span>
+                    </span>
+                    {/* r */}
+                    <span className="relative inline-block">
+                      <span>r</span>
+                      <span className="absolute top-[92%] left-0 w-full h-6 md:h-10 overflow-visible pointer-events-none z-20"><PixelDivider variant="dosel" customViewBox="525 0 45 60" preserveAspectRatio="none" /></span>
+                    </span>
+                    {/* k — two feet: left stem + right diagonal leg */}
+                    <span className="relative inline-block">
+                      <span>k</span>
+                      <span className="absolute top-[92%] left-0 w-[42%] h-6 md:h-10 overflow-visible pointer-events-none z-20"><PixelDivider variant="dosel" customViewBox="570 0 40 60" preserveAspectRatio="none" /></span>
+                      <span className="absolute top-[92%] right-0 w-[42%] h-6 md:h-10 overflow-visible pointer-events-none z-20"><PixelDivider variant="dosel" customViewBox="610 0 40 60" preserveAspectRatio="none" /></span>
+                    </span>
+                    {/* s */}
+                    <span className="relative inline-block">
+                      <span>s</span>
+                      <span className="absolute top-[92%] left-0 w-full h-6 md:h-10 overflow-visible pointer-events-none z-20"><PixelDivider variant="dosel" customViewBox="650 0 50 60" preserveAspectRatio="none" /></span>
+                    </span>
+                    {/* . */}
+                    <span className="relative inline-block">
+                      <span>.</span>
+                      <span className="absolute top-[92%] left-0 w-full h-6 md:h-10 overflow-visible pointer-events-none z-20"><PixelDivider variant="dosel" customViewBox="700 0 25 60" preserveAspectRatio="none" /></span>
+                    </span>
+                  </div>
+                </MaskText>
+
+              </div>
+
+              <MaskText delay={0.4}>
+                <p className="font-sans text-[var(--color-muted)] text-sm tracking-widest uppercase mt-12 transition-opacity duration-1000">Scroll to explore</p>
+              </MaskText>
+            </div>  
+            
             {/* SLIDES 1..N: PROJECTS */}
             {PROJECTS.map((project) => (
               <ProjectCard 

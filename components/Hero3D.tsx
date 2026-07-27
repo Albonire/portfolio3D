@@ -73,7 +73,7 @@ export default function HeroSection() {
         
         <div className="absolute bottom-8 md:bottom-12 left-0 font-sans text-[var(--color-text)]/60 text-[10px] md:text-xs uppercase tracking-widest z-20 flex items-center gap-2">
           <span>Scroll to explore &darr;</span>
-          <PixelPlant type="firefly" className="text-xs opacity-75 animate-pulse" />
+          <PixelPlant type="firefly" className="text-xs opacity-75" />
         </div>
       </div>
     </section>
