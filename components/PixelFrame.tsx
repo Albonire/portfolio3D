@@ -103,16 +103,6 @@ const S: Record<string, string[]> = {
   worm: [" Ee", "Ee "],
   flowerY: [" w ", "wyw", " w ", " g ", "Lg "],
   mushroom: [" ppp ", "pwpwp", " eEe "],
-  butterfly: ["yw wy", "ywkwy", " yky "],
-  butterfly2: ["vV Vv", "vVkVv", " vkv "],
-  bee: [" ww ", "kyky"],
-  snail: [" BtB ", "BtEtB", "kkkkk"],
-  ladybug: [" kk ", "pkkp"],
-  cater: [" GLG L", "GGgGGg"],
-  dfly: [" C C C ", "cckckcc"],
-  worm: [" Ee", "Ee "],
-  flowerY: [" w ", "wyw", " w ", " g ", "Lg "],
-  mushroom: [" ppp ", "pwpwp", " eEe "],
 };
 
 export type FrameVariant = "vid" | "hedge" | "cane" | "garland" | "root" | "bamboo";
