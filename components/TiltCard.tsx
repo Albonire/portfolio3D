@@ -6,6 +6,7 @@ interface TiltCardProps {
   children: ReactNode;
   className?: string;
   intensity?: number; // Max rotation degrees
+  sheen?: boolean; // Show radial spotlight on hover (default true)
   onMouseEnter?: () => void;
   onMouseLeave?: () => void;
 }
@@ -14,6 +15,7 @@ export default function TiltCard({
   children,
   className = "",
   intensity = 15,
+  sheen = true,
   onMouseEnter,
   onMouseLeave
 }: TiltCardProps) {
@@ -43,7 +45,7 @@ export default function TiltCard({
       transformOrigin: "center",
     });
 
-    if (sheenRef.current) {
+    if (sheenRef.current && sheen) {
       const sheenX = x - rect.width / 2;
       const sheenY = y - rect.height / 2;
 
@@ -93,20 +95,21 @@ export default function TiltCard({
     >
       {children}
 
-      {/* Premium Sheen Gradient */}
-      <div
-        ref={sheenRef}
-        className="absolute inset-0 z-[60] pointer-events-none mix-blend-soft-light opacity-0"
-        style={{
-          background: "radial-gradient(circle at center, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0) 50%)",
-          width: "150%",
-          height: "150%",
-          left: "-25%",
-          top: "-25%",
-          transform: "translateZ(100px)",
-          transition: "none"
-        }}
-      />
+      {sheen && (
+        <div
+          ref={sheenRef}
+          className="absolute inset-0 z-[60] pointer-events-none mix-blend-soft-light opacity-0"
+          style={{
+            background: "radial-gradient(circle at center, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0) 50%)",
+            width: "150%",
+            height: "150%",
+            left: "-25%",
+            top: "-25%",
+            transform: "translateZ(100px)",
+            transition: "none"
+          }}
+        />
+      )}
     </div>
   );
 }

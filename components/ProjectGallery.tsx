@@ -9,6 +9,7 @@ import TiltCard from './TiltCard';
 import MaskText from './MaskText';
 import Magnetic from './Magnetic';  
 import PixelDivider, { PixelPlant, PlantType } from './PixelDivider';
+import PixelFrame, { FrameVariant } from './PixelFrame';
 
 if (typeof window !== 'undefined') {
     gsap.registerPlugin(ScrollTrigger);
@@ -25,6 +26,8 @@ const PROJECT_PLANTS: PlantType[] = [
   "snail",
   "dfly",
 ];
+
+const FRAME_VARIANTS: FrameVariant[] = ["vid", "hedge", "cane", "garland", "root", "bamboo"];
 
 const ProjectCard = memo(function ProjectCard({ project, isActive, onHover, onLeave }: { 
   project: typeof PROJECTS[0], 
@@ -63,59 +66,61 @@ const ProjectCard = memo(function ProjectCard({ project, isActive, onHover, onLe
       {/* Media Container - Responsive Aspect Ratio */}
       <a href={project.link} target="_blank" className="block relative z-10 cursor-pointer">
         <TiltCard
-          className="relative w-[85vw] md:w-[800px] aspect-[4/3] md:aspect-video bg-[var(--color-border)] border border-[var(--color-border)] shadow-sm group-hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] dark:group-hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.4)] transition-shadow duration-700"
+          className="relative w-[90vw] md:w-[900px] shadow-sm group-hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] dark:group-hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.4)] transition-shadow duration-700"
           intensity={5}
+          sheen={false}
         >
-          {/* Biophilic sprout anchored directly onto video frame top edge */}
-          <PixelPlant 
-            type={PROJECT_PLANTS[project.id % PROJECT_PLANTS.length]} 
-            flip={project.id % 2 === 1}
-            className="absolute -top-4 left-8 text-base opacity-90 group-hover:opacity-100 group-hover:-translate-y-1 transition-all duration-500 pointer-events-none z-[70] drop-shadow-md" 
-          />
+          <PixelFrame 
+            variant={FRAME_VARIANTS[(project.id - 1) % FRAME_VARIANTS.length]}
+            pixel={3}
+            tone="sobrio"
+            critters={true}
+            id={`project-frame-${project.id}`}
+          >
+            {/* Inner clipped video frame */}
+            <div className="relative aspect-[4/3] md:aspect-video bg-[var(--color-border)] border border-[var(--color-border)] overflow-hidden">
+              {/* Elegant soft border on hover instead of neon */}
+              <div className="absolute inset-0 border border-transparent group-hover:border-[var(--color-accent)]/30 pointer-events-none z-50 transition-colors duration-700" />
 
-          {/* Inner clipped video frame */}
-          <div className="absolute inset-0 overflow-hidden">
-            {/* Elegant soft border on hover instead of neon */}
-            <div className="absolute inset-0 border border-transparent group-hover:border-[var(--color-accent)]/30 pointer-events-none z-50 transition-colors duration-700" />
-
-            {/* Subtle overlay to help title pop, but keeping video clear */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500 z-30 pointer-events-none" />
-            
-            {project.video ? (
-              <>
+              {/* Subtle overlay to help title pop, but keeping video clear */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500 z-30 pointer-events-none" />
+              
+              {project.video ? (
+                <>
+                  <Image 
+                    src={project.image} 
+                    alt={project.title}
+                    fill
+                    className={`object-cover transition-all duration-700 ${isActive ? 'opacity-0 scale-110' : 'opacity-100 grayscale-[0.5] group-hover:grayscale-0'}`}
+                    priority={project.id === 1}
+                    loading={project.id === 1 ? "eager" : "lazy"}
+                    sizes="(max-width: 768px) 92vw, 900px"
+                  />
+                  <video 
+                    ref={videoRef}
+                    src={project.video}
+                    loop 
+                    muted 
+                    playsInline
+                    preload="none"
+                    crossOrigin="anonymous"
+                    suppressHydrationWarning
+                    className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${isActive ? 'opacity-100' : 'opacity-0'}`}
+                  />
+                </>
+              ) : (
                 <Image 
                   src={project.image} 
                   alt={project.title}
                   fill
-                  className={`object-cover transition-all duration-700 ${isActive ? 'opacity-0 scale-110' : 'opacity-100 grayscale-[0.5] group-hover:grayscale-0'}`}
                   priority={project.id === 1}
                   loading={project.id === 1 ? "eager" : "lazy"}
-                  sizes="(max-width: 768px) 92vw, 800px"
+                  sizes="(max-width: 768px) 92vw, 900px"
+                  className="object-cover grayscale-[0.5] group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700 ease-in-out"
                 />
-                <video 
-                  ref={videoRef}
-                  src={project.video}
-                  loop 
-                  muted 
-                  playsInline
-                  preload="none"
-                  crossOrigin="anonymous"
-                  suppressHydrationWarning
-                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${isActive ? 'opacity-100' : 'opacity-0'}`}
-                />
-              </>
-            ) : (
-              <Image 
-                src={project.image} 
-                alt={project.title}
-                fill
-                priority={project.id === 1}
-                loading={project.id === 1 ? "eager" : "lazy"}
-                sizes="(max-width: 768px) 92vw, 800px"
-                className="object-cover grayscale-[0.5] group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700 ease-in-out"
-              />
-            )}
-          </div>
+              )}
+            </div>
+          </PixelFrame>
         </TiltCard>
       </a>
   
