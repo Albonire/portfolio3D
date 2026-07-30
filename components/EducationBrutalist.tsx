@@ -33,7 +33,7 @@ export default function EducationBrutalist() {
               <p className="font-body text-base text-[var(--color-text)]/90 leading-relaxed max-w-xl">{edu.description}</p>
               
               {edu.link && (
-                edu.disabled || edu.link === "#" ? (
+                edu.link === "#" ? (
                   <span className="inline-flex items-center gap-2 mt-6 font-sans tracking-widest uppercase text-[10px] border border-[var(--color-border)] px-4 py-2 text-[var(--color-muted)]/50 opacity-50 cursor-not-allowed select-none">
                     <span>View Certificate &rarr;</span>
                   </span>
