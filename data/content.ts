@@ -76,21 +76,21 @@ export const PROJECTS = [
 export const EDUCATION = [
   {
     id: 1,
+    year: "Ongoing",
+    title: "Systems Engineering",
+    institution: "Pamplona University",
+    description: "Formal education in software engineering and computer science.",
+    type: "ongoing degree",
+    link: "#",
+  },
+  {
+    id: 2,
     year: "2024",
     title: "Programming Bootcamp",
     institution: "Sergio Arboleda University",
     description: "TypeScript, React, Node.js, Next.js, Tailwind CSS",
     type: "certification",
-    link: "https://certificadotech.tiiny.site",
-  },
-  {
-    id: 2,
-    year: "2022",
-    title: "Systems Engineering",
-    institution: "Pamplona University",
-    description: "Formal education in software engineering and computer science.",
-    type: "ongoing degree",
-    link: "#", // PASTE CERTIFICATE URL HERE
+    link: "/CertificadoTECH.pdf",
   },
   {
     id: 3,
@@ -99,16 +99,16 @@ export const EDUCATION = [
     institution: "Programming Academy",
     description: "JavaScript, React, Node.js & databases",
     type: "course",
-    link: "#", // PASTE CERTIFICATE URL HERE
+    link: "/Anderson_MMXXI.png",
   },
   {
     id: 4,
     year: "2019",
-    title: "Bachiller Técnico",
+    title: "Technical High School Diploma",
     institution: "IT Technical Institute",
     description: "Focus on electronics and industrial mechanics",
     type: "degree",
-    link: "#", // PASTE CERTIFICATE URL HERE
+    link: "/Certificado_bachiller.jpg",
   },
   {
     id: 5,
@@ -117,7 +117,7 @@ export const EDUCATION = [
     institution: "SENA",
     description: "Hardware & Networking",
     type: "certification",
-    link: "#", // PASTE CERTIFICATE URL HERE
+    link: "#",
   },
 ];
 
