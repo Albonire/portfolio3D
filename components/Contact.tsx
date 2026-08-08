@@ -2,7 +2,8 @@
 
 import { ABOUT } from "@/data/content";
 import Magnetic from "./Magnetic";
-import PixelDivider, { PixelPlant, PlantType } from "./PixelDivider";
+import { PixelPlant } from "./PixelDivider";
+import PixelDitherAvatar from "./PixelDitherAvatar";
 
 const EditorialArrow = ({ className = "" }: { className?: string }) => (
   <svg aria-hidden="true" viewBox="0 0 24 24" className={`h-5 w-5 ${className}`}>
@@ -32,13 +33,6 @@ const EditorialArrow = ({ className = "" }: { className?: string }) => (
     />
   </svg>
 );
-
-const SOCIAL_PLANTS: Record<string, PlantType> = {
-  GITHUB: "ant",
-  LINKEDIN: "bee",
-  TWITTER: "dfly",
-  EMAIL: "firefly",
-};
 
 export default function Contact() {
   const email = ABOUT.social.find(s => s.label === "EMAIL")?.url.replace('mailto:', '');
@@ -79,13 +73,12 @@ export default function Contact() {
           </div>
         </div>
 
-        {/* Right Column - Social Links */}
-        <div className="md:w-1/3 flex flex-col justify-between md:justify-end md:border-l md:border-[var(--color-border)] md:pl-12">
+        {/* Right Column - Social Links & Dithered Portrait Avatar */}
+        <div className="md:w-1/3 flex flex-col justify-between md:border-l md:border-[var(--color-border)] md:pl-12">
+          <div className="mb-10 flex justify-start">
+            <PixelDitherAvatar variant="hedge" tone="sobrio" />
+          </div>
           <div className="flex flex-col gap-6">
-            <h3 className="font-sans text-xs font-medium tracking-[0.2em] text-[var(--color-muted)] uppercase mb-4 flex items-center gap-2">
-              <span>Connect</span>
-              <PixelPlant type="ladybug" className="text-xs opacity-75" />
-            </h3>
             <ul className="flex flex-col gap-4">
               {ABOUT.social.map((social) => (
                 <li key={social.label}>
