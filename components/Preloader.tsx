@@ -1,35 +1,31 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
-
-const STATUSES = [
-  "SYSTEM BOOT",
-  "COMPILING SHADERS",
-  "LOADING 3D SCENE",
-  "OPTIMIZING MEMORY",
-  "SYSTEM READY"
-];
+import { useEffect, useState, useCallback, useRef } from "react";
 
 export default function Preloader() {
   const [isDismissed, setIsDismissed] = useState(false);
   const [percent, setPercent] = useState(0);
   const [isExiting, setIsExiting] = useState(false);
+  const dismissedRef = useRef(false);
 
   const dismiss = useCallback(() => {
+    if (dismissedRef.current) return;
+    dismissedRef.current = true;
     setIsExiting(true);
     try {
       sessionStorage.setItem("boot_sequence_seen", "true");
     } catch {
       // ignore
     }
-    const timer = setTimeout(() => {
+    setTimeout(() => {
       document.body.style.overflow = "";
       setIsDismissed(true);
     }, 500);
-    return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
+    if (isExiting) return;
+
     // Check sessionStorage AFTER hydration to prevent SSR mismatch
     try {
       if (sessionStorage.getItem("boot_sequence_seen") === "true") {
@@ -83,31 +79,22 @@ export default function Preloader() {
       cancelAnimationFrame(animationFrameId);
       clearTimeout(fallbackTimer);
       window.removeEventListener("keydown", onKeyDown);
-      document.body.style.overflow = "";
     };
-  }, [dismiss]);
+  }, [dismiss, isExiting]);
 
   if (isDismissed) return null;
 
-  const statusIdx = Math.min(
-    Math.floor((percent / 100) * STATUSES.length),
-    STATUSES.length - 1
-  );
-  const statusText = STATUSES[statusIdx];
-
   return (
-    <div 
+    <div
+      role="status"
+      aria-live="polite"
+      aria-label="Loading"
       className={`fixed inset-0 z-[99999] bg-[var(--bg-primary)] text-[var(--text-primary)] flex flex-col justify-between p-6 md:p-12 cursor-wait select-none transition-transform duration-500 ease-in-out ${
         isExiting ? "-translate-y-full pointer-events-none" : "translate-y-0"
       }`}
     >
       {/* Top Header */}
-      <div className="flex justify-between items-center font-mono text-[10px] md:text-xs uppercase tracking-widest text-[var(--color-muted)]">
-        <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-[var(--color-accent)] animate-pulse" />
-          <span>{statusText}</span>
-        </div>
-        
+      <div className="flex justify-end items-center font-mono text-[10px] md:text-xs uppercase tracking-widest text-[var(--color-muted)]">
         <button
           type="button"
           onClick={dismiss}
@@ -135,17 +122,6 @@ export default function Preloader() {
         </div>
       </div>
 
-      {/* Bottom Footer */}
-      <div className="flex justify-between items-end font-mono text-[10px] md:text-xs uppercase tracking-widest text-[var(--color-muted)]">
-        <div className="flex gap-4 sm:gap-8">
-          <span>MEM: OK</span>
-          <span>GPU: ACCEL</span>
-          <span>NET: READY</span>
-        </div>
-        <div>
-          <span>FABIAN GONZÁLEZ ©</span>
-        </div>
-      </div>
     </div>
   );
 }
