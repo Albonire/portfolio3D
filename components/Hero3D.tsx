@@ -57,8 +57,8 @@ export default function HeroSection() {
         <div className="will-change-transform max-w-2xl md:max-w-3xl lg:max-w-4xl relative z-10">
           <MaskText priority={true}>
             <h1 className="font-display font-medium text-[8.5vw] sm:text-6xl md:text-7xl lg:text-[7.5rem] leading-[1.05] tracking-tight text-[var(--color-text)] drop-shadow-sm">
-              Digital engineering <br />
-              <span className="text-[var(--color-accent)] italic">& creativity.</span>
+              Anderson Fabian <br />
+              <span className="text-[var(--color-accent)] italic"> González.</span>
             </h1>
           </MaskText>
         </div>
@@ -66,7 +66,7 @@ export default function HeroSection() {
         <div className="will-change-transform mt-6 md:mt-10 max-w-sm md:max-w-lg relative z-10">
           <MaskText delay={0.1} priority={true}>
             <p className="font-body text-base md:text-lg lg:text-xl text-[var(--color-text)]/80 leading-relaxed font-light">
-              Building high-performance systems where AI meets intuitive web design.
+              If you&apos;re visiting my portfolio, I want you to enjoy what you see, and this project in general schematically represents my way of being.
             </p>
           </MaskText>
         </div>
