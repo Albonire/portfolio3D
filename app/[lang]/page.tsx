@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import ExternalLink from "@/components/ExternalLink";
 import Header from "@/components/Header";
 import Inline from "@/components/Inline";
+import RequestLab from "@/components/RequestLab";
 import Section from "@/components/Section";
 import Sources from "@/components/Sources";
 import { getContent } from "@/content";
@@ -46,11 +47,11 @@ export default async function Home({ params }: Props) {
     <>
       <Header lang={lang} content={c} altHref={`/${otherLocale(lang)}`} />
       <main id="main" className="mx-auto max-w-5xl px-5 sm:px-8">
-        <section className="grid gap-12 py-16 sm:py-24 md:grid-cols-[minmax(0,1fr)_17rem]">
+        <section className="grid gap-12 py-14 sm:py-20 lg:grid-cols-[minmax(0,1fr)_27rem] lg:gap-14">
           <div>
-            <h1 className="font-serif text-4xl font-medium leading-[1.1] text-ink sm:text-5xl">{c.hero.name}</h1>
-            <p className="mt-3 text-lg text-muted">{c.hero.role}</p>
-            <p className="mt-8 max-w-2xl text-lg leading-relaxed text-body">{c.hero.intro}</p>
+            <h1 className="font-serif text-4xl font-medium leading-[1.1] text-ink sm:text-[2.6rem]">{c.hero.name}</h1>
+            <p className="mt-3 max-w-xl text-lg text-muted">{c.hero.role}</p>
+            <p className="mt-8 max-w-xl text-lg leading-relaxed text-body">{c.hero.intro}</p>
             <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
               <a
                 href={c.hero.cvPrimary.href}
@@ -66,15 +67,17 @@ export default async function Home({ params }: Props) {
               </a>
             </div>
           </div>
-          <dl className="grid content-start gap-4 border-t border-rule pt-6 text-sm md:border-l md:border-t-0 md:pl-8 md:pt-1">
-            {c.hero.facts.map((fact) => (
-              <div key={fact.label}>
-                <dt className="font-mono text-xs text-muted">{fact.label}</dt>
-                <dd className="mt-0.5 text-ink">{fact.value}</dd>
-              </div>
-            ))}
-          </dl>
+          <RequestLab lab={c.hero.lab} caseHref={`/${lang}/work/control-vehicular`} />
         </section>
+
+        <dl className="grid grid-cols-2 gap-x-8 gap-y-5 border-t border-rule py-8 text-sm lg:grid-cols-4">
+          {c.hero.facts.map((fact) => (
+            <div key={fact.label}>
+              <dt className="font-mono text-xs text-muted">{fact.label}</dt>
+              <dd className="mt-0.5 text-ink">{fact.value}</dd>
+            </div>
+          ))}
+        </dl>
 
         <Section id="work" title={c.work.title}>
           <p className="max-w-2xl text-body">{c.work.intro}</p>

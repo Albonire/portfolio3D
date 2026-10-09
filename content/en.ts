@@ -37,7 +37,7 @@ export const en: Content = {
     ],
     lab: {
       title: "One request, step by step",
-      note: "A simulation of the Control Vehicular flow, a real system with private code. Each scenario has its integration test in the repository.",
+      note: "A simulation of the Control Vehicular flow, a real system with private code.",
       scenariosLabel: "Scenarios",
       requestLabel: "Request",
       resultLabel: "Response",
@@ -95,7 +95,7 @@ export const en: Content = {
           result: { code: "200", text: "No session starts even if the password is right. The lockout is per user and IP." },
         },
       ],
-      sourceNote: "Source: src/app.js, src/auth.js and src/routes/auth.js, plus the permissions.test.js and auth.test.js tests in fleet_control.",
+      sourceNote: "Each scenario has its test in fleet_control (permissions.test.js and auth.test.js). Flow taken from src/app.js, src/auth.js and src/routes/auth.js.",
       caseLabel: "Read the case study",
     },
     cvPrimary: { label: "Résumé (PDF)", href: "/cv/Anderson_Gonzalez_CV_EN.pdf" },

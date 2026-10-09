@@ -19,6 +19,8 @@
   --color-rule: #e2e8f0;
   --color-accent: #1f3a5f;
   --color-accent-strong: #162b47;
+  /* Solo para el paso que falla en el simulador: semántico, no decorativo. */
+  --color-stop: #9f1239;
 }
 
 @layer base {

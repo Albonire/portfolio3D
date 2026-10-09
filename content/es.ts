@@ -37,7 +37,7 @@ export const es: Content = {
     ],
     lab: {
       title: "Una petición, paso a paso",
-      note: "Simulación del flujo de Control Vehicular, un sistema real con código privado. Cada escenario tiene su prueba de integración en el repositorio.",
+      note: "Simulación del flujo de Control Vehicular, un sistema real con código privado.",
       scenariosLabel: "Escenarios",
       requestLabel: "Petición",
       resultLabel: "Respuesta",
@@ -95,7 +95,7 @@ export const es: Content = {
           result: { code: "200", text: "No se inicia sesión aunque la clave sea la correcta. El bloqueo es por usuario e IP." },
         },
       ],
-      sourceNote: "Fuente: src/app.js, src/auth.js y src/routes/auth.js, y las pruebas permissions.test.js y auth.test.js de fleet_control.",
+      sourceNote: "Cada escenario tiene su prueba en fleet_control (permissions.test.js y auth.test.js). Flujo tomado de src/app.js, src/auth.js y src/routes/auth.js.",
       caseLabel: "Ver el caso de estudio",
     },
     cvPrimary: { label: "Hoja de vida (PDF)", href: "/cv/Anderson_Gonzalez_Hoja_de_Vida.pdf" },
