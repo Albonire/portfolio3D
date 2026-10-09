@@ -358,13 +358,13 @@ export const en: Content = {
       title: "Commit authorship in cv-parser",
       where: "git shortlog of rosimar1/cv-parser (private)",
       date: "October 9, 2026",
-      note: "Fabian Gonzalez 50, jholman19 41, Claude 27 and ImgBot 1: 119 in total.",
+      note: "Fabian Gonzalez 50, another team developer 41, Claude 27 and ImgBot 1: 119 in total.",
     },
     "fleet-commits": {
       title: "Commit authorship in fleet_control",
       where: "git shortlog of rosimar1/fleet_control (private)",
       date: "October 9, 2026",
-      note: "Jholman Adrian Sogamoso Gutierrez 17 and Fabian Gonzalez 7: 24 in total.",
+      note: "Another team developer 17 and Fabian Gonzalez 7: 24 in total.",
     },
     "fleet-tests": {
       title: "Tests when the migration closed",
@@ -429,7 +429,7 @@ export const en: Content = {
       title: "Commit authorship in CircuitBreve",
       where: "git log of Albonire/CircuitBreve (public)",
       date: "October 9, 2026",
-      note: "Fabian Gonzalez 9, ANDresC-1A 4 (backend and a copy of the frontend) and ImgBot 1: 14 in total.",
+      note: "Fabian Gonzalez 9, another contributor 4 (backend and a copy of the frontend) and ImgBot 1: 14 in total.",
       href: "https://github.com/Albonire/CircuitBreve",
     },
     "circuit-loc": {
