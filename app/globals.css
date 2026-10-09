@@ -1,99 +1,64 @@
 @import "tailwindcss";
 
-@theme {
-  --color-dark: var(--bg-primary);
-  --color-text: var(--text-primary);
-  --color-accent: var(--color-accent);
-  --color-muted: var(--color-muted);
-  --color-border: var(--color-border);
-  
-  --font-display: var(--font-display);
-  --font-body: var(--font-body);
-
-  --animate-pulse-fast: pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+/* Fuentes: next/font define --font-plex-* en <html>; aquí solo se enlazan a los tokens de Tailwind.
+   Los nombres son distintos a propósito (una variable que se referencia a sí misma queda inválida). */
+@theme inline {
+  --font-sans: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-plex-serif), ui-serif, Georgia, serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
-@variant dark (&:where(.dark, .dark *));
+/* Paleta: neutros slate sobre un papel casi blanco (ni blanco puro ni crema) y un solo acento,
+   el mismo azul marino de la hoja de vida. Todo el texto cumple contraste AA sobre --color-paper. */
+@theme {
+  --color-paper: #f8fafc;
+  --color-wash: #f1f5f9;
+  --color-ink: #0f172a;
+  --color-body: #334155;
+  --color-muted: #475569;
+  --color-rule: #e2e8f0;
+  --color-accent: #1f3a5f;
+  --color-accent-strong: #162b47;
+}
 
 @layer base {
-  :root {
-    --bg-primary: #1A1A18;      /* Matte dark stone (default) */
-    --text-primary: #F5F5F3;    /* Off-white */
-    --color-accent: #B8C9B2;    /* Lighter pastel Sage for dark mode */
-    --color-muted: #C0BFBA;     /* Contrast improved for readability */
-    --color-border: #2D2D2A;
-  }
-
-  [data-theme='dark'], .dark {
-    --bg-primary: #1A1A18;      /* Matte dark stone */
-    --text-primary: #F5F5F3;    /* Off-white */
-    --color-accent: #B8C9B2;    /* Lighter pastel Sage for dark mode */
-    --color-muted: #C0BFBA;     /* Contrast improved for readability */
-    --color-border: #2D2D2A;
-  }
-
-  [data-theme='light'], .light {
-    --bg-primary: #EBE7E2;      /* Soft stone with subtle warmth */
-    --text-primary: #1C1C1A;    /* Extremely dark stone */
-    --color-accent: #445640;    /* Darker Sage Green for good contrast */
-    --color-muted: #5C5B56;     /* Darker muted text */
-    --color-border: #D6CFC9;
+  html {
+    color-scheme: light;
+    background-color: var(--color-paper);
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
   }
 
   body {
-    background-color: var(--color-dark);
-    color: var(--color-text);
-    overflow-x: hidden;
-    transition: background-color 0.5s ease, color 0.5s ease;
+    background-color: var(--color-paper);
+    color: var(--color-body);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
 
-  @media (pointer: fine) {
-    html,
-    body,
+  ::selection {
+    background-color: var(--color-accent);
+    color: var(--color-paper);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
     *,
     *::before,
     *::after {
-      cursor: none !important;
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
     }
   }
-}
-
-@layer utilities {
-  /* Typography Utilities */
-  .stroke-text {
-    -webkit-text-stroke: 2px currentColor;
-    color: transparent;
-  }
-  
-  .stroke-neon {
-    -webkit-text-stroke: 2px var(--color-neon);
-  }
-  
-  .stroke-black {
-    -webkit-text-stroke: 2px black;
-  }
-}
-
-/* Glitch Animation */
-@keyframes glitch-anim {
-  0% { clip-path: inset(20% 0 80% 0); transform: translate(-2px, 1px); }
-  20% { clip-path: inset(60% 0 10% 0); transform: translate(2px, -1px); }
-  40% { clip-path: inset(40% 0 50% 0); transform: translate(-2px, 2px); }
-  60% { clip-path: inset(80% 0 5% 0); transform: translate(2px, -2px); }
-  80% { clip-path: inset(10% 0 70% 0); transform: translate(-1px, 1px); }
-  100% { clip-path: inset(30% 0 50% 0); transform: translate(1px, -1px); }
-}
-
-.glitch-layer {
-  display: none;
-  position: absolute;
-  inset: 0;
-  z-index: 10;
-  mix-blend-mode: hard-light;
-  background-size: cover;
-}
-
-.group:hover .glitch-layer {
-  display: block;
-  animation: glitch-anim 0.3s infinite linear alternate-reverse;
 }
