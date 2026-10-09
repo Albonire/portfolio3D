@@ -12,13 +12,18 @@ app/[lang]/not-found.tsx        404
 app/sitemap.ts, app/robots.ts   SEO, con hreflang
 proxy.ts                        "/" redirige a /es o /en según cookie NEXT_LOCALE o Accept-Language
 content/es.ts, content/en.ts    todo el texto del sitio, un módulo por idioma (tipo Content en content/types.ts)
-lib/                            idiomas y constantes del sitio (dominio, correo, enlaces)
+components/RequestLab.tsx       simulador de la portada: una petición de Control Vehicular, paso a paso
+components/AccuracyChart.tsx    curva de precisión del lector OCR (caso Talento Rosimar)
+components/CircuitToy.tsx       sumador completo interactivo (caso CircuitBreve)
+components/Sources.tsx          lista numerada de fuentes de las cifras
+lib/                            idiomas, constantes del sitio y lib/refs.ts (numeración de fuentes)
 public/cv/                      hojas de vida en PDF (ES y EN)
 public/work/<caso>/             capturas en WebP
 public/og.png                   imagen para compartir en redes
 ```
 
-El sitio no tiene componentes de cliente propios: todo se genera en el build. Un solo tema (claro), una sola
+Las únicas piezas de cliente son las tres interactivas (simulador, gráfica y sumador); el resto se genera en el build.
+Un solo tema (claro), una sola
 paleta (neutros slate y azul marino `#1f3a5f`, el mismo del CV) y tres fuentes de la familia IBM Plex.
 
 ## Desarrollo
@@ -43,6 +48,19 @@ npm run build
 Los PDF de `public/cv/` salen del repositorio `Albonire/my-cv` (carpeta `dist/`). Para actualizarlos, regenerar allí
 (`python3 cv/scripts/build.py`) y copiar los dos PDF. No publicar nunca el PDF de soportes ni nada de `archivo/`:
 traen la cédula.
+
+## Recibos: fuentes de las cifras
+
+Dentro de un texto, `[[89,8 %|ocr-medicion]]` muestra la cifra con un superíndice que lleva a su fuente. Las fuentes están
+en `sources.items` de cada idioma; la numeración sale del orden de aparición en la página. Una cifra nueva lleva su fuente
+(archivo o repositorio, fecha y si es privado) o no entra.
+
+## Fidelidad del simulador
+
+`RequestLab` simula el flujo documentado de Control Vehicular (código privado). Cada escenario se verificó contra
+`src/app.js`, `src/auth.js` y `src/routes/auth.js` y tiene su prueba de integración en ese repositorio: CSRF devuelve 400,
+la falta de permiso redirige con aviso (302) y el bloqueo de login vuelve el formulario (200). Si el sistema cambia, hay que
+releer esos archivos antes de tocar `hero.lab` en `content/`.
 
 ## Reglas de redacción
 

@@ -547,7 +547,7 @@ export const en: Content = {
                 { label: "First measurement", value: 63.4, phase: "table", note: "Before fixing anything." },
                 { label: "Local threshold (Sauvola)", value: 68.5, phase: "table", note: "One threshold per region instead of a single one for the whole page." },
                 { label: "Polarity detection", value: 72.5, phase: "table", note: "Dark regions are inverted before thresholding, so light text isn't lost." },
-                { label: "Email reconstruction", value: 73.9, phase: "table", note: "The at sign, which Tesseract reads badly, is rebuilt." },
+                { label: "Email reconstruction", value: 73.9, phase: "table", note: "The at sign, which Tesseract struggles to read, is rebuilt." },
                 { label: "Classifier regression", value: 19.6, phase: "table", note: "Six of every nine résumés came out as an unstructured document and reached the form empty." },
                 { label: "Classifier fixed", value: 64.1, phase: "table", note: "The document classifier is corrected." },
                 { label: "Preprocessing by text", value: 68.4, phase: "table", note: "Gray or binarized is chosen by how much text was read." },
