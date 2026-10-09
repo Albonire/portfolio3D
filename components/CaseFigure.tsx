@@ -1,5 +1,8 @@
 import Image from "next/image";
 import type { ChartFigure, CircuitFigure, FlowFigure, ImageFigure } from "@/content/types";
+import type { Locale } from "@/lib/i18n";
+import AccuracyChart from "./AccuracyChart";
+import CircuitToy from "./CircuitToy";
 
 const columns: Record<number, string> = {
   3: "lg:grid-cols-3",
@@ -7,8 +10,11 @@ const columns: Record<number, string> = {
   5: "lg:grid-cols-5",
 };
 
-export default function CaseFigure({ figure }: { figure: ImageFigure | FlowFigure | ChartFigure | CircuitFigure }) {
-  if (figure.kind === "chart" || figure.kind === "circuit") return null;
+type Props = { figure: ImageFigure | FlowFigure | ChartFigure | CircuitFigure; lang: Locale };
+
+export default function CaseFigure({ figure, lang }: Props) {
+  if (figure.kind === "chart") return <AccuracyChart figure={figure} lang={lang} />;
+  if (figure.kind === "circuit") return <CircuitToy figure={figure} />;
 
   if (figure.kind === "image") {
     return (

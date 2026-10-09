@@ -123,7 +123,7 @@ export default async function CaseStudyPage({ params }: Props) {
               </div>
             )}
             {section.figures?.map((figure, i) => (
-              <CaseFigure key={i} figure={figure} />
+              <CaseFigure key={i} figure={figure} lang={lang} />
             ))}
           </section>
         ))}
