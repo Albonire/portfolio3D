@@ -5,8 +5,10 @@ import CaseFigure from "@/components/CaseFigure";
 import ExternalLink from "@/components/ExternalLink";
 import Header from "@/components/Header";
 import Inline from "@/components/Inline";
+import Sources from "@/components/Sources";
 import { getContent } from "@/content";
 import { hasLocale, locales, otherLocale } from "@/lib/i18n";
+import { collectRefs } from "@/lib/refs";
 
 type Props = { params: Promise<{ lang: string; slug: string }> };
 
@@ -36,6 +38,7 @@ export default async function CaseStudyPage({ params }: Props) {
   const c = getContent(lang);
   const study = c.cases[slug];
   if (!study) notFound();
+  const refs = { keys: collectRefs(study), label: c.ui.sourceLabel };
 
   return (
     <>
@@ -54,7 +57,9 @@ export default async function CaseStudyPage({ params }: Props) {
           {study.meta.map((item) => (
             <div key={item.label} className="contents">
               <dt className="font-mono text-xs text-muted sm:pt-0.5">{item.label}</dt>
-              <dd className="text-ink">{item.value}</dd>
+              <dd className="text-ink">
+                <Inline text={item.value} refs={refs} />
+              </dd>
             </div>
           ))}
         </dl>
@@ -72,21 +77,21 @@ export default async function CaseStudyPage({ params }: Props) {
             <div className="mt-4 max-w-2xl space-y-4 text-body">
               {section.paragraphs?.map((p) => (
                 <p key={p}>
-                  <Inline text={p} />
+                  <Inline text={p} refs={refs} />
                 </p>
               ))}
               {section.bullets && (
                 <ul className="list-disc space-y-2 pl-5 marker:text-muted">
                   {section.bullets.map((b) => (
                     <li key={b}>
-                      <Inline text={b} />
+                      <Inline text={b} refs={refs} />
                     </li>
                   ))}
                 </ul>
               )}
               {section.closing && (
                 <p>
-                  <Inline text={section.closing} />
+                  <Inline text={section.closing} refs={refs} />
                 </p>
               )}
             </div>
@@ -107,7 +112,7 @@ export default async function CaseStudyPage({ params }: Props) {
                       <tr key={row[0]} className="border-b border-rule align-top">
                         {row.map((cell, i) => (
                           <td key={i} className={`py-2 pr-4 ${i === 0 ? "text-ink" : "text-body"}`}>
-                            {cell}
+                            <Inline text={cell} refs={refs} />
                           </td>
                         ))}
                       </tr>
@@ -122,6 +127,14 @@ export default async function CaseStudyPage({ params }: Props) {
             ))}
           </section>
         ))}
+        {refs.keys.length > 0 && (
+          <section aria-labelledby="fuentes-title" className="mt-16 border-t border-rule pt-8">
+            <h2 id="fuentes-title" className="font-serif text-xl font-medium text-ink">
+              {c.sources.title}
+            </h2>
+            <Sources keys={refs.keys} items={c.sources.items} />
+          </section>
+        )}
       </main>
     </>
   );

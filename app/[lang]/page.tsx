@@ -3,9 +3,12 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import ExternalLink from "@/components/ExternalLink";
 import Header from "@/components/Header";
+import Inline from "@/components/Inline";
 import Section from "@/components/Section";
+import Sources from "@/components/Sources";
 import { getContent } from "@/content";
 import { hasLocale, otherLocale } from "@/lib/i18n";
+import { collectRefs } from "@/lib/refs";
 import { EMAIL } from "@/lib/site";
 
 type Props = { params: Promise<{ lang: string }> };
@@ -34,6 +37,10 @@ export default async function Home({ params }: Props) {
   const { lang } = await params;
   if (!hasLocale(lang)) notFound();
   const c = getContent(lang);
+  const refs = {
+    keys: collectRefs([c.hero, c.work, c.experience, c.education, c.skills, c.contact]),
+    label: c.ui.sourceLabel,
+  };
 
   return (
     <>
@@ -89,10 +96,14 @@ export default async function Home({ params }: Props) {
                   </p>
                 </div>
                 <p className="mt-1 text-sm text-muted">{project.context}</p>
-                <p className="mt-3 max-w-2xl text-body">{project.summary}</p>
+                <p className="mt-3 max-w-2xl text-body">
+                  <Inline text={project.summary} refs={refs} />
+                </p>
                 <ul className="mt-3 max-w-2xl list-disc space-y-1 pl-5 text-sm text-body marker:text-muted">
                   {project.facts.map((fact) => (
-                    <li key={fact}>{fact}</li>
+                    <li key={fact}>
+                      <Inline text={fact} refs={refs} />
+                    </li>
                   ))}
                 </ul>
                 <p className="mt-4 flex flex-wrap gap-x-5 gap-y-1 text-sm">
@@ -118,7 +129,7 @@ export default async function Home({ params }: Props) {
             {c.work.also.map((item) => (
               <li key={item.title} className="py-4">
                 <p className="max-w-2xl text-body">
-                  <span className="font-medium text-ink">{item.title}.</span> {item.text}{" "}
+                  <span className="font-medium text-ink">{item.title}.</span> <Inline text={item.text} refs={refs} />{" "}
                   <ExternalLink link={{ label: item.linkLabel, href: item.href }} />
                 </p>
               </li>
@@ -210,6 +221,10 @@ export default async function Home({ params }: Props) {
               <ExternalLink key={item.href} link={item} />
             ))}
           </p>
+        </Section>
+
+        <Section id="sources" title={c.sources.title}>
+          <Sources keys={refs.keys} items={c.sources.items} intro={c.sources.intro} />
         </Section>
       </main>
     </>

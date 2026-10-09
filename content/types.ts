@@ -9,6 +9,47 @@ export type ImageFigure = {
   caption: string;
 };
 
+export type ChartPoint = {
+  label: string;
+  value: number;
+  note: string;
+  /** "table" son los 10 pasos de la tabla Resultado; "later" son hitos de tandas posteriores. */
+  phase: "table" | "later";
+};
+
+export type ChartFigure = {
+  kind: "chart";
+  label: string;
+  caption: string;
+  yLabel: string;
+  laterLabel: string;
+  dataLabel: string;
+  keysHint: string;
+  /** Índice del punto que se muestra al cargar (la caída). */
+  focus: number;
+  callout: { title: string; text: string };
+  points: ChartPoint[];
+};
+
+export type CircuitFigure = {
+  kind: "circuit";
+  label: string;
+  caption: string;
+  hint: string;
+  summary: string;
+  tableLabel: string;
+  inputLabels: [string, string, string];
+  outputLabels: [string, string];
+};
+
+export type Source = {
+  title: string;
+  where: string;
+  date?: string;
+  note?: string;
+  href?: string;
+};
+
 export type FlowFigure = {
   kind: "flow";
   label: string;
@@ -25,7 +66,7 @@ export type CaseSection = {
   /** Frase final, se muestra después de la lista. */
   closing?: string;
   table?: Table;
-  figures?: (ImageFigure | FlowFigure)[];
+  figures?: (ImageFigure | FlowFigure | ChartFigure | CircuitFigure)[];
 };
 
 export type CaseStudy = {
@@ -56,6 +97,29 @@ export type Job = {
   bullets: string[];
 };
 
+export type LabScenario = {
+  id: string;
+  label: string;
+  request: string;
+  /** Un estado por paso: ok pasa, na no aplica, stop se detiene, skip no se ejecuta. */
+  states: ("ok" | "na" | "stop" | "skip")[];
+  notes: string[];
+  result: { code: string; text: string };
+};
+
+export type LabContent = {
+  title: string;
+  note: string;
+  scenariosLabel: string;
+  requestLabel: string;
+  resultLabel: string;
+  stateLabels: { ok: string; na: string; stop: string; skip: string };
+  steps: { title: string; detail: string }[];
+  scenarios: LabScenario[];
+  sourceNote: string;
+  caseLabel: string;
+};
+
 export type Content = {
   htmlLang: string;
   meta: { title: string; description: string };
@@ -67,6 +131,7 @@ export type Content = {
     back: string;
     caseStudy: string;
     private: string;
+    sourceLabel: string;
   };
   nav: { work: string; experience: string; education: string; skills: string; contact: string };
   hero: {
@@ -74,6 +139,7 @@ export type Content = {
     role: string;
     intro: string;
     facts: { label: string; value: string }[];
+    lab: LabContent;
     cvPrimary: Link;
     cvSecondary: Link;
   };
@@ -103,6 +169,7 @@ export type Content = {
     emailLabel: string;
     items: Link[];
   };
+  sources: { title: string; intro: string; items: Record<string, Source> };
   footer: string;
   notFound: { title: string; text: string; link: string };
   cases: Record<string, CaseStudy>;

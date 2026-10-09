@@ -1,5 +1,5 @@
 import Image from "next/image";
-import type { FlowFigure, ImageFigure } from "@/content/types";
+import type { ChartFigure, CircuitFigure, FlowFigure, ImageFigure } from "@/content/types";
 
 const columns: Record<number, string> = {
   3: "lg:grid-cols-3",
@@ -7,7 +7,9 @@ const columns: Record<number, string> = {
   5: "lg:grid-cols-5",
 };
 
-export default function CaseFigure({ figure }: { figure: ImageFigure | FlowFigure }) {
+export default function CaseFigure({ figure }: { figure: ImageFigure | FlowFigure | ChartFigure | CircuitFigure }) {
+  if (figure.kind === "chart" || figure.kind === "circuit") return null;
+
   if (figure.kind === "image") {
     return (
       <figure className="my-8">
