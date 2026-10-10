@@ -1,15 +1,11 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Mono, IBM_Plex_Sans, IBM_Plex_Serif } from "next/font/google";
 import { notFound } from "next/navigation";
 import { getContent } from "@/content";
 import { SunnyLayer } from "@/components/Sunny";
 import { hasLocale, locales } from "@/lib/i18n";
 import { SITE_URL } from "@/lib/site";
+import { mono, sans, serif } from "../fonts";
 import "../globals.css";
-
-const sans = IBM_Plex_Sans({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-plex-sans", display: "swap" });
-const serif = IBM_Plex_Serif({ subsets: ["latin"], weight: ["500", "600"], variable: "--font-plex-serif", display: "swap" });
-const mono = IBM_Plex_Mono({ subsets: ["latin"], weight: ["400"], variable: "--font-plex-mono", display: "swap" });
 
 export const dynamicParams = false;
 
