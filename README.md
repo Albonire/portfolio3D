@@ -23,7 +23,8 @@ scripts/samples/                fuente Typst de la hoja de vida de muestra de do
 public/samples/                 los PDF de muestra generados (datos inventados)
 public/cv/                      hojas de vida en PDF (ES y EN)
 public/work/<caso>/             capturas en WebP
-public/og.png                   imagen para compartir en redes
+public/og-es.png, og-en.png    imagen para compartir en redes, una por idioma (1200x630)
+scripts/og/                     plantilla HTML y script que renderizan esas dos imágenes
 public/icon.svg, favicon.ico,   icono de la pestaña: una compuerta lógica AND (Anderson empieza por "AND"), la misma
   apple-touch-icon.png          de components/Mark.tsx. El SVG cambia de color en modo oscuro; el .ico es el respaldo
                                 para Safari, en un azul medio que se ve en pestañas claras y oscuras
@@ -74,6 +75,18 @@ Los PDF de `public/samples/` salen de `scripts/samples/two-column.typ` (Typst), 
 ```bash
 python3 -c "import typst; [typst.compile('scripts/samples/two-column.typ', output=f'public/samples/{n}', sys_inputs={'lang': l}) for l, n in (('es', 'muestra-dos-columnas.pdf'), ('en', 'sample-two-column.pdf'))]"
 ```
+
+## Imagen para compartir
+
+`public/og-es.png` y `public/og-en.png` salen de `scripts/og/og.html` (el idioma va en `?lang=`). Para regenerarlas hace
+falta Playwright, que no es dependencia del repositorio, y red para las fuentes de Google:
+
+```bash
+npm i --no-save playwright && node scripts/og/render.mjs
+```
+
+La compuerta es el mismo trazado de `components/Mark.tsx`. Las plataformas guardan la imagen en caché: tras cambiarla,
+hay que volver a pedirla en el depurador de cada una (LinkedIn Post Inspector, Facebook Sharing Debugger).
 
 ## Reglas de redacción
 

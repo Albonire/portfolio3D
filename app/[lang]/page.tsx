@@ -30,9 +30,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       url: `/${lang}`,
       title: meta.title,
       description: meta.description,
-      images: [{ url: "/og.png", width: 1200, height: 630, alt: meta.title }],
+      images: [{ url: `/og-${lang}.png`, width: 1200, height: 630, alt: meta.title }],
     },
-    twitter: { card: "summary_large_image", title: meta.title, description: meta.description, images: ["/og.png"] },
+    twitter: { card: "summary_large_image", title: meta.title, description: meta.description, images: [`/og-${lang}.png`] },
   };
 }
 

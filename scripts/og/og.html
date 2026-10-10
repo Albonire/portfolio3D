@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<!-- Plantilla de la imagen para compartir (1200x630). El idioma sale de ?lang=es o ?lang=en.
+     El dibujo de la compuerta es el mismo trazado de components/Mark.tsx y public/icon.svg. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400&family=IBM+Plex+Sans:wght@400&family=IBM+Plex+Serif:wght@500&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; width: 1200px; height: 630px; background: #f8fafc; }
+  .wrap { box-sizing: border-box; width: 1200px; height: 630px; padding: 76px 96px 72px; display: flex; flex-direction: column; justify-content: space-between; border-top: 10px solid #1f3a5f; }
+  svg { display: block; width: 76px; height: 76px; margin-left: -6px; }
+  h1 { margin: 34px 0 0; font: 500 92px/1.05 'IBM Plex Serif', serif; color: #0f172a; }
+  p.role { margin: 22px 0 0; max-width: 940px; font: 400 40px/1.33 'IBM Plex Sans', sans-serif; color: #475569; }
+  .foot { display: flex; justify-content: space-between; font: 400 26px 'IBM Plex Mono', monospace; color: #475569; }
+  .foot b { font-weight: 400; color: #1f3a5f; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div>
+    <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M9 5.5H16A10.5 10.5 0 0 1 16 26.5H9Z M2 11.5H9 M2 20.5H9 M26.5 16H30.5" fill="none" stroke="#1f3a5f" stroke-width="2.4" stroke-linejoin="miter"/></svg>
+    <h1>Anderson F. González</h1>
+    <p class="role" id="role"></p>
+  </div>
+  <div class="foot"><span>Node.js · Laravel · React · PostgreSQL</span><b>anderdev.works</b></div>
+</div>
+<script>
+  const roles = {
+    es: 'Desarrollador full stack, con énfasis en backend, integraciones y seguridad',
+    en: 'Full-stack developer with a focus on backend, integrations and security',
+  };
+  const lang = new URLSearchParams(location.search).get('lang') === 'en' ? 'en' : 'es';
+  document.documentElement.lang = lang;
+  document.getElementById('role').textContent = roles[lang];
+</script>
+</body>
+</html>
