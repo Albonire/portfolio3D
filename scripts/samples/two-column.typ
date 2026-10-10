@@ -1,5 +1,5 @@
 // Hoja de vida de muestra con diseño de dos columnas. Todos los datos son inventados.
-// Se compila con: python3 -c "import typst; ..." (ver README, apartado "Muestras del lector").
+// Se compila con: python3 -c "import typst; ..." (ver README, apartado "Lector de hojas de vida").
 #let lang = sys.inputs.at("lang", default: "es")
 #let t(es, en) = if lang == "es" { es } else { en }
 

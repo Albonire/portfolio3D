@@ -232,7 +232,7 @@ export default function TimeOverlap({ content, lang }: { content: OverlapContent
           value={zone ?? ""}
           onChange={(event) => setPicked(event.target.value)}
           disabled={zone === null}
-          className="rounded-sm border border-rule bg-paper px-2.5 py-1.5 text-sm text-ink"
+          className="rounded-sm border border-muted bg-paper px-2.5 py-1.5 text-sm text-ink"
         >
           {zone === null && <option value="">{content.detecting}</option>}
           {options.map((o) => (
@@ -279,13 +279,10 @@ export default function TimeOverlap({ content, lang }: { content: OverlapContent
         <p className="mt-1 font-mono text-[11px] text-muted">{content.axisLabel}</p>
       </div>
 
-      <div aria-live="polite" className="mt-4 min-h-[5.5rem] max-w-2xl sm:min-h-[4rem]">
-        {view && (
-          <>
-            <p className="text-ink">{view.summary}</p>
-            <p className="mt-1 text-sm text-muted">{view.now}</p>
-          </>
-        )}
+      {/* Solo el resumen se anuncia al cambiar de zona. La hora de ahora cambia cada minuto y no debe ir en la región viva. */}
+      <div className="mt-4 min-h-[5.5rem] max-w-2xl sm:min-h-[4rem]">
+        <div aria-live="polite">{view && <p className="text-ink">{view.summary}</p>}</div>
+        {view && <p className="mt-1 text-sm text-muted">{view.now}</p>}
       </div>
       <p className="max-w-2xl text-sm text-muted">{content.assumption}</p>
     </div>

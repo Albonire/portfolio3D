@@ -16,7 +16,7 @@ export default function Sources({ keys, items, intro }: Props) {
             <li
               key={key}
               id={`fuente-${key}`}
-              className="grid scroll-mt-20 grid-cols-[1.75rem_minmax(0,1fr)] gap-x-2 target:bg-wash"
+              className="grid scroll-mt-28 grid-cols-[1.75rem_minmax(0,1fr)] gap-x-2 target:bg-wash"
             >
               <span className="font-mono text-xs text-muted">{index + 1}</span>
               <div className="max-w-2xl">

@@ -220,13 +220,13 @@ function Findings({
       extra: (
         <>
           <p>
-            {c.contact.email}: <span className="font-mono text-ink">{email ?? c.contact.notFound}</span>
+            {c.contact.email}: <span className="break-words font-mono text-ink">{email ?? c.contact.notFound}</span>
           </p>
           <p>
             {c.contact.phone}: <span className="font-mono text-ink">{phone ?? c.contact.notFound}</span>
           </p>
           <p>
-            {c.contact.links}: <span className="font-mono text-ink">{report.urls.length > 0 ? report.urls.join(", ") : c.contact.notFound}</span>
+            {c.contact.links}: <span className="break-words font-mono text-ink">{report.urls.length > 0 ? report.urls.join(", ") : c.contact.notFound}</span>
             {report.clickableLinks > 0 && <span className="text-muted"> · {fill(c.contact.clickable, { n: report.clickableLinks })}</span>}
           </p>
           {!contactOk && <p className="text-muted">{c.contact.missingHint}</p>}
@@ -246,7 +246,7 @@ function Findings({
   return (
     <div>
       <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
-        <h3 ref={heading} tabIndex={-1} className="font-serif text-lg font-medium text-ink">
+        <h3 ref={heading} tabIndex={-1} className="min-w-0 max-w-full font-serif text-lg font-medium text-ink [overflow-wrap:anywhere]">
           {fill(content.resultFor, { name })}
         </h3>
         <button
@@ -279,6 +279,7 @@ function Findings({
               <h4 className="font-mono text-xs text-muted">{preview.title}</h4>
               <pre
                 tabIndex={0}
+                role="region"
                 aria-label={preview.title}
                 className="mt-2 max-h-72 overflow-auto whitespace-pre-wrap break-words border border-rule bg-wash p-3 font-mono text-xs leading-relaxed text-ink"
               >

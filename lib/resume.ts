@@ -132,9 +132,11 @@ export function findSections(rows: Row[]): Set<SectionKey> {
 }
 
 const EMAIL = /[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}/g;
-const PHONE = /\+?\d[\d \u00a0().-]{7,18}\d/g;
+const PHONE = /\+?\(?\d[\d \u00a0().-]{7,18}\d/g;
 const URL_LIKE = /\b(?:https?:\/\/|www\.|linkedin\.com\/|github\.com\/)[^\s<>"')\]]+/gi;
-const YEAR_RANGE = /^(?:19|20)\d{2}\s*[-.]\s*(?:19|20)\d{2}$/;
+const YEAR = /^(?:19|20)\d{2}$/;
+// Números de identificación con puntos de miles (cédula 1.098.765.432, NIT 900.123.456-7): no son teléfonos.
+const DOTTED_ID = /^\d{1,3}(?:\.\d{3}){2,}(?:-\d)?$/;
 
 const unique = (values: string[]) => [...new Set(values)];
 
@@ -145,7 +147,10 @@ export function findContacts(text: string) {
       .map((m) => m.trim())
       .filter((m) => {
         const digits = m.replace(/\D/g, "").length;
-        if (digits < 9 || digits > 15 || YEAR_RANGE.test(m)) return false;
+        if (digits < 9 || digits > 15 || DOTTED_ID.test(m)) return false;
+        // Dos o más años seguidos ("2019 - 2022", "2022 2023 2024") son fechas.
+        const groups = m.split(/\D+/).filter(Boolean);
+        if (groups.length >= 2 && groups.every((g) => YEAR.test(g))) return false;
         // Una cadena de solo dígitos sin formato es teléfono únicamente si tiene 10 (como un celular colombiano);
         // si no, suele ser un número de documento o de certificado.
         return /[+ \u00a0().-]/.test(m) || digits === 10;

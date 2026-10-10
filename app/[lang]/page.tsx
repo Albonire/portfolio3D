@@ -48,7 +48,7 @@ export default async function Home({ params }: Props) {
   return (
     <>
       <Header lang={lang} content={c} altHref={`/${otherLocale(lang)}`} brand="mark" />
-      <main id="main" className="mx-auto max-w-5xl px-5 sm:px-8">
+      <main id="main" tabIndex={-1} className="mx-auto max-w-5xl px-5 outline-none sm:px-8">
         <section className="grid gap-12 py-14 sm:py-20 lg:grid-cols-[minmax(0,1fr)_27rem] lg:gap-14">
           <div>
             <h1 className="font-serif text-4xl font-medium leading-[1.1] text-ink sm:text-[2.6rem]">{c.hero.name}</h1>
@@ -134,10 +134,11 @@ export default async function Home({ params }: Props) {
                       className="text-accent underline decoration-rule underline-offset-4 transition-colors hover:decoration-accent"
                     >
                       {c.ui.caseStudy}
+                      <span className="sr-only"> ({project.title})</span>
                     </Link>
                   )}
                   {project.links.map((link) => (
-                    <ExternalLink key={link.href} link={link} />
+                    <ExternalLink key={link.href} link={link} context={project.title} />
                   ))}
                   {project.links.length === 0 && <span className="text-muted">{c.ui.private}</span>}
                 </p>
