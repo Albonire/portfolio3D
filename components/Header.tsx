@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Content } from "@/content";
 import { otherLocale, type Locale } from "@/lib/i18n";
+import LangSwitch from "./LangSwitch";
 import Mark from "./Mark";
 import { SunnySwitch } from "./Sunny";
 
@@ -29,7 +30,7 @@ export default function Header({ lang, content, altHref, brand = "name" }: Props
           <Mark />
           {brand === "name" && <span>{content.hero.name}</span>}
         </Link>
-        <nav aria-label={content.ui.home} className="order-3 w-full sm:order-none sm:w-auto">
+        <nav aria-label={content.ui.navLabel} className="order-3 w-full sm:order-none sm:w-auto">
           <ul className="flex flex-wrap gap-x-5 gap-y-1 text-sm">
             {items.map((item) => (
               <li key={item.href}>
@@ -42,7 +43,8 @@ export default function Header({ lang, content, altHref, brand = "name" }: Props
         </nav>
         <div className="flex items-center gap-3 sm:gap-6">
           <SunnySwitch label={content.ui.sunny.label} labelFromSm={brand === "name"} />
-          <Link
+          <LangSwitch
+            locale={other}
             href={altHref}
             hrefLang={other}
             lang={other}
@@ -50,7 +52,7 @@ export default function Header({ lang, content, altHref, brand = "name" }: Props
             className="text-sm text-accent underline decoration-rule underline-offset-4 transition-colors hover:decoration-accent"
           >
             {content.ui.switchTo}
-          </Link>
+          </LangSwitch>
         </div>
       </div>
     </header>

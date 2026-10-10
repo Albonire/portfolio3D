@@ -12,7 +12,7 @@ import HalftoneLayer from "./Halftone";
 // (la dice el texto de al lado), sin pie de figura y sin tabla (están en el caso de estudio).
 const SIZES = {
   full: { W: 600, H: 300, M: { left: 44, right: 20, top: 28, bottom: 58 }, font: 12 },
-  compact: { W: 400, H: 250, M: { left: 40, right: 16, top: 28, bottom: 54 }, font: 13 },
+  compact: { W: 400, H: 258, M: { left: 40, right: 16, top: 30, bottom: 62 }, font: 15 },
 };
 const TICKS = [0, 25, 50, 75, 100];
 
@@ -115,7 +115,7 @@ export default function AccuracyChart({ figure, lang, compact = false }: Props) 
               ))}
 
               {points.map((p, i) => (
-                <text key={p.label} x={x(i)} y={H - M.bottom + 18} textAnchor="middle" className="fill-muted font-mono" fontSize={compact ? 11 : font}>
+                <text key={p.label} x={x(i)} y={H - M.bottom + 18} textAnchor="middle" className="fill-muted font-mono" fontSize={compact ? 13 : font}>
                   {i + 1}
                 </text>
               ))}
