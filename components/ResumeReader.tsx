@@ -100,6 +100,9 @@ export default function ResumeReader({ content, lang }: { content: ReaderContent
 
   return (
     <div>
+      <noscript>
+        <p className="mb-4 text-sm text-muted">{content.noscript}</p>
+      </noscript>
       <div
         onDragOver={(event) => {
           event.preventDefault();

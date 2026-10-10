@@ -102,6 +102,7 @@ export type Job = {
 export type OverlapContent = {
   title: string;
   intro: string;
+  noscript: string;
   zoneLabel: string;
   detecting: string;
   detected: string;
@@ -118,6 +119,7 @@ export type OverlapContent = {
 export type ReaderContent = {
   title: string;
   lead: string;
+  noscript: string;
   privacy: string;
   pick: string;
   dropHint: string;

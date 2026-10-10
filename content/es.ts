@@ -75,6 +75,7 @@ export const es: Content = {
   reader: {
     title: "Prueba tu hoja de vida",
     lead: "Un lector de hojas de vida empieza por sacar el texto del PDF. Aquí puedes ver qué texto sale del tuyo y en qué orden, con pdf.js, la misma biblioteca con la que el lector de Talento Rosimar lee los PDF digitales.",
+    noscript: "Para leer un PDF en el navegador hace falta activar JavaScript.",
     privacy: "El archivo se procesa en tu navegador y no se envía a ningún servidor.",
     pick: "Elegir un PDF",
     dropHint: "o suéltalo aquí",
@@ -361,6 +362,7 @@ export const es: Content = {
     overlap: {
       title: "Tu hora y la mía",
       intro: "Trabajo en hora de Colombia (UTC-5, sin horario de verano). Elige tu zona y mira cuánto de la jornada compartimos.",
+      noscript: "Para calcular la coincidencia hace falta activar JavaScript.",
       zoneLabel: "Tu zona horaria",
       detecting: "Detectando",
       detected: "detectada",

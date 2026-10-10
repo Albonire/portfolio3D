@@ -75,6 +75,7 @@ export const en: Content = {
   reader: {
     title: "Test your résumé",
     lead: "A résumé reader starts by pulling the text out of the PDF. Here you can see what text comes out of yours and in what order, using pdf.js, the same library the Talento Rosimar reader uses on digital PDFs.",
+    noscript: "Reading a PDF in the browser needs JavaScript.",
     privacy: "The file is processed in your browser and is not sent to any server.",
     pick: "Choose a PDF",
     dropHint: "or drop it here",
@@ -359,6 +360,7 @@ export const en: Content = {
     overlap: {
       title: "Your time and mine",
       intro: "I work on Colombian time (UTC-5, no daylight saving). Pick your zone to see how much of the workday we share.",
+      noscript: "Calculating the overlap needs JavaScript.",
       zoneLabel: "Your time zone",
       detecting: "Detecting",
       detected: "detected",

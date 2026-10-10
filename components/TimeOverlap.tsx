@@ -219,6 +219,10 @@ export default function TimeOverlap({ content, lang }: { content: OverlapContent
       <h3 className="font-serif text-xl font-medium text-ink">{content.title}</h3>
       <p className="mt-2 max-w-2xl text-body">{content.intro}</p>
 
+      <noscript>
+        <p className="mt-4 text-sm text-muted">{content.noscript}</p>
+      </noscript>
+
       <div className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-2">
         <label htmlFor={selectId} className="text-sm text-muted">
           {content.zoneLabel}
