@@ -72,8 +72,8 @@ html[data-sunny] {
     visibility 0s linear 700ms;
 }
 .sunny-layer[data-on="true"] {
-  /* 0,8 y no 1: con el papel cálido conserva la luz de la página y las sombras se ven igual de claras. */
-  opacity: 0.8;
+  /* Intensidad del video: 1 es el original de dany (página gris y fría). 0,8 era el primer ajuste; 0,68 es el 85 % de ese. */
+  opacity: 0.68;
   visibility: visible;
   transition:
     opacity 700ms cubic-bezier(0.23, 1, 0.32, 1),
