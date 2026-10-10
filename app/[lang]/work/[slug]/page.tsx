@@ -18,17 +18,42 @@ export function generateStaticParams() {
   return locales.flatMap((lang) => Object.keys(getContent(lang).cases).map((slug) => ({ lang, slug })));
 }
 
+// Los buscadores cortan la descripción hacia los 160 caracteres: se toman las frases completas que quepan y, si ni la
+// primera cabe, se corta en una palabra.
+function describe(text: string, max = 160) {
+  if (text.length <= max) return text;
+  let out = "";
+  for (const sentence of text.match(/[^.]+\.(?:\s+|$)/g) ?? []) {
+    if ((out + sentence).trim().length > max) break;
+    out += sentence;
+  }
+  if (out) return out.trim();
+  const head = text.slice(0, max - 1);
+  return `${head.slice(0, head.lastIndexOf(" "))}\u2026`;
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { lang, slug } = await params;
   if (!hasLocale(lang)) return {};
-  const study = getContent(lang).cases[slug];
+  const content = getContent(lang);
+  const study = content.cases[slug];
   if (!study) return {};
   const siblings = Object.fromEntries(locales.map((l) => [l, `/${l}/work/${slug}`]));
+  const description = describe(study.lead);
   return {
     title: study.title,
-    description: study.lead,
+    description,
     alternates: { canonical: `/${lang}/work/${slug}`, languages: { ...siblings, "x-default": `/en/work/${slug}` } },
-    openGraph: { type: "article", url: `/${lang}/work/${slug}`, title: study.title, description: study.lead, images: [`/og-${lang}.png`] },
+    openGraph: {
+      type: "article",
+      locale: lang === "es" ? "es_CO" : "en_US",
+      siteName: content.hero.name,
+      url: `/${lang}/work/${slug}`,
+      title: study.title,
+      description,
+      images: [{ url: `/og-${lang}.png`, width: 1200, height: 630, alt: content.meta.title }],
+    },
+    twitter: { card: "summary_large_image", title: study.title, description, images: [`/og-${lang}.png`] },
   };
 }
 
@@ -43,7 +68,7 @@ export default async function CaseStudyPage({ params }: Props) {
   return (
     <>
       <Header lang={lang} content={c} altHref={`/${otherLocale(lang)}/work/${slug}`} />
-      <main id="main" className="mx-auto max-w-5xl px-5 pb-24 sm:px-8">
+      <main id="main" tabIndex={-1} className="mx-auto max-w-5xl px-5 pb-24 outline-none sm:px-8">
         <Link
           href={`/${lang}#work`}
           className="mt-10 inline-block text-sm text-accent underline decoration-rule underline-offset-4 transition-colors hover:decoration-accent"

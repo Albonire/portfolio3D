@@ -152,13 +152,14 @@ export type Content = {
   meta: { title: string; description: string };
   ui: {
     skip: string;
-    home: string;
+    navLabel: string;
     switchLabel: string;
     switchTo: string;
     back: string;
     caseStudy: string;
     private: string;
     sourceLabel: string;
+    sunny: { label: string };
   };
   nav: { work: string; experience: string; education: string; skills: string; contact: string };
   hero: {
@@ -194,7 +195,6 @@ export type Content = {
   contact: {
     title: string;
     text: string;
-    emailLabel: string;
     items: Link[];
     overlap: OverlapContent;
   };

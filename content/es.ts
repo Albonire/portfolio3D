@@ -37,13 +37,14 @@ export const es: Content = {
   },
   ui: {
     skip: "Saltar al contenido",
-    home: "Inicio",
+    navLabel: "Principal",
     switchLabel: "Idioma",
     switchTo: "English",
     back: "Volver al trabajo",
     caseStudy: "Caso de estudio",
     private: "Código privado",
     sourceLabel: "Fuente",
+    sunny: { label: "Sol" },
   },
   nav: {
     work: "Trabajo",
@@ -237,7 +238,7 @@ export const es: Content = {
       },
       {
         title: "cUPido",
-        text: "Red social para estudiantes universitarios, en equipo. Soy el principal contribuidor del frontend en React y TypeScript ([[115 de 351 commits|cupido-commits]]).",
+        text: "Red social para estudiantes universitarios, en equipo. Escribí [[115 de los 351 commits|cupido-commits]] del frontend en React y TypeScript.",
         href: "https://cupido-sandy.vercel.app",
         linkLabel: "Demo",
       },
@@ -264,7 +265,7 @@ export const es: Content = {
         place: "Remoto",
         period: "Ago 2026 a la fecha",
         bullets: [
-          "Desarrollé talento.rosimar.com, sistema de talento humano (PWA en React, API con JWT, MariaDB), con un lector OCR en el navegador que acertó 165 de 165 campos en 10 PDF digitales y alcanza 89,8 % en 40 escaneos de prueba.",
+          "Desarrollé talento.rosimar.com, sistema de talento humano (PWA en React, API con JWT, MariaDB), con un lector OCR en el navegador que acertó [[165 de 165 campos|ocr-pdf]] en 10 PDF digitales y llegó a [[89,8 %|ocr-medicion]] en 40 escaneos sintéticos.",
           "Migré de Python/Flask a Node.js/Express el backend de controlvehicular.rosimar.com (conciliación del combustible de la flota con facturas DIAN); agregué 48 pruebas y corregí dos fallas de seguridad (open redirect y CSRF).",
           "En la tienda rosimar.com (Next.js, Laravel, PostgreSQL, ERP Mayasis, ePayco) agregué validación de propiedad y montos en pedidos, eliminé consultas N+1 y configuré CI en GitHub Actions con pruebas end-to-end en Playwright.",
           "En la plataforma de cursos de Lograr (Next.js 16, Laravel 12, MariaDB) integré la pasarela de pagos Wompi con verificación de firma de eventos e implementé el streaming privado de video con enlaces firmados.",
@@ -354,7 +355,6 @@ export const es: Content = {
   contact: {
     title: "Contacto",
     text: "Si tienes una práctica, un contrato o un proyecto en mente, escríbeme. Te respondo.",
-    emailLabel: "Correo",
     items: [
       { label: "LinkedIn", href: "https://www.linkedin.com/in/anderson-gonzaleza21/" },
       { label: "GitHub", href: "https://github.com/Albonire" },
@@ -436,13 +436,13 @@ export const es: Content = {
       title: "Autoría de los commits de cv-parser",
       where: "git shortlog de rosimar1/cv-parser (privado)",
       date: "9 de octubre de 2026",
-      note: "Fabian Gonzalez 50, otro desarrollador del equipo 41, Claude 27 e ImgBot 1: 119 en total.",
+      note: "Fabian Gonzalez (mi usuario de git) 50, otro desarrollador del equipo 41, Claude 27 e ImgBot 1: 119 en total.",
     },
     "fleet-commits": {
       title: "Autoría de los commits de fleet_control",
       where: "git shortlog de rosimar1/fleet_control (privado)",
       date: "9 de octubre de 2026",
-      note: "Otro desarrollador del equipo 17 y Fabian Gonzalez 7: 24 en total.",
+      note: "Otro desarrollador del equipo 17 y Fabian Gonzalez (mi usuario de git) 7: 24 en total.",
     },
     "fleet-tests": {
       title: "Pruebas al cerrar la migración",
@@ -507,7 +507,7 @@ export const es: Content = {
       title: "Autoría de los commits de CircuitBreve",
       where: "git log de Albonire/CircuitBreve (público)",
       date: "9 de octubre de 2026",
-      note: "Fabian Gonzalez 9, otro colaborador 4 (backend y una copia del frontend) e ImgBot 1: 14 en total.",
+      note: "Fabian Gonzalez (mi usuario de git) 9, otro colaborador 4 (backend y una copia del frontend) e ImgBot 1: 14 en total.",
       href: "https://github.com/Albonire/CircuitBreve",
     },
     "circuit-loc": {
@@ -598,7 +598,7 @@ export const es: Content = {
           heading: "Lo que medí y lo que no",
           paragraphs: [
             "La primera cifra que tuve fue [[165 de 165 campos correctos|ocr-pdf]]. Era cierta, pero engañosa: ese banco son diez PDF generados por código, todos con capa de texto perfecta, y esa ruta no es la que usa Rosimar. Lo que llega de verdad son escaneos y fotos, y esa ruta no estaba medida.",
-            "Armé un segundo banco con 40 hojas de vida colombianas sintéticas convertidas en escaneos degradados (ruido, inclinación, poca luz, recompresión) y un tercero con 17 fotos reales. Última medición documentada: 30 de septiembre de 2026.",
+            "Armé un segundo banco con 40 hojas de vida colombianas sintéticas convertidas en escaneos degradados (ruido, inclinación, poca luz, recompresión), un tercero con 17 fotos reales y un cuarto con 12 contratos. Última medición documentada: 30 de septiembre de 2026.",
           ],
           table: {
             head: ["Banco", "Documentos", "Resultado"],
@@ -627,18 +627,18 @@ export const es: Content = {
         {
           heading: "Límites",
           bullets: [
-            "Las fotos reales (75,9 %) siguen lejos de los escaneos limpios, que superan el 90 %.",
+            "Las fotos reales (75,9 %) siguen lejos de los escaneos sintéticos ([[89,8 %|ocr-medicion]]).",
             "Los formularios manuscritos no se leen bien. Hay un piloto con TrOCR que todavía no se probó contra ese banco.",
             "En un portátil con Ryzen 7 cada documento tarda [[entre 16 segundos (fotos) y 58 segundos (contratos)|ocr-tiempos]].",
             "Los escaneos son sintéticos: se parecen a los reales, pero no los reemplazan.",
           ],
           closing:
-            "Me quedo con una idea de este proyecto: un 100 % sobre el banco equivocado es peor que un 76 % honesto, porque el primero dice que no hay nada que arreglar.",
+            "Me quedo con una idea de este proyecto: un 100 % sobre el banco equivocado es peor que un 75,9 % honesto, porque el primero dice que no hay nada que arreglar.",
         },
       ],
     },
     "control-vehicular": {
-      title: "Control Vehicular: migrar de Flask a Node.js sin cambiar el comportamiento",
+      title: "Control Vehicular: de Flask a Node.js con el mismo esquema",
       lead: "Un sistema web que lee las facturas electrónicas de combustible de la DIAN y las concilia con los tanqueos de la flota de una distribuidora. Mi parte fue reescribir el backend de Python a Node.js, manteniendo el esquema y las rutas.",
       meta: [
         { label: "Cliente", value: "Distribuciones Rosimar S.A.S." },
@@ -656,7 +656,7 @@ export const es: Content = {
         {
           heading: "Por qué migrar",
           paragraphs: [
-            "La aplicación original estaba en Flask. El hosting compartido de Hostinger que usa el cliente no soporta Python con frameworks, solo en un VPS. Se reescribió, con una condición: no cambiar el comportamiento. Mismo esquema MySQL, mismas rutas, mismas pantallas.",
+            "La aplicación original estaba en Flask. El hosting compartido de Hostinger que usa el cliente no soporta Python con frameworks, solo en un VPS. Se reescribió, con una condición: no cambiar el comportamiento. Mismo esquema MySQL, mismas rutas, mismas pantallas. La única excepción son los errores del original que se corrigieron por el camino, más abajo.",
           ],
         },
         {
