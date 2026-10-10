@@ -1,3 +1,5 @@
+import type { SectionKey } from "../lib/resume";
+
 export type Link = { label: string; href: string };
 
 export type ImageFigure = {
@@ -113,6 +115,36 @@ export type OverlapContent = {
   zones: { id: string; label: string }[];
 };
 
+export type ReaderContent = {
+  title: string;
+  lead: string;
+  privacy: string;
+  pick: string;
+  dropHint: string;
+  samplesLabel: string;
+  samples: { own: Link; columns: Link };
+  busy: string;
+  reset: string;
+  errors: { notPdf: string; tooBig: string; password: string; broken: string };
+  /** Plantillas: {name}, {n}, {total}, {chars}. */
+  resultFor: string;
+  pageOne: string;
+  pageMany: string;
+  cap: string;
+  status: { ok: string; review: string };
+  checks: {
+    text: { label: string; ok: string; few: string; none: string };
+    contact: { label: string; email: string; phone: string; links: string; clickable: string; notFound: string; missingHint: string };
+    sections: { label: string; found: string; missing: string; none: string };
+    columns: { label: string; none: string; some: string };
+  };
+  sectionNames: Record<SectionKey, string>;
+  previewTitle: string;
+  previewRowsTitle: string;
+  previewCut: string;
+  limits: string;
+};
+
 export type Content = {
   htmlLang: string;
   meta: { title: string; description: string };
@@ -136,6 +168,7 @@ export type Content = {
     cvPrimary: Link;
     cvSecondary: Link;
   };
+  reader: ReaderContent;
   work: {
     title: string;
     intro: string;

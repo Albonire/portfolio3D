@@ -5,6 +5,7 @@ import AccuracyChart from "@/components/AccuracyChart";
 import ExternalLink from "@/components/ExternalLink";
 import Header from "@/components/Header";
 import Inline from "@/components/Inline";
+import ResumeReader from "@/components/ResumeReader";
 import Section from "@/components/Section";
 import Sources from "@/components/Sources";
 import TimeOverlap from "@/components/TimeOverlap";
@@ -155,6 +156,13 @@ export default async function Home({ params }: Props) {
               </li>
             ))}
           </ul>
+        </Section>
+
+        <Section id="reader" title={c.reader.title}>
+          <p className="max-w-2xl text-body">{c.reader.lead}</p>
+          <div className="mt-6 max-w-3xl">
+            <ResumeReader content={c.reader} lang={lang} />
+          </div>
         </Section>
 
         <Section id="experience" title={c.experience.title}>
