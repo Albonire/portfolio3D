@@ -7,7 +7,6 @@ import { useSunny } from "./Sunny";
 // Paper Shaders (Apache-2.0, https://github.com/paper-design/shaders). La idea está tomada de dany.works, que lo pone
 // sobre sus imágenes y lo quita al pasar el cursor; aquí es fija y solo existe con el modo Sol encendido.
 // Parte de los parámetros de dany (rejilla hexagonal, puntos "gooey", contraste 0,4, grano 0,2).
-const SUNNY_PAPER = "#f7f1e3"; // papel del modo Sol (app/globals.css)
 const INK = "#1f3a5f"; // azul marino del acento
 const FADE_MS = 700;
 
@@ -15,62 +14,28 @@ type ShaderProps = Record<string, unknown>;
 type Shader = ComponentType<ShaderProps>;
 
 export type HalftoneProps = {
-  /** Dirección de la imagen, o función que la genera (solo en el cliente) y devuelve una URL de datos. */
-  image: string | (() => string | undefined);
-  /** true: el fondo tapa por completo lo que hay debajo (una imagen); false: solo se ven los puntos. */
-  solid?: boolean;
+  /** Función que genera la imagen en el cliente y devuelve una URL de datos. Los puntos salen de su luminosidad. */
+  image: () => string | undefined;
   /** Tamaño de la rejilla relativo a la imagen (0 a 1) y radio máximo del punto en celdas (0 a 2). */
   size?: number;
   radius?: number;
   contrast?: number;
-  inverted?: boolean;
-  /** true: los puntos conservan los colores de la imagen en vez de la tinta azul. */
-  colors?: boolean;
   /** Grano superpuesto (0 a 1). En una placa transparente conviene 0: el grano mancharía todo el recuadro. */
   grain?: number;
-  type?: "classic" | "gooey" | "holes" | "soft";
-  /** Solo para imágenes con fondo casi blanco (capturas de interfaz): multiplica la tinta de cada canal antes de pasarla al shader. 1 = sin cambio. */
-  boost?: number;
   /** Valor de clip-path para la capa. El shader dibuja puntos mínimos también sobre las zonas blancas; recortar a la forma evita manchar lo que hay fuera (ejes, etiquetas). */
   clip?: string;
 };
 
+// Sin WebGL no se pinta nada y queda el original. El contexto de prueba se suelta enseguida para no gastar uno de los pocos que permite el navegador.
 function hasWebGL() {
   try {
     const canvas = document.createElement("canvas");
-    return Boolean(canvas.getContext("webgl2") || canvas.getContext("webgl"));
+    const gl = canvas.getContext("webgl2") || canvas.getContext("webgl");
+    gl?.getExtension("WEBGL_lose_context")?.loseContext();
+    return Boolean(gl);
   } catch {
     return false;
   }
-}
-
-// Una captura de interfaz es casi toda blanca: sin ayuda, los puntos salen diminutos y el dibujo se pierde. Esto oscurece
-// lo que no es blanco (el blanco sigue siendo blanco) y devuelve una URL de datos; si algo falla devuelve undefined.
-function boosted(src: string, boost: number): Promise<string | undefined> {
-  return new Promise((resolve) => {
-    const img = new Image();
-    img.onload = () => {
-      try {
-        const canvas = document.createElement("canvas");
-        canvas.width = img.naturalWidth;
-        canvas.height = img.naturalHeight;
-        const ctx = canvas.getContext("2d");
-        if (!ctx) return resolve(undefined);
-        ctx.drawImage(img, 0, 0);
-        const data = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        const px = data.data;
-        for (let i = 0; i < px.length; i += 4) {
-          for (let k = 0; k < 3; k++) px[i + k] = 255 - Math.min(255, (255 - px[i + k]) * boost);
-        }
-        ctx.putImageData(data, 0, 0);
-        resolve(canvas.toDataURL("image/png"));
-      } catch {
-        resolve(undefined);
-      }
-    };
-    img.onerror = () => resolve(undefined);
-    img.src = src;
-  });
 }
 
 // Si el shader falla al montarse (sin WebGL, contexto perdido), no se pinta nada y queda el original.
@@ -84,19 +49,7 @@ class Quiet extends Component<{ children: ReactNode }, { failed: boolean }> {
   }
 }
 
-export default function HalftoneLayer({
-  image,
-  solid = false,
-  size = 0.2,
-  radius = 1,
-  contrast = 0.4,
-  inverted = false,
-  colors = false,
-  grain = 0.2,
-  type = "gooey",
-  boost = 1,
-  clip,
-}: HalftoneProps) {
+export default function HalftoneLayer({ image, size = 0.2, radius = 1, contrast = 0.4, grain = 0.2, clip }: HalftoneProps) {
   const on = useSunny();
   const box = useRef<HTMLDivElement>(null);
   const [near, setNear] = useState(false);
@@ -123,18 +76,16 @@ export default function HalftoneLayer({
     if (!on || !near || Shader || !hasWebGL()) return;
     let cancelled = false;
     import("./HalftoneShader")
-      .then(async (mod) => {
-        const raw = typeof image === "function" ? image() : image;
-        const ready = raw !== undefined && boost > 1 ? await boosted(raw, boost) : raw;
+      .then((mod) => {
         if (cancelled) return;
-        setSrc(ready);
+        setSrc(image());
         setShader(() => mod.default as unknown as Shader);
       })
       .catch(() => {});
     return () => {
       cancelled = true;
     };
-  }, [on, near, Shader, image, boost]);
+  }, [on, near, Shader, image]);
 
   const active = on && near && Shader !== null && src !== undefined;
   useEffect(() => {
@@ -155,19 +106,17 @@ export default function HalftoneLayer({
           <Shader
             image={src}
             colorFront={INK}
-            colorBack={solid ? SUNNY_PAPER : "#00000000"}
+            colorBack="#00000000"
             grid="hex"
-            type={type}
-            originalColors={colors}
+            type="gooey"
             fit="cover"
             size={size}
             radius={radius}
             contrast={contrast}
-            inverted={inverted}
             grainMixer={0.2}
             grainOverlay={grain}
             grainSize={0.5}
-            style={{ width: "100%", height: "100%", backgroundColor: solid ? SUNNY_PAPER : "transparent" }}
+            style={{ width: "100%", height: "100%", backgroundColor: "transparent" }}
           />
         </Quiet>
       )}
