@@ -7,6 +7,7 @@ import Header from "@/components/Header";
 import Inline from "@/components/Inline";
 import Section from "@/components/Section";
 import Sources from "@/components/Sources";
+import TimeOverlap from "@/components/TimeOverlap";
 import { getContent } from "@/content";
 import { hasLocale, otherLocale } from "@/lib/i18n";
 import { collectRefs } from "@/lib/refs";
@@ -240,6 +241,9 @@ export default async function Home({ params }: Props) {
               <ExternalLink key={item.href} link={item} />
             ))}
           </p>
+          <div className="mt-12 border-t border-rule pt-8">
+            <TimeOverlap content={c.contact.overlap} lang={lang} />
+          </div>
         </Section>
 
         <Section id="sources" title={c.sources.title}>

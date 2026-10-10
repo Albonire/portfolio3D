@@ -97,6 +97,22 @@ export type Job = {
   bullets: string[];
 };
 
+export type OverlapContent = {
+  title: string;
+  intro: string;
+  zoneLabel: string;
+  detecting: string;
+  detected: string;
+  nowLabel: string;
+  now: string;
+  rows: { me: string; you: string; both: string };
+  axisLabel: string;
+  assumption: string;
+  /** Plantillas con {duration}, {from}, {to}, {meFrom} y {meTo}; los textos van en el idioma de cada diccionario. */
+  summary: { overlap: string; same: string; none: string };
+  zones: { id: string; label: string }[];
+};
+
 export type Content = {
   htmlLang: string;
   meta: { title: string; description: string };
@@ -145,6 +161,7 @@ export type Content = {
     text: string;
     emailLabel: string;
     items: Link[];
+    overlap: OverlapContent;
   };
   sources: { title: string; intro: string; items: Record<string, Source> };
   footer: string;
