@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: study.title,
     description: study.lead,
     alternates: { canonical: `/${lang}/work/${slug}`, languages: { ...siblings, "x-default": `/en/work/${slug}` } },
-    openGraph: { type: "article", url: `/${lang}/work/${slug}`, title: study.title, description: study.lead, images: ["/og.png"] },
+    openGraph: { type: "article", url: `/${lang}/work/${slug}`, title: study.title, description: study.lead, images: [`/og-${lang}.png`] },
   };
 }
 
