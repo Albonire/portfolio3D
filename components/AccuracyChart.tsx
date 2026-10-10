@@ -4,17 +4,23 @@ import { useState } from "react";
 import type { ChartFigure } from "@/content/types";
 import type { Locale } from "@/lib/i18n";
 
-// Gráfica de una sola serie, dibujada a mano en SVG: 2 px de línea, marcadores de 9 px con anillo del color
+// Gráfica de una sola serie, dibujada a mano en SVG: 2 px de línea, marcadores con anillo del color
 // de la superficie, cuadrícula fina y sin etiquetar cada punto. Los hitos de tandas posteriores van con
 // línea punteada porque salen de otras corridas del mismo banco.
-const W = 600;
-const H = 300;
-const M = { left: 44, right: 20, top: 28, bottom: 58 };
-const PLOT_W = W - M.left - M.right;
-const PLOT_H = H - M.top - M.bottom;
+// `compact` es la versión de la portada: más angosta, sin la nota del hundimiento dentro del dibujo
+// (la dice el texto de al lado), sin pie de figura y sin tabla (están en el caso de estudio).
+const SIZES = {
+  full: { W: 600, H: 300, M: { left: 44, right: 20, top: 28, bottom: 58 }, font: 12 },
+  compact: { W: 400, H: 250, M: { left: 40, right: 16, top: 28, bottom: 54 }, font: 13 },
+};
 const TICKS = [0, 25, 50, 75, 100];
 
-export default function AccuracyChart({ figure, lang }: { figure: ChartFigure; lang: Locale }) {
+type Props = { figure: ChartFigure; lang: Locale; compact?: boolean };
+
+export default function AccuracyChart({ figure, lang, compact = false }: Props) {
+  const { W, H, M, font } = SIZES[compact ? "compact" : "full"];
+  const PLOT_W = W - M.left - M.right;
+  const PLOT_H = H - M.top - M.bottom;
   const { points } = figure;
   const last = points.length - 1;
   const [active, setActive] = useState(figure.focus);
@@ -45,31 +51,31 @@ export default function AccuracyChart({ figure, lang }: { figure: ChartFigure; l
   }
 
   return (
-    <figure className="my-8">
-      <div className="overflow-x-auto">
+    <figure className={compact ? "mt-4" : "my-8"}>
+      <div className={compact ? undefined : "overflow-x-auto"}>
         <div
           role="group"
           tabIndex={0}
           aria-label={`${figure.label}. ${figure.keysHint}`}
           onKeyDown={onKeyDown}
-          className="min-w-[26rem] max-w-3xl"
+          className={compact ? "w-full" : "min-w-[26rem] max-w-3xl"}
         >
           <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full select-none" aria-hidden="true">
-            <text x={M.left} y={14} className="fill-muted font-mono" fontSize="12">
+            <text x={M.left} y={14} className="fill-muted font-mono" fontSize={font}>
               {figure.yLabel}
             </text>
 
             {TICKS.map((t) => (
               <g key={t}>
                 <line x1={M.left} x2={W - M.right} y1={y(t)} y2={y(t)} className="stroke-rule" strokeWidth="1" />
-                <text x={M.left - 8} y={y(t) + 4} textAnchor="end" className="fill-muted font-mono" fontSize="12">
+                <text x={M.left - 8} y={y(t) + 4} textAnchor="end" className="fill-muted font-mono" fontSize={font}>
                   {t}
                 </text>
               </g>
             ))}
 
             {points.map((p, i) => (
-              <text key={p.label} x={x(i)} y={H - M.bottom + 18} textAnchor="middle" className="fill-muted font-mono" fontSize="12">
+              <text key={p.label} x={x(i)} y={H - M.bottom + 18} textAnchor="middle" className="fill-muted font-mono" fontSize={compact ? 11 : font}>
                 {i + 1}
               </text>
             ))}
@@ -82,7 +88,13 @@ export default function AccuracyChart({ figure, lang }: { figure: ChartFigure; l
                   className="stroke-muted"
                   strokeWidth="1"
                 />
-                <text x={(x(firstLater) + x(last)) / 2} y={H - M.bottom + 50} textAnchor="middle" className="fill-muted" fontSize="12">
+                <text
+                  x={compact ? x(last) + 6 : (x(firstLater) + x(last)) / 2}
+                  y={H - M.bottom + 52}
+                  textAnchor={compact ? "end" : "middle"}
+                  className="fill-muted"
+                  fontSize={font}
+                >
                   {figure.laterLabel}
                 </text>
               </g>
@@ -118,18 +130,26 @@ export default function AccuracyChart({ figure, lang }: { figure: ChartFigure; l
               />
             ))}
 
-            <text x={x(0)} y={y(points[0].value) + 24} textAnchor="start" className="fill-ink font-mono" fontSize="12">
+            <text x={x(0)} y={y(points[0].value) + 24} textAnchor="start" className="fill-ink font-mono" fontSize={font}>
               {fmt(points[0].value)}
             </text>
-            <text x={x(last)} y={y(points[last].value) - 12} textAnchor="end" className="fill-ink font-mono" fontSize="12">
+            <text x={x(last)} y={y(points[last].value) - 12} textAnchor="end" className="fill-ink font-mono" fontSize={font}>
               {fmt(points[last].value)}
             </text>
-            <text x={x(dipIndex) + 24} y={y(points[dipIndex].value) - 2} className="fill-ink" fontSize="12">
-              {figure.callout.title}
-            </text>
-            <text x={x(dipIndex) + 24} y={y(points[dipIndex].value) + 14} className="fill-muted" fontSize="12">
-              {figure.callout.text}
-            </text>
+            {compact ? (
+              <text x={x(dipIndex) + 14} y={y(points[dipIndex].value) + 5} className="fill-ink font-mono" fontSize={font}>
+                {fmt(points[dipIndex].value)}
+              </text>
+            ) : (
+              <>
+                <text x={x(dipIndex) + 24} y={y(points[dipIndex].value) - 2} className="fill-ink" fontSize={font}>
+                  {figure.callout.title}
+                </text>
+                <text x={x(dipIndex) + 24} y={y(points[dipIndex].value) + 14} className="fill-muted" fontSize={font}>
+                  {figure.callout.text}
+                </text>
+              </>
+            )}
 
             {points.map((p, i) => (
               <rect
@@ -147,7 +167,7 @@ export default function AccuracyChart({ figure, lang }: { figure: ChartFigure; l
         </div>
       </div>
 
-      <div aria-live="polite" className="mt-3 min-h-[5.5rem] max-w-3xl border-t border-rule pt-3">
+      <div aria-live="polite" className={`mt-3 min-h-[5.5rem] border-t border-rule pt-3 ${compact ? "" : "max-w-3xl"}`}>
         <p className="font-mono text-xs text-muted">
           {active + 1}/{points.length}
           {current.phase === "later" ? ` · ${figure.laterLabel}` : ""}
@@ -158,38 +178,42 @@ export default function AccuracyChart({ figure, lang }: { figure: ChartFigure; l
         <p className="text-sm text-body">{current.note}</p>
       </div>
 
-      <details className="mt-3 max-w-3xl text-sm">
-        <summary className="cursor-pointer text-accent underline decoration-rule underline-offset-4 hover:decoration-accent">
-          {figure.dataLabel}
-        </summary>
-        <table className="mt-3 w-full border-collapse text-left">
-          <caption className="sr-only">{figure.label}</caption>
-          <thead>
-            <tr className="border-b border-ink">
-              <th scope="col" className="w-8 py-1.5 pr-3 font-mono text-xs font-normal text-muted">
-                #
-              </th>
-              <th scope="col" className="py-1.5 pr-3 font-medium text-ink">
-                {figure.yLabel}
-              </th>
-              <th scope="col" className="py-1.5 text-right font-medium text-ink">
-                %
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {points.map((p, i) => (
-              <tr key={p.label} className="border-b border-rule align-top">
-                <td className="py-1.5 pr-3 font-mono text-xs text-muted">{i + 1}</td>
-                <td className="py-1.5 pr-3 text-body">{p.label}</td>
-                <td className="py-1.5 text-right font-mono text-ink">{fmt(p.value)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </details>
+      {!compact && (
+        <>
+          <details className="mt-3 max-w-3xl text-sm">
+            <summary className="cursor-pointer text-accent underline decoration-rule underline-offset-4 hover:decoration-accent">
+              {figure.dataLabel}
+            </summary>
+            <table className="mt-3 w-full border-collapse text-left">
+              <caption className="sr-only">{figure.label}</caption>
+              <thead>
+                <tr className="border-b border-ink">
+                  <th scope="col" className="w-8 py-1.5 pr-3 font-mono text-xs font-normal text-muted">
+                    #
+                  </th>
+                  <th scope="col" className="py-1.5 pr-3 font-medium text-ink">
+                    {figure.yLabel}
+                  </th>
+                  <th scope="col" className="py-1.5 text-right font-medium text-ink">
+                    %
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {points.map((p, i) => (
+                  <tr key={p.label} className="border-b border-rule align-top">
+                    <td className="py-1.5 pr-3 font-mono text-xs text-muted">{i + 1}</td>
+                    <td className="py-1.5 pr-3 text-body">{p.label}</td>
+                    <td className="py-1.5 text-right font-mono text-ink">{fmt(p.value)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </details>
 
-      <figcaption className="mt-3 max-w-3xl text-sm text-muted">{figure.caption}</figcaption>
+          <figcaption className="mt-3 max-w-3xl text-sm text-muted">{figure.caption}</figcaption>
+        </>
+      )}
     </figure>
   );
 }

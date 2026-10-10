@@ -12,8 +12,7 @@ app/[lang]/not-found.tsx        404
 app/sitemap.ts, app/robots.ts   SEO, con hreflang
 proxy.ts                        "/" redirige a /es o /en según cookie NEXT_LOCALE o Accept-Language
 content/es.ts, content/en.ts    todo el texto del sitio, un módulo por idioma (tipo Content en content/types.ts)
-components/RequestLab.tsx       simulador de la portada: una petición de Control Vehicular, paso a paso
-components/AccuracyChart.tsx    curva de precisión del lector OCR (caso Talento Rosimar)
+components/AccuracyChart.tsx    curva de precisión del lector OCR (portada y caso Talento Rosimar)
 components/CircuitToy.tsx       sumador completo interactivo (caso CircuitBreve)
 components/Sources.tsx          lista numerada de fuentes de las cifras
 lib/                            idiomas, constantes del sitio y lib/refs.ts (numeración de fuentes)
@@ -54,13 +53,6 @@ traen la cédula.
 Dentro de un texto, `[[89,8 %|ocr-medicion]]` muestra la cifra con un superíndice que lleva a su fuente. Las fuentes están
 en `sources.items` de cada idioma; la numeración sale del orden de aparición en la página. Una cifra nueva lleva su fuente
 (archivo o repositorio, fecha y si es privado) o no entra.
-
-## Fidelidad del simulador
-
-`RequestLab` simula el flujo documentado de Control Vehicular (código privado). Cada escenario se verificó contra
-`src/app.js`, `src/auth.js` y `src/routes/auth.js` y tiene su prueba de integración en ese repositorio: CSRF devuelve 400,
-la falta de permiso redirige con aviso (302) y el bloqueo de login vuelve el formulario (200). Si el sistema cambia, hay que
-releer esos archivos antes de tocar `hero.lab` en `content/`.
 
 ## Reglas de redacción
 

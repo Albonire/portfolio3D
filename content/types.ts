@@ -97,29 +97,6 @@ export type Job = {
   bullets: string[];
 };
 
-export type LabScenario = {
-  id: string;
-  label: string;
-  request: string;
-  /** Un estado por paso: ok pasa, na no aplica, stop se detiene, skip no se ejecuta. */
-  states: ("ok" | "na" | "stop" | "skip")[];
-  notes: string[];
-  result: { code: string; text: string };
-};
-
-export type LabContent = {
-  title: string;
-  note: string;
-  scenariosLabel: string;
-  requestLabel: string;
-  resultLabel: string;
-  stateLabels: { ok: string; na: string; stop: string; skip: string };
-  steps: { title: string; detail: string }[];
-  scenarios: LabScenario[];
-  sourceNote: string;
-  caseLabel: string;
-};
-
 export type Content = {
   htmlLang: string;
   meta: { title: string; description: string };
@@ -139,7 +116,7 @@ export type Content = {
     role: string;
     intro: string;
     facts: { label: string; value: string }[];
-    lab: LabContent;
+    curve: { title: string; text: string; caseLabel: string; chart: ChartFigure };
     cvPrimary: Link;
     cvSecondary: Link;
   };

@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import AccuracyChart from "@/components/AccuracyChart";
 import ExternalLink from "@/components/ExternalLink";
 import Header from "@/components/Header";
 import Inline from "@/components/Inline";
-import RequestLab from "@/components/RequestLab";
 import Section from "@/components/Section";
 import Sources from "@/components/Sources";
 import { getContent } from "@/content";
@@ -67,7 +67,23 @@ export default async function Home({ params }: Props) {
               </a>
             </div>
           </div>
-          <RequestLab lab={c.hero.lab} caseHref={`/${lang}/work/control-vehicular`} />
+          <section aria-labelledby="curve-title" className="min-w-0 border border-rule p-5">
+            <h2 id="curve-title" className="font-serif text-lg font-medium leading-snug text-ink">
+              {c.hero.curve.title}
+            </h2>
+            <p className="mt-2 text-sm leading-relaxed text-body">
+              <Inline text={c.hero.curve.text} refs={refs} />
+            </p>
+            <AccuracyChart figure={c.hero.curve.chart} lang={lang} compact />
+            <p className="mt-4 text-sm">
+              <Link
+                href={`/${lang}/work/talento-rosimar`}
+                className="text-accent underline decoration-rule underline-offset-4 transition-colors hover:decoration-accent"
+              >
+                {c.hero.curve.caseLabel}
+              </Link>
+            </p>
+          </section>
         </section>
 
         <dl className="grid grid-cols-2 gap-x-8 gap-y-5 border-t border-rule py-8 text-sm lg:grid-cols-4">
