@@ -1,11 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import AccuracyChart from "@/components/AccuracyChart";
 import ExternalLink from "@/components/ExternalLink";
 import Header from "@/components/Header";
+import Inline from "@/components/Inline";
+import ResumeReader from "@/components/ResumeReader";
 import Section from "@/components/Section";
+import Sources from "@/components/Sources";
+import TimeOverlap from "@/components/TimeOverlap";
 import { getContent } from "@/content";
 import { hasLocale, otherLocale } from "@/lib/i18n";
+import { collectRefs } from "@/lib/refs";
 import { EMAIL } from "@/lib/site";
 
 type Props = { params: Promise<{ lang: string }> };
@@ -34,16 +40,20 @@ export default async function Home({ params }: Props) {
   const { lang } = await params;
   if (!hasLocale(lang)) notFound();
   const c = getContent(lang);
+  const refs = {
+    keys: collectRefs([c.hero, c.work, c.experience, c.education, c.skills, c.contact]),
+    label: c.ui.sourceLabel,
+  };
 
   return (
     <>
       <Header lang={lang} content={c} altHref={`/${otherLocale(lang)}`} />
       <main id="main" className="mx-auto max-w-5xl px-5 sm:px-8">
-        <section className="grid gap-12 py-16 sm:py-24 md:grid-cols-[minmax(0,1fr)_17rem]">
+        <section className="grid gap-12 py-14 sm:py-20 lg:grid-cols-[minmax(0,1fr)_27rem] lg:gap-14">
           <div>
-            <h1 className="font-serif text-4xl font-medium leading-[1.1] text-ink sm:text-5xl">{c.hero.name}</h1>
-            <p className="mt-3 text-lg text-muted">{c.hero.role}</p>
-            <p className="mt-8 max-w-2xl text-lg leading-relaxed text-body">{c.hero.intro}</p>
+            <h1 className="font-serif text-4xl font-medium leading-[1.1] text-ink sm:text-[2.6rem]">{c.hero.name}</h1>
+            <p className="mt-3 max-w-xl text-lg text-muted">{c.hero.role}</p>
+            <p className="mt-8 max-w-xl text-lg leading-relaxed text-body">{c.hero.intro}</p>
             <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
               <a
                 href={c.hero.cvPrimary.href}
@@ -59,15 +69,33 @@ export default async function Home({ params }: Props) {
               </a>
             </div>
           </div>
-          <dl className="grid content-start gap-4 border-t border-rule pt-6 text-sm md:border-l md:border-t-0 md:pl-8 md:pt-1">
-            {c.hero.facts.map((fact) => (
-              <div key={fact.label}>
-                <dt className="font-mono text-xs text-muted">{fact.label}</dt>
-                <dd className="mt-0.5 text-ink">{fact.value}</dd>
-              </div>
-            ))}
-          </dl>
+          <section aria-labelledby="curve-title" className="min-w-0 border border-rule p-5">
+            <h2 id="curve-title" className="font-serif text-lg font-medium leading-snug text-ink">
+              {c.hero.curve.title}
+            </h2>
+            <p className="mt-2 text-sm leading-relaxed text-body">
+              <Inline text={c.hero.curve.text} refs={refs} />
+            </p>
+            <AccuracyChart figure={c.hero.curve.chart} lang={lang} compact />
+            <p className="mt-4 text-sm">
+              <Link
+                href={`/${lang}/work/talento-rosimar`}
+                className="text-accent underline decoration-rule underline-offset-4 transition-colors hover:decoration-accent"
+              >
+                {c.hero.curve.caseLabel}
+              </Link>
+            </p>
+          </section>
         </section>
+
+        <dl className="grid grid-cols-2 gap-x-8 gap-y-5 border-t border-rule py-8 text-sm lg:grid-cols-4">
+          {c.hero.facts.map((fact) => (
+            <div key={fact.label}>
+              <dt className="font-mono text-xs text-muted">{fact.label}</dt>
+              <dd className="mt-0.5 text-ink">{fact.value}</dd>
+            </div>
+          ))}
+        </dl>
 
         <Section id="work" title={c.work.title}>
           <p className="max-w-2xl text-body">{c.work.intro}</p>
@@ -89,10 +117,14 @@ export default async function Home({ params }: Props) {
                   </p>
                 </div>
                 <p className="mt-1 text-sm text-muted">{project.context}</p>
-                <p className="mt-3 max-w-2xl text-body">{project.summary}</p>
+                <p className="mt-3 max-w-2xl text-body">
+                  <Inline text={project.summary} refs={refs} />
+                </p>
                 <ul className="mt-3 max-w-2xl list-disc space-y-1 pl-5 text-sm text-body marker:text-muted">
                   {project.facts.map((fact) => (
-                    <li key={fact}>{fact}</li>
+                    <li key={fact}>
+                      <Inline text={fact} refs={refs} />
+                    </li>
                   ))}
                 </ul>
                 <p className="mt-4 flex flex-wrap gap-x-5 gap-y-1 text-sm">
@@ -118,12 +150,19 @@ export default async function Home({ params }: Props) {
             {c.work.also.map((item) => (
               <li key={item.title} className="py-4">
                 <p className="max-w-2xl text-body">
-                  <span className="font-medium text-ink">{item.title}.</span> {item.text}{" "}
+                  <span className="font-medium text-ink">{item.title}.</span> <Inline text={item.text} refs={refs} />{" "}
                   <ExternalLink link={{ label: item.linkLabel, href: item.href }} />
                 </p>
               </li>
             ))}
           </ul>
+        </Section>
+
+        <Section id="reader" title={c.reader.title}>
+          <p className="max-w-2xl text-body">{c.reader.lead}</p>
+          <div className="mt-6 max-w-3xl">
+            <ResumeReader content={c.reader} lang={lang} />
+          </div>
         </Section>
 
         <Section id="experience" title={c.experience.title}>
@@ -210,6 +249,13 @@ export default async function Home({ params }: Props) {
               <ExternalLink key={item.href} link={item} />
             ))}
           </p>
+          <div className="mt-12 border-t border-rule pt-8">
+            <TimeOverlap content={c.contact.overlap} lang={lang} />
+          </div>
+        </Section>
+
+        <Section id="sources" title={c.sources.title}>
+          <Sources keys={refs.keys} items={c.sources.items} intro={c.sources.intro} />
         </Section>
       </main>
     </>
