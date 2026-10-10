@@ -79,8 +79,21 @@ html[data-sunny] {
     opacity 700ms cubic-bezier(0.23, 1, 0.32, 1),
     visibility 0s;
 }
+/* Textura de puntos (halftone) sobre componentes elegidos, solo con el modo Sol encendido. */
+.halftone-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 700ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+.halftone-layer[data-on="true"] {
+  opacity: 1;
+}
+
 @media print {
-  .sunny-layer {
+  .sunny-layer,
+  .halftone-layer {
     display: none;
   }
 }

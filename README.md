@@ -90,12 +90,31 @@ hay que volver a pedirla en el depurador de cada una (LinkedIn Post Inspector, F
 
 ## Modo Sol (experimento)
 
-El interruptor "Sol" de la cabecera pone una capa de video con sombras de hojas (mezcla `multiply`, opacidad 0,8) y un
-tinte cálido sobre el papel. Es una prueba del efecto que tiene dany.works con la tecla `S`. El video se enlaza desde
+El interruptor "Sol" de la cabecera pone una capa de video con sombras de hojas (mezcla `multiply`) y un tinte cálido
+sobre el papel. Es una prueba del efecto que tiene dany.works con la tecla `S`. El video se enlaza desde
 `https://dany.works/leaves.mp4` (constante `SUNNY_VIDEO` en `components/Sunny.tsx`) y **no está en este repositorio**:
 es de otra persona. **Antes de publicar el sitio con este modo hay que cambiarlo por un archivo propio o tener permiso de
 su autor.** El video no se pide hasta encender el modo, con movimiento reducido queda quieto en su primer fotograma y
 al apagarlo se pausa y se oculta.
+
+La intensidad del video es la opacidad de `.sunny-layer[data-on="true"]` en `app/globals.css` (0,68; con 1 es el original
+de dany).
+
+Con el modo encendido, dos componentes se convierten en una trama de puntos de media tinta ("halftone"), la textura que
+dany muestra en sus imágenes al quitar el cursor. Aquí es fija, sin hover:
+
+- El área bajo la curva de la gráfica de precisión (portada y caso Talento Rosimar). La trama se dibuja desde los datos de
+  la gráfica en un canvas y se recorta con `clip-path` a la forma del área; detrás de cada texto marcado con `data-cut` se
+  deja un recuadro blanco medido sobre el texto real, así que ninguna etiqueta queda sobre puntos.
+- Las capturas de CircuitBreve (`CaseFigure`), con los colores de la interfaz.
+
+El efecto es `components/Halftone.tsx` (`HalftoneLayer`), que usa el shader `HalftoneDots` de
+[Paper Shaders](https://github.com/paper-design/shaders) (`@paper-design/shaders-react`, licencia Apache-2.0). El shader
+va en un chunk aparte (`components/HalftoneShader.tsx`, unos 9 KB comprimidos) que solo se descarga al encender el modo y
+solo se monta mientras el componente está a menos de 150 px de la pantalla. Sin WebGL no se pinta nada y queda el
+original. Para ajustarlo, cada uso pasa sus propios valores: `size` (tamaño de la rejilla, relativo a la imagen), `radius`,
+`contrast`, `grain` y, para capturas casi blancas, `boost` (oscurece lo que no es blanco antes del shader). Para quitar la
+textura de un componente basta con borrar su `HalftoneLayer`.
 
 ## Reglas de redacción
 

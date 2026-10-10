@@ -35,7 +35,7 @@ function write(on: boolean) {
   listeners.forEach((listener) => listener());
 }
 const snapshot = () => read() || memory;
-const useSunny = () => useSyncExternalStore(subscribe, snapshot, () => false);
+export const useSunny = () => useSyncExternalStore(subscribe, snapshot, () => false);
 
 // `labelFromSm`: en pantallas angostas la etiqueta queda solo para lectores de pantalla, para que la cabecera de los
 // casos de estudio (marca, nombre, interruptor e idioma) quepa en una fila.
