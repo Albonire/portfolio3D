@@ -47,7 +47,7 @@ export default async function Home({ params }: Props) {
 
   return (
     <>
-      <Header lang={lang} content={c} altHref={`/${otherLocale(lang)}`} />
+      <Header lang={lang} content={c} altHref={`/${otherLocale(lang)}`} brand="mark" />
       <main id="main" className="mx-auto max-w-5xl px-5 sm:px-8">
         <section className="grid gap-12 py-14 sm:py-20 lg:grid-cols-[minmax(0,1fr)_27rem] lg:gap-14">
           <div>

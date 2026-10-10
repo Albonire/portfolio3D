@@ -24,6 +24,9 @@ public/samples/                 los PDF de muestra generados (datos inventados)
 public/cv/                      hojas de vida en PDF (ES y EN)
 public/work/<caso>/             capturas en WebP
 public/og.png                   imagen para compartir en redes
+public/icon.svg, favicon.ico,   icono de la pestaña: una compuerta lógica AND (Anderson empieza por "AND"), la misma
+  apple-touch-icon.png          de components/Mark.tsx. El SVG cambia de color en modo oscuro; el .ico es el respaldo
+                                para Safari, en un azul medio que se ve en pestañas claras y oscuras
 ```
 
 Las piezas de cliente son cuatro (gráfica, sumador, hora y lector de hojas de vida); el resto se genera en el build.
