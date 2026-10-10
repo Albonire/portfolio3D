@@ -88,6 +88,15 @@ npm i --no-save playwright && node scripts/og/render.mjs
 La compuerta es el mismo trazado de `components/Mark.tsx`. Las plataformas guardan la imagen en caché: tras cambiarla,
 hay que volver a pedirla en el depurador de cada una (LinkedIn Post Inspector, Facebook Sharing Debugger).
 
+## Modo Sol (experimento)
+
+El interruptor "Sol" de la cabecera pone una capa de video con sombras de hojas (mezcla `multiply`, opacidad 0,8) y un
+tinte cálido sobre el papel. Es una prueba del efecto que tiene dany.works con la tecla `S`. El video se enlaza desde
+`https://dany.works/leaves.mp4` (constante `SUNNY_VIDEO` en `components/Sunny.tsx`) y **no está en este repositorio**:
+es de otra persona. **Antes de publicar el sitio con este modo hay que cambiarlo por un archivo propio o tener permiso de
+su autor.** El video no se pide hasta encender el modo, con movimiento reducido queda quieto en su primer fotograma y
+al apagarlo se pausa y se oculta.
+
 ## Reglas de redacción
 
 Las mismas del CV: sin rayas largas, sin emojis, sin adverbios de relleno ni palabras de humo, y cifras solo si se

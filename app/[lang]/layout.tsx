@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { IBM_Plex_Mono, IBM_Plex_Sans, IBM_Plex_Serif } from "next/font/google";
 import { notFound } from "next/navigation";
 import { getContent } from "@/content";
+import { SunnyLayer } from "@/components/Sunny";
 import { hasLocale, locales } from "@/lib/i18n";
 import { SITE_URL } from "@/lib/site";
 import "../globals.css";
@@ -48,6 +49,7 @@ export default async function RootLayout({
           {content.ui.skip}
         </a>
         {children}
+        <SunnyLayer />
         <footer className="border-t border-rule">
           <div className="mx-auto max-w-5xl px-5 py-8 text-sm text-muted sm:px-8">
             © {new Date().getFullYear()} {content.footer}

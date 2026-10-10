@@ -44,6 +44,7 @@ export const es: Content = {
     caseStudy: "Caso de estudio",
     private: "Código privado",
     sourceLabel: "Fuente",
+    sunny: { label: "Sol" },
   },
   nav: {
     work: "Trabajo",
