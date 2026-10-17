@@ -110,7 +110,7 @@ es de otra persona. **Antes de publicar el sitio con este modo hay que cambiarlo
 su autor.** El video no se pide hasta encender el modo, con movimiento reducido queda quieto en su primer fotograma y
 al apagarlo se pausa y se oculta.
 
-La intensidad del video es la opacidad de `.sunny-layer[data-on="true"]` en `app/globals.css` (0,68; con 1 es el original
+La intensidad del video es la opacidad de `.sunny-layer[data-on="true"]` en `app/globals.css` (0,58; con 1 es el original
 de dany).
 
 Con el modo encendido, el área bajo la curva de la gráfica de precisión (portada y caso Talento Rosimar) se rellena con una
