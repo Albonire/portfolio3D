@@ -110,7 +110,7 @@ es de otra persona. **Antes de publicar el sitio con este modo hay que cambiarlo
 su autor.** El video no se pide hasta encender el modo, con movimiento reducido queda quieto en su primer fotograma y
 al apagarlo se pausa y se oculta.
 
-La intensidad del video es la opacidad de `.sunny-layer[data-on="true"]` en `app/globals.css` (0,68; con 1 es el original
+La intensidad del video es la opacidad de `.sunny-layer[data-on="true"]` en `app/globals.css` (0,58; con 1 es el original
 de dany).
 
 Con el modo encendido, el área bajo la curva de la gráfica de precisión (portada y caso Talento Rosimar) se rellena con una
@@ -125,6 +125,11 @@ va en un chunk aparte (`components/HalftoneShader.tsx`, unos 9 KB comprimidos) q
 solo se monta mientras el componente está a menos de 150 px de la pantalla. Sin WebGL no se pinta nada y queda el
 original. Para ajustarlo, cada uso pasa sus propios valores: `size` (tamaño de la rejilla, relativo a la imagen), `radius`,
 `contrast`, `grain` y `clip`. Para quitar la textura basta con borrar el `HalftoneLayer` de `components/AccuracyChart.tsx`.
+
+Con el modo encendido también suena un bosque de cigarras higurashi de Japón (`public/audio/cigarras.mp3`, 1,8 MB, loop con
+fundido cruzado ya hecho; recodificado desde el archivo que aportó el dueño). Se reproduce con Web Audio (bucle sin hueco), con
+fundido de entrada y salida de 1,5 s, y no se descarga hasta la primera vez que se enciende el modo. **Confirmar la licencia del
+audio antes de publicar**: proviene de un video de YouTube de otra persona.
 
 ## Reglas de redacción
 

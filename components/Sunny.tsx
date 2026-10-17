@@ -8,6 +8,46 @@ import { useEffect, useRef, useSyncExternalStore } from "react";
 const SUNNY_VIDEO = "https://dany.works/leaves.mp4";
 const FADE_MS = 700;
 
+// Sonido ambiente del modo Sol: bosque de cigarras (higurashi) de Japón, un archivo de loop con fundido cruzado ya hecho
+// (public/audio/cigarras.mp3, recodificado desde el original que aportó el dueño del sitio; confirmar su licencia antes de
+// publicar). Se reproduce con Web Audio y no con <audio loop>: un buffer en bucle repite sin el hueco que deja el
+// relleno del mp3. Se descarga al encender el modo por primera vez.
+const SUNNY_AUDIO = "/audio/cigarras.mp3";
+const AUDIO_FADE_S = 1.5;
+const AUDIO_LEVEL = 0.6;
+
+type Ambient = { ctx: AudioContext; gain: GainNode; source: AudioBufferSourceNode };
+let ambientPromise: Promise<Ambient | null> | null = null;
+
+function loadAmbient(): Promise<Ambient | null> {
+  ambientPromise ??= (async () => {
+    try {
+      const ctx = new AudioContext();
+      const gain = ctx.createGain();
+      gain.gain.value = 0;
+      gain.connect(ctx.destination);
+      const response = await fetch(SUNNY_AUDIO);
+      const buffer = await ctx.decodeAudioData(await response.arrayBuffer());
+      const source = ctx.createBufferSource();
+      source.buffer = buffer;
+      source.loop = true;
+      source.connect(gain);
+      source.start();
+      return { ctx, gain, source };
+    } catch {
+      return null;
+    }
+  })();
+  return ambientPromise;
+}
+
+function fadeAmbient(a: Ambient, to: number) {
+  const now = a.ctx.currentTime;
+  a.gain.gain.cancelScheduledValues(now);
+  a.gain.gain.setValueAtTime(a.gain.gain.value, now);
+  a.gain.gain.linearRampToValueAtTime(to, now + AUDIO_FADE_S);
+}
+
 // El estado vive fuera de React para que lo compartan el interruptor (cabecera) y la capa (layout) sin
 // contexto, y se guarda en sessionStorage para que sobreviva al cambio de idioma y de página. El servidor
 // siempre dice "apagado", así que no hay diferencia de hidratación.
@@ -86,6 +126,41 @@ export function SunnyLayer() {
   }, [on]);
 
   useEffect(() => () => document.documentElement.removeAttribute("data-sunny"), []);
+
+  // Audio: encendido, fundido de entrada; apagado, fundido de salida y se suspende. Si el navegador no deja sonar sin un
+  // gesto (al cambiar de página con el modo ya encendido), se reanuda con el primer toque o tecla.
+  useEffect(() => {
+    let cancelled = false;
+    let stop = () => {};
+    if (on) {
+      void loadAmbient().then(async (ambient) => {
+        if (!ambient || cancelled) return;
+        const start = () => {
+          void ambient.ctx.resume().then(() => !cancelled && fadeAmbient(ambient, AUDIO_LEVEL));
+        };
+        start();
+        if (ambient.ctx.state !== "running") {
+          const events = ["pointerdown", "keydown"] as const;
+          const retry = () => {
+            events.forEach((e) => window.removeEventListener(e, retry));
+            start();
+          };
+          events.forEach((e) => window.addEventListener(e, retry, { once: true }));
+          stop = () => events.forEach((e) => window.removeEventListener(e, retry));
+        }
+      });
+    } else if (ambientPromise) {
+      void ambientPromise.then((ambient) => {
+        if (!ambient || cancelled) return;
+        fadeAmbient(ambient, 0);
+        window.setTimeout(() => !cancelled && void ambient.ctx.suspend(), AUDIO_FADE_S * 1000 + 100);
+      });
+    }
+    return () => {
+      cancelled = true;
+      stop();
+    };
+  }, [on]);
 
   return (
     <video
