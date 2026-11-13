@@ -1,4 +1,6 @@
 @import "tailwindcss";
+@import "./textile-tiles.css";
+@import "./textile.css";
 
 /* Fuentes: next/font define --font-plex-* en <html>; aquí solo se enlazan a los tokens de Tailwind.
    Los nombres son distintos a propósito (una variable que se referencia a sí misma queda inválida). */
@@ -50,7 +52,8 @@
 
 html[data-sunny] {
   --color-paper: #f7f1e3;
-  --color-wash: #eee7d6;
+  /* Translúcido para que la trama del lino se vea a través; sobre el papel da #eee7d6. */
+  --color-wash: rgb(120 95 40 / 0.07);
   --color-rule: #ded6c2;
 }
 
@@ -79,21 +82,18 @@ html[data-sunny] {
     opacity 700ms cubic-bezier(0.23, 1, 0.32, 1),
     visibility 0s;
 }
-/* Textura de puntos (halftone) sobre componentes elegidos, solo con el modo Sol encendido. */
-.halftone-layer {
-  position: absolute;
-  inset: 0;
+/* Fundido de la página entera al cambiar de modo (ver toggle() en components/Sunny.tsx). No bloquea los clics. */
+html.sunny-fade::view-transition {
   pointer-events: none;
-  opacity: 0;
-  transition: opacity 700ms cubic-bezier(0.23, 1, 0.32, 1);
 }
-.halftone-layer[data-on="true"] {
-  opacity: 1;
+html.sunny-fade::view-transition-old(root),
+html.sunny-fade::view-transition-new(root) {
+  animation-duration: 600ms;
+  animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 @media print {
-  .sunny-layer,
-  .halftone-layer {
+  .sunny-layer {
     display: none;
   }
 }

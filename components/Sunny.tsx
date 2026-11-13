@@ -72,7 +72,23 @@ function write(on: boolean) {
     // Sin almacenamiento (ventana privada): el interruptor sigue funcionando hasta recargar.
     memory = on;
   }
+  // El atributo se pone aquí mismo, no solo en el efecto de SunnyLayer, para que el fundido de toggle() lo capture.
+  document.documentElement.toggleAttribute("data-sunny", on);
   listeners.forEach((listener) => listener());
+}
+
+// El tejido del modo Sol cambia cosas que CSS no sabe interpolar (texturas, puntadas en lugar de líneas), así que el
+// paso de un modo a otro se hace con un fundido de la página entera (View Transitions). Donde no existe, o con
+// movimiento reducido, el cambio es directo.
+function toggle(on: boolean) {
+  const root = document.documentElement;
+  if (!("startViewTransition" in document) || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    write(on);
+    return;
+  }
+  root.classList.add("sunny-fade");
+  const transition = document.startViewTransition(() => write(on));
+  void transition.finished.finally(() => root.classList.remove("sunny-fade"));
 }
 const snapshot = () => read() || memory;
 export const useSunny = () => useSyncExternalStore(subscribe, snapshot, () => false);
@@ -86,16 +102,16 @@ export function SunnySwitch({ label, labelFromSm = false }: { label: string; lab
       type="button"
       role="switch"
       aria-checked={on}
-      onClick={() => write(!on)}
+      onClick={() => toggle(!on)}
       className="-my-2 flex items-center gap-2 py-2 text-muted transition-colors hover:text-ink"
     >
       <span className={`font-mono text-xs ${labelFromSm ? "sr-only sm:not-sr-only" : ""}`}>{label}</span>
       <span
         aria-hidden="true"
-        className={`relative h-4 w-7 rounded-full border transition-colors ${on ? "border-accent bg-accent" : "border-muted/60"}`}
+        className={`tx-buttonhole relative h-4 w-7 rounded-full border transition-colors ${on ? "border-accent bg-accent" : "border-muted/60"}`}
       >
         <span
-          className={`absolute left-0.5 top-0.5 size-2.5 rounded-full transition-transform ${on ? "translate-x-3 bg-paper" : "bg-muted"}`}
+          className={`tx-button absolute left-0.5 top-0.5 size-2.5 rounded-full transition-transform ${on ? "translate-x-3 bg-paper" : "bg-muted"}`}
         />
       </span>
     </button>

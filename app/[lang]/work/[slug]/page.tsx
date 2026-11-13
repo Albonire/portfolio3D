@@ -78,7 +78,7 @@ export default async function CaseStudyPage({ params }: Props) {
         <h1 className="mt-6 max-w-3xl font-serif text-3xl font-medium leading-tight text-ink sm:text-4xl">{study.title}</h1>
         <p className="mt-5 max-w-2xl text-lg leading-relaxed text-body">{study.lead}</p>
 
-        <dl className="mt-10 grid gap-x-8 gap-y-3 border-y border-rule py-6 text-sm sm:grid-cols-[8rem_minmax(0,1fr)]">
+        <dl className="tx-seam-y mt-10 grid gap-x-8 gap-y-3 border-y border-rule py-6 text-sm sm:grid-cols-[8rem_minmax(0,1fr)]">
           {study.meta.map((item) => (
             <div key={item.label} className="contents">
               <dt className="font-mono text-xs text-muted sm:pt-0.5">{item.label}</dt>
@@ -124,7 +124,7 @@ export default async function CaseStudyPage({ params }: Props) {
               <div className="mt-6 max-w-2xl overflow-x-auto">
                 <table className="w-full border-collapse text-left text-sm">
                   <thead>
-                    <tr className="border-b border-ink">
+                    <tr className="tx-seam-b tx-ink border-b border-ink">
                       {section.table.head.map((h) => (
                         <th key={h} scope="col" className="py-2 pr-4 font-medium text-ink">
                           {h}
@@ -134,7 +134,7 @@ export default async function CaseStudyPage({ params }: Props) {
                   </thead>
                   <tbody>
                     {section.table.rows.map((row) => (
-                      <tr key={row[0]} className="border-b border-rule align-top">
+                      <tr key={row[0]} className="tx-seam-b tx-fine border-b border-rule align-top">
                         {row.map((cell, i) => (
                           <td key={i} className={`py-2 pr-4 ${i === 0 ? "text-ink" : "text-body"}`}>
                             <Inline text={cell} refs={refs} />
@@ -153,7 +153,7 @@ export default async function CaseStudyPage({ params }: Props) {
           </section>
         ))}
         {refs.keys.length > 0 && (
-          <section aria-labelledby="fuentes-title" className="mt-16 border-t border-rule pt-8">
+          <section aria-labelledby="fuentes-title" className="tx-seam-t mt-16 border-t border-rule pt-8">
             <h2 id="fuentes-title" className="font-serif text-xl font-medium text-ink">
               {c.sources.title}
             </h2>

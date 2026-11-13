@@ -135,7 +135,7 @@ function Bar({ segments, className }: { segments: Interval[]; className: string 
       {segments.map(([from, to]) => (
         <span
           key={from}
-          className={`absolute inset-y-0 ${className}`}
+          className={`tx-knit absolute inset-y-0 ${className}`}
           style={{ left: `${(from / DAY) * 100}%`, width: `${((to - from) / DAY) * 100}%` }}
         />
       ))}
@@ -248,7 +248,7 @@ export default function TimeOverlap({ content, lang }: { content: OverlapContent
           {view && (
             <div className="absolute inset-y-0 z-10" style={{ left: `${nowPct}%` }}>
               <span className={`absolute top-0 whitespace-nowrap font-mono text-[11px] leading-none text-ink ${nowAlign}`}>{content.nowLabel}</span>
-              <span className="absolute inset-y-4 w-px bg-ink" />
+              <span className="tx-pin absolute inset-y-4 w-px bg-ink" />
             </div>
           )}
           <div className="space-y-3">

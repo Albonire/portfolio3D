@@ -4,7 +4,7 @@
 // necesita más cuerpo para leerse a 16 px.
 export default function Mark({ size = 28 }: { size?: number }) {
   return (
-    <svg viewBox="0 0 32 32" width={size} height={size} aria-hidden="true" focusable="false" className="shrink-0">
+    <svg viewBox="0 0 32 32" width={size} height={size} aria-hidden="true" focusable="false" className="tx-mark shrink-0">
       <path
         d="M9 5.5H16A10.5 10.5 0 0 1 16 26.5H9Z M2 11.5H9 M2 20.5H9 M26.5 16H30.5"
         className="stroke-accent"
