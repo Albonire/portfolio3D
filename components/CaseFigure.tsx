@@ -36,10 +36,10 @@ export default function CaseFigure({ figure, lang }: Props) {
     <figure className="my-8">
       <ol
         aria-label={figure.label}
-        className={`grid gap-px overflow-hidden border border-rule bg-rule sm:grid-cols-2 ${columns[figure.steps.length] ?? "lg:grid-cols-3"}`}
+        className={`tx-patchwork grid gap-px overflow-hidden border border-rule bg-rule sm:grid-cols-2 ${columns[figure.steps.length] ?? "lg:grid-cols-3"}`}
       >
         {figure.steps.map((step, index) => (
-          <li key={step.title} className="bg-paper p-4">
+          <li key={step.title} className="tx-patch bg-paper p-4">
             <span className="font-mono text-xs text-muted">{index + 1}</span>
             <p className="mt-1 font-medium text-ink">{step.title}</p>
             <p className="mt-1 text-sm leading-relaxed text-muted">{step.detail}</p>

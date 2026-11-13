@@ -29,7 +29,7 @@ function Wire({ d, on }: { d: string; on: boolean }) {
       strokeLinecap="round"
       strokeLinejoin="round"
       strokeWidth={on ? 2.5 : 1.5}
-      className={on ? "stroke-accent" : "stroke-muted opacity-40"}
+      className={on ? "tx-wire-on stroke-accent" : "tx-wire-off stroke-muted opacity-40"}
       style={{ transition: "stroke 150ms, stroke-width 150ms, opacity 150ms" }}
     />
   );
@@ -48,7 +48,7 @@ function Gate({ x, y, label, on }: { x: number; y: number; label: string; on: bo
         width={70}
         height={44}
         rx={3}
-        className={`fill-paper ${on ? "stroke-accent" : "stroke-muted"}`}
+        className={`tx-gate fill-paper ${on ? "stroke-accent" : "stroke-muted"}`}
         strokeWidth={on ? 2 : 1.25}
         style={{ transition: "stroke 150ms" }}
       />
@@ -177,7 +177,7 @@ export default function CircuitToy({ figure }: { figure: CircuitFigure }) {
         <table className="h-fit w-full border-collapse text-left font-mono text-xs">
           <caption className="pb-2 text-left font-sans text-sm text-muted">{figure.tableLabel}</caption>
           <thead>
-            <tr className="border-b border-ink text-ink">
+            <tr className="tx-seam-b tx-ink border-b border-ink text-ink">
               {[nameA, nameB, nameC, nameSum, nameCout].map((h) => (
                 <th key={h} scope="col" className="py-1.5 pr-2 font-normal">
                   {h}
@@ -193,7 +193,7 @@ export default function CircuitToy({ figure }: { figure: CircuitFigure }) {
                 <tr
                   key={row.join("")}
                   aria-current={isActive ? "true" : undefined}
-                  className={`border-b border-rule transition-colors ${isActive ? "bg-wash text-ink" : "text-muted"}`}
+                  className={`tx-seam-b tx-fine border-b border-rule transition-colors ${isActive ? "bg-wash text-ink" : "text-muted"}`}
                 >
                   {[...row, out.sum, out.cout].map((bit, i) => (
                     <td key={i} className={`py-1.5 pr-2 ${isActive ? "font-medium" : ""}`}>

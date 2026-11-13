@@ -20,7 +20,7 @@ export default function Header({ lang, content, altHref, brand = "name" }: Props
   ];
 
   return (
-    <header className="sticky top-0 z-20 border-b border-rule bg-paper">
+    <header className="tx-cloth tx-seam-b sticky top-0 z-20 border-b border-rule bg-paper">
       <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-x-3 gap-y-1 px-5 py-3 sm:gap-x-8 sm:px-8">
         <Link
           href={`/${lang}`}

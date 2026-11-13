@@ -23,8 +23,9 @@ components/Header.tsx, Section.tsx, Inline.tsx, ExternalLink.tsx, Mark.tsx, Lang
                                 piezas de página (cabecera, secciones, texto con fuentes, enlaces, marca, cambio de idioma que
                                 guarda la cookie, cuerpo del 404)
 components/CaseFigure.tsx       figuras de los casos (gráfica, sumador, flujo, captura)
-components/Sunny.tsx, Halftone.tsx, HalftoneShader.tsx
-                                modo Sol: video de sombras y textura de puntos (ver "Modo Sol")
+components/Sunny.tsx            modo Sol: interruptor, video de sombras y sonido (ver "Modo Sol")
+app/textile.css                 modo Sol: el tejido (costuras, marcos cosidos, bordado). Solo actúa con el modo encendido
+app/textile-tiles.css           teselas SVG del tejido. Archivo generado: sale de scripts/textile/build.mjs
 lib/                            idiomas, constantes del sitio, lib/refs.ts (numeración de fuentes) y lib/resume.ts
                                 (análisis del texto de un PDF, lógica pura sin DOM)
 scripts/samples/                fuente Typst de la hoja de vida de muestra de dos columnas
@@ -38,8 +39,8 @@ public/icon.svg, favicon.ico,   icono de la pestaña: una compuerta lógica AND 
                                 para Safari, en un azul medio que se ve en pestañas claras y oscuras
 ```
 
-Las piezas de cliente son siete (gráfica, sumador, hora, lector de hojas de vida, cambio de idioma y las dos del modo
-Sol); el resto se genera en el build. Un solo tema (claro), una sola paleta (neutros slate y azul marino `#1f3a5f`, el mismo
+Las piezas de cliente son seis (gráfica, sumador, hora, lector de hojas de vida, cambio de idioma y el modo Sol); el
+resto se genera en el build. Un solo tema (claro), una sola paleta (neutros slate y azul marino `#1f3a5f`, el mismo
 del CV) y tres fuentes de la familia IBM Plex.
 
 ## Desarrollo
@@ -113,18 +114,46 @@ al apagarlo se pausa y se oculta.
 La intensidad del video es la opacidad de `.sunny-layer[data-on="true"]` en `app/globals.css` (0,58; con 1 es el original
 de dany).
 
-Con el modo encendido, el área bajo la curva de la gráfica de precisión (portada y caso Talento Rosimar) se rellena con una
-trama de puntos de media tinta ("halftone"), la textura que dany muestra en sus imágenes al quitar el cursor. Aquí es fija,
-sin hover. La trama se dibuja desde los datos de la gráfica en un canvas y se recorta con `clip-path` a la forma del área;
-detrás de cada texto marcado con `data-cut` se deja un recuadro blanco medido sobre el texto real, así que ninguna etiqueta
-queda sobre puntos. Las capturas de CircuitBreve no llevan textura: se probó y se descartó.
+### Tejido hecho a mano
 
-El efecto es `components/Halftone.tsx` (`HalftoneLayer`), que usa el shader `HalftoneDots` de
-[Paper Shaders](https://github.com/paper-design/shaders) (`@paper-design/shaders-react`, licencia Apache-2.0). El shader
-va en un chunk aparte (`components/HalftoneShader.tsx`, unos 9 KB comprimidos) que solo se descarga al encender el modo y
-solo se monta mientras el componente está a menos de 150 px de la pantalla. Sin WebGL no se pinta nada y queda el
-original. Para ajustarlo, cada uso pasa sus propios valores: `size` (tamaño de la rejilla, relativo a la imagen), `radius`,
-`contrast`, `grain` y `clip`. Para quitar la textura basta con borrar el `HalftoneLayer` de `components/AccuracyChart.tsx`.
+Con el modo encendido la página se lee como una tela de lino bordada. Solo cambian las piezas que no son imágenes; las
+capturas de los casos quedan como están.
+
+| Pieza | Con el modo Sol |
+| --- | --- |
+| Fondo y cabecera | Lino: fibras irregulares y el cruce de los hilos |
+| Líneas divisorias | Costuras en hilván. Hilo fino entre filas de listas y tablas; pespunte oscuro bajo las cabeceras de tabla |
+| Recuadros (gráfica de portada, zona de arrastre, vista previa del PDF) | Marco de puntadas con las esquinas resueltas. Al arrastrar un archivo, el hilo pasa a azul |
+| Pasos de un flujo | Retazos cosidos, en dos tonos alternos |
+| Botones principales | Etiqueta de sarga azul cosida con hilo crudo |
+| Enlaces | Subrayado en hilván; al pasar el cursor se cierra en línea continua |
+| Viñetas | Cruces de punto de cruz |
+| Gráfica de precisión | Bordado: rejilla en hilván, línea en pespunte (tandas posteriores en hilván suelto), cada medición una cruz y el área bajo la curva en punto de cruz |
+| Sumador | Cables bordados (pespunte si llevan 1, hilván suelto si llevan 0) y compuertas con borde de puntadas |
+| Barras de horario | Punto de media; "ahora" es un alfiler |
+| Marca | La compuerta AND, bordada |
+| Interruptor | Un botón de dos agujeros en su ojal |
+| Pie de página | La tela termina: cenefa en zigzag y flecos |
+
+Cómo está hecho:
+
+- `app/textile.css` tiene todas las reglas, bajo `html[data-sunny]` y dentro de `@media screen and (forced-colors: none)`:
+  al imprimir o con colores forzados quedan las líneas normales. Las clases `tx-*` del marcado son solo ganchos: con
+  el modo apagado no hacen nada (está comprobado comparando capturas con la versión anterior).
+- Las costuras no mueven nada: la línea de 1 px sigue ahí, transparente, y el hilván va como imagen de fondo.
+- `app/textile-tiles.css` trae las teselas SVG como URL de datos (unos 3 KB comprimidos). Lo genera
+  `node scripts/textile/build.mjs`: cada puntada lleva un largo, una separación y una inclinación distintos, tomados de un
+  generador con semilla fija, así que no parece hecho a máquina y sale igual cada vez. Los colores de los hilos están
+  al principio de ese script.
+- El relleno de la gráfica se calcula en `components/AccuracyChart.tsx` (`stitchFill`) solo con el modo encendido. Las
+  cruces van enteras sobre una cuadrícula (la curva se resuelve en escalera, como en un bordado) y se aclaran al
+  alejarse de la línea: cruces completas, medias puntadas y puntadas sueltas. Detrás de cada texto marcado con
+  `data-cut` no se borda: se mide el texto real.
+- El cambio de modo se hace con un fundido de toda la página (View Transitions, `toggle()` en `components/Sunny.tsx`),
+  porque CSS no sabe interpolar una línea hacia una costura. Sin esa API, o con movimiento reducido, el cambio es directo.
+
+Antes el área bajo la curva llevaba una trama de puntos de media tinta (shader `HalftoneDots` de Paper Shaders). El
+bordado la reemplaza; el componente y la dependencia se quitaron y siguen en el historial de git.
 
 Con el modo encendido también suena un bosque de cigarras higurashi de Japón (`public/audio/cigarras.mp3`, 1,8 MB, loop con
 fundido cruzado ya hecho; recodificado desde el archivo que aportó el dueño). Se reproduce con Web Audio (bucle sin hueco), con

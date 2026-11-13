@@ -57,7 +57,7 @@ export default async function Home({ params }: Props) {
             <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
               <a
                 href={c.hero.cvPrimary.href}
-                className="inline-flex items-center rounded-sm bg-accent px-4 py-2.5 text-sm font-medium text-paper transition-colors hover:bg-accent-strong"
+                className="tx-label inline-flex items-center rounded-sm bg-accent px-4 py-2.5 text-sm font-medium text-paper transition-colors hover:bg-accent-strong"
               >
                 {c.hero.cvPrimary.label}
               </a>
@@ -69,7 +69,7 @@ export default async function Home({ params }: Props) {
               </a>
             </div>
           </div>
-          <section aria-labelledby="curve-title" className="min-w-0 border border-rule p-5">
+          <section aria-labelledby="curve-title" className="tx-frame min-w-0 border border-rule p-5">
             <h2 id="curve-title" className="font-serif text-lg font-medium leading-snug text-ink">
               {c.hero.curve.title}
             </h2>
@@ -88,7 +88,7 @@ export default async function Home({ params }: Props) {
           </section>
         </section>
 
-        <dl className="grid grid-cols-2 gap-x-8 gap-y-5 border-t border-rule py-8 text-sm lg:grid-cols-4">
+        <dl className="tx-seam-t grid grid-cols-2 gap-x-8 gap-y-5 border-t border-rule py-8 text-sm lg:grid-cols-4">
           {c.hero.facts.map((fact) => (
             <div key={fact.label}>
               <dt className="font-mono text-xs text-muted">{fact.label}</dt>
@@ -99,9 +99,9 @@ export default async function Home({ params }: Props) {
 
         <Section id="work" title={c.work.title}>
           <p className="max-w-2xl text-body">{c.work.intro}</p>
-          <div className="mt-10">
+          <div className="tx-seams mt-10 divide-y divide-rule">
             {c.work.projects.map((project) => (
-              <article key={project.title} className="border-t border-rule py-8 first:border-t-0 first:pt-0">
+              <article key={project.title} className="py-8 first:pt-0">
                 <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
                   <h3 className="font-serif text-xl font-medium text-ink">
                     {project.slug ? (
@@ -146,8 +146,8 @@ export default async function Home({ params }: Props) {
             ))}
           </div>
 
-          <h3 className="mt-6 border-t border-rule pt-8 font-serif text-xl font-medium text-ink">{c.work.alsoTitle}</h3>
-          <ul className="mt-4 divide-y divide-rule">
+          <h3 className="tx-seam-t tx-fine mt-6 border-t border-rule pt-8 font-serif text-xl font-medium text-ink">{c.work.alsoTitle}</h3>
+          <ul className="tx-seams mt-4 divide-y divide-rule">
             {c.work.also.map((item) => (
               <li key={item.title} className="py-4">
                 <p className="max-w-2xl text-body">
@@ -202,8 +202,8 @@ export default async function Home({ params }: Props) {
               </li>
             ))}
           </ul>
-          <h3 className="mt-10 border-t border-rule pt-8 font-serif text-xl font-medium text-ink">{c.education.certsTitle}</h3>
-          <ul className="mt-4 divide-y divide-rule">
+          <h3 className="tx-seam-t tx-fine mt-10 border-t border-rule pt-8 font-serif text-xl font-medium text-ink">{c.education.certsTitle}</h3>
+          <ul className="tx-seams mt-4 divide-y divide-rule">
             {c.education.certs.map((cert) => (
               <li key={cert.title} className="py-4">
                 <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
@@ -252,7 +252,7 @@ export default async function Home({ params }: Props) {
               <ExternalLink key={item.href} link={item} />
             ))}
           </p>
-          <div className="mt-12 border-t border-rule pt-8">
+          <div className="tx-seam-t tx-fine mt-12 border-t border-rule pt-8">
             <TimeOverlap content={c.contact.overlap} lang={lang} />
           </div>
         </Section>

@@ -114,12 +114,13 @@ export default function ResumeReader({ content, lang }: { content: ReaderContent
           setDragging(false);
           if (!busy) fromFile(event.dataTransfer.files[0]);
         }}
-        className={`border p-5 transition-colors ${dragging ? "border-accent bg-wash" : "border-rule"}`}
+        data-active={dragging}
+        className={`tx-frame border p-5 transition-colors ${dragging ? "border-accent bg-wash" : "border-rule"}`}
       >
         <div className="flex flex-wrap items-center gap-x-4 gap-y-3">
           <label
             htmlFor={inputId}
-            className="inline-flex cursor-pointer items-center rounded-sm bg-accent px-4 py-2.5 text-sm font-medium text-paper transition-colors hover:bg-accent-strong has-[:disabled]:cursor-default has-[:disabled]:opacity-60 has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-3 has-[:focus-visible]:outline-accent"
+            className="tx-label inline-flex cursor-pointer items-center rounded-sm bg-accent px-4 py-2.5 text-sm font-medium text-paper transition-colors hover:bg-accent-strong has-[:disabled]:cursor-default has-[:disabled]:opacity-60 has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-3 has-[:focus-visible]:outline-accent"
           >
             {content.pick}
             <input
@@ -262,7 +263,7 @@ function Findings({
         {totalPages > report.pages && ` · ${fill(content.cap, { n: report.pages, total: totalPages })}`}
       </p>
 
-      <dl className="mt-4 divide-y divide-rule border-y border-rule text-sm">
+      <dl className="tx-seam-y tx-seams mt-4 divide-y divide-rule border-y border-rule text-sm">
         {rows.map((row) => (
           <div key={row.key} className="grid gap-x-6 gap-y-1 py-3 sm:grid-cols-[7rem_5rem_minmax(0,1fr)]">
             <dt className="font-mono text-xs text-muted sm:pt-0.5">{row.label}</dt>
@@ -281,7 +282,7 @@ function Findings({
                 tabIndex={0}
                 role="region"
                 aria-label={preview.title}
-                className="mt-2 max-h-72 overflow-auto whitespace-pre-wrap break-words border border-rule bg-wash p-3 font-mono text-xs leading-relaxed text-ink"
+                className="tx-frame mt-2 max-h-72 overflow-auto whitespace-pre-wrap break-words border border-rule bg-wash p-3 font-mono text-xs leading-relaxed text-ink"
               >
                 {cut(preview.text)}
               </pre>

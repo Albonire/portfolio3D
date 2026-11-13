@@ -1,9 +1,9 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { ChartFigure } from "@/content/types";
 import type { Locale } from "@/lib/i18n";
-import HalftoneLayer from "./Halftone";
+import { useSunny } from "./Sunny";
 
 // Gráfica de una sola serie, dibujada a mano en SVG: 2 px de línea, marcadores con anillo del color
 // de la superficie, cuadrícula fina y sin etiquetar cada punto. Los hitos de tandas posteriores van con
@@ -16,6 +16,54 @@ const SIZES = {
 };
 const TICKS = [0, 25, 50, 75, 100];
 
+// Modo Sol: la gráfica se borda. El relleno bajo la curva es punto de cruz sobre una cuadrícula de CELL unidades,
+// con cruces enteras (ninguna queda cortada por la curva, que se resuelve en escalera como en un bordado real).
+// La densidad baja al alejarse de la línea como la sombrearía una bordadora: cruces completas, luego medias
+// puntadas y al final puntadas sueltas. La semilla de cada puntada sale de su celda, así que el dibujo no cambia
+// entre visitas. Las cruces de los datos usan el mismo desvío para que ninguna quede idéntica a otra.
+const CELL = 8;
+type Box = { x: number; y: number; width: number; height: number };
+const jitter = (a: number, b: number, salt = 0) => {
+  const h = Math.sin(a * 127.1 + b * 311.7 + salt * 74.7) * 43758.5453;
+  return h - Math.floor(h);
+};
+const r1 = (v: number) => Math.round(v * 10) / 10;
+
+function stitchFill(curve: [number, number][], base: number, cuts: Box[]) {
+  const full: string[] = [];
+  const half: string[] = [];
+  const [x0] = curve[0];
+  const xEnd = curve[curve.length - 1][0];
+  const curveY = (px: number) => {
+    const i = Math.min(curve.findIndex(([cx]) => cx >= px), curve.length - 1);
+    if (i <= 0) return curve[0][1];
+    const [ax, ay] = curve[i - 1];
+    const [bx, by] = curve[i];
+    return ay + ((px - ax) / (bx - ax)) * (by - ay);
+  };
+  for (let left = x0 + 1; left + CELL <= xEnd; left += CELL) {
+    const right = left + CELL;
+    // El punto más bajo de la curva dentro de la columna: la celda entera tiene que quedar por debajo.
+    const lowest = Math.max(curveY(left), curveY(right), ...curve.filter(([cx]) => cx > left && cx < right).map(([, cy]) => cy));
+    const rows = Math.floor((base - lowest - 3) / CELL);
+    for (let row = rows - 1; row >= 0; row--) {
+      const depth = rows - 1 - row;
+      const top = base - (row + 1) * CELL;
+      if (cuts.some((c) => left < c.x + c.width && right > c.x && top < c.y + c.height && top + CELL > c.y)) continue;
+      // Dos razones para saltarse una celda: está lejos de la línea, o está pegada al eje (ahí siempre va ralo).
+      const seed = jitter(left, row);
+      if (depth >= 5 && seed > 0.62 - (depth - 5) * 0.085) continue;
+      if (row < 3 && seed > 0.2 + row * 0.22) continue;
+      const pad = 1.5;
+      const j = (k: number) => (jitter(left, row, k) - 0.5) * 0.9;
+      const a = `M${r1(left + pad + j(1))} ${r1(top + CELL - pad + j(2))}L${r1(right - pad + j(3))} ${r1(top + pad + j(4))}`;
+      if (depth < 3 && row >= 3) full.push(`${a}M${r1(left + pad + j(5))} ${r1(top + pad + j(6))}L${r1(right - pad + j(7))} ${r1(top + CELL - pad + j(8))}`);
+      else half.push(a);
+    }
+  }
+  return { full: full.join(""), half: half.join("") };
+}
+
 type Props = { figure: ChartFigure; lang: Locale; compact?: boolean };
 
 export default function AccuracyChart({ figure, lang, compact = false }: Props) {
@@ -26,6 +74,8 @@ export default function AccuracyChart({ figure, lang, compact = false }: Props) 
   const last = points.length - 1;
   const [active, setActive] = useState(figure.focus);
   const svgRef = useRef<SVGSVGElement>(null);
+  const sunny = useSunny();
+  const [cuts, setCuts] = useState<Box[] | null>(null);
 
   const x = (i: number) => M.left + (i * PLOT_W) / last;
   const y = (v: number) => M.top + (1 - v / 100) * PLOT_H;
@@ -35,41 +85,31 @@ export default function AccuracyChart({ figure, lang, compact = false }: Props) 
     return lang === "es" ? `${n} %` : `${n}%`;
   };
 
-  // Modo Sol (experimento): el área bajo la curva se rellena con puntos de media tinta, detrás del SVG. La imagen que
-  // recibe el shader se dibuja desde los datos, en las mismas coordenadas del viewBox: oscura (puntos grandes) junto a
-  // la línea alta y casi blanca hacia el eje, y en blanco (sin puntos) por encima de la curva. Detrás de cada texto
-  // marcado con data-cut se deja un recuadro blanco, medido sobre el texto real, para que ningún punto quede bajo una letra.
-  const areaImage = () => {
-    const scale = 2;
-    const canvas = document.createElement("canvas");
-    canvas.width = W * scale;
-    canvas.height = H * scale;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return undefined;
-    ctx.scale(scale, scale);
-    ctx.fillStyle = "#ffffff";
-    ctx.fillRect(0, 0, W, H);
-    const gradient = ctx.createLinearGradient(0, y(100), 0, y(0));
-    gradient.addColorStop(0, "#161616");
-    gradient.addColorStop(1, "#fafafa");
-    ctx.beginPath();
-    ctx.moveTo(x(0), y(0));
-    points.forEach((p, i) => ctx.lineTo(x(i), y(p.value)));
-    ctx.lineTo(x(last), y(0));
-    ctx.closePath();
-    ctx.fillStyle = gradient;
-    ctx.fill();
-    ctx.fillStyle = "#ffffff";
-    svgRef.current?.querySelectorAll<SVGGraphicsElement>("[data-cut]").forEach((el) => {
-      const box = el.getBBox();
-      ctx.fillRect(box.x - 5, box.y - 4, box.width + 10, box.height + 8);
-    });
-    return canvas.toDataURL("image/png");
-  };
+  // El relleno bordado deja libre el sitio de cada etiqueta marcada con data-cut: se mide el texto real (y otra vez
+  // cuando termina de cargar la fuente) y las celdas que lo tocan no se bordan.
+  useEffect(() => {
+    if (!sunny) return;
+    let cancelled = false;
+    const measure = () => {
+      if (cancelled || !svgRef.current) return;
+      const boxes = Array.from(svgRef.current.querySelectorAll<SVGGraphicsElement>("[data-cut]"), (el) => {
+        const box = el.getBBox();
+        return { x: box.x - 4, y: box.y - 2, width: box.width + 8, height: box.height + 4 };
+      });
+      setCuts(boxes);
+    };
+    measure();
+    void document.fonts?.ready.then(measure);
+    return () => {
+      cancelled = true;
+    };
+  }, [sunny, lang, compact]);
 
-  const areaClip = `polygon(${[[x(0), y(0)], ...points.map((p, i) => [x(i), y(p.value)]), [x(last), y(0)]]
-    .map(([px, py]) => `${((px / W) * 100).toFixed(2)}% ${((py / H) * 100).toFixed(2)}%`)
-    .join(", ")})`;
+  const fill = useMemo(() => {
+    if (!sunny || !cuts) return null;
+    const curve = points.map((p, i): [number, number] => [M.left + (i * PLOT_W) / last, M.top + (1 - p.value / 100) * PLOT_H]);
+    return stitchFill(curve, M.top + PLOT_H, cuts);
+  }, [sunny, cuts, points, last, M, PLOT_W, PLOT_H]);
 
   const firstLater = points.findIndex((p) => p.phase === "later");
   const dipIndex = points.reduce((min, p, i) => (p.value < points[min].value ? i : min), 0);
@@ -99,15 +139,21 @@ export default function AccuracyChart({ figure, lang, compact = false }: Props) 
           className={compact ? "w-full" : "min-w-[26rem] max-w-3xl"}
         >
           <div className="relative">
-            <HalftoneLayer image={areaImage} clip={areaClip} size={compact ? 0.22 : 0.17} radius={0.9} contrast={0.8} grain={0} />
-            <svg ref={svgRef} viewBox={`0 0 ${W} ${H}`} className="relative z-10 block h-auto w-full select-none" aria-hidden="true">
+            <svg ref={svgRef} viewBox={`0 0 ${W} ${H}`} className="block h-auto w-full select-none" aria-hidden="true">
+              {fill && (
+                <g className="tx-sol-only stroke-accent" fill="none" strokeWidth="1.15" strokeLinecap="round">
+                  <path d={fill.full} opacity="0.62" />
+                  <path d={fill.half} opacity="0.5" />
+                </g>
+              )}
+
               <text x={M.left} y={14} className="fill-muted font-mono" fontSize={font}>
                 {figure.yLabel}
               </text>
 
               {TICKS.map((t) => (
                 <g key={t}>
-                  <line x1={M.left} x2={W - M.right} y1={y(t)} y2={y(t)} className="stroke-rule" strokeWidth="1" />
+                  <line x1={M.left} x2={W - M.right} y1={y(t)} y2={y(t)} className="tx-grid stroke-rule" strokeWidth="1" />
                   <text x={M.left - 8} y={y(t) + 4} textAnchor="end" className="fill-muted font-mono" fontSize={font}>
                     {t}
                   </text>
@@ -140,7 +186,7 @@ export default function AccuracyChart({ figure, lang, compact = false }: Props) 
                 </g>
               )}
 
-              <line x1={x(active)} x2={x(active)} y1={M.top} y2={M.top + PLOT_H} className="stroke-muted" strokeWidth="1" />
+              <line x1={x(active)} x2={x(active)} y1={M.top} y2={M.top + PLOT_H} className="tx-guide stroke-muted" strokeWidth="1" />
 
               {points.slice(1).map((p, k) => {
                 const i = k + 1;
@@ -151,7 +197,7 @@ export default function AccuracyChart({ figure, lang, compact = false }: Props) 
                     y1={y(points[i - 1].value)}
                     x2={x(i)}
                     y2={y(p.value)}
-                    className="stroke-accent"
+                    className={`stroke-accent ${p.phase === "later" ? "tx-running" : "tx-backstitch"}`}
                     strokeWidth="2"
                     strokeLinecap="round"
                     strokeDasharray={p.phase === "later" ? "5 5" : undefined}
@@ -165,27 +211,42 @@ export default function AccuracyChart({ figure, lang, compact = false }: Props) 
                   cx={x(i)}
                   cy={y(p.value)}
                   r={i === active ? 7 : i === dipIndex ? 6 : 4.5}
-                  className={`${i === dipIndex ? "fill-stop" : "fill-accent"} stroke-paper`}
+                  className={`tx-sol-hide ${i === dipIndex ? "fill-stop" : "fill-accent"} stroke-paper`}
                   strokeWidth="2"
                 />
               ))}
 
-              <text data-cut x={x(0)} y={y(points[0].value) + 24} textAnchor="start" className="fill-ink font-mono" fontSize={font}>
+              {/* Modo Sol: cada medición es una cruz de punto de cruz, con un borde del color de la tela debajo. */}
+              <g className="tx-sol-only" fill="none" strokeLinecap="round">
+                {points.map((p, i) => {
+                  const s = i === active ? 5.6 : i === dipIndex ? 5 : 3.9;
+                  const j = (k: number) => (jitter(i, k) - 0.5) * 1.1;
+                  const d = `M${r1(x(i) - s + j(1))} ${r1(y(p.value) - s + j(2))}L${r1(x(i) + s + j(3))} ${r1(y(p.value) + s + j(4))}M${r1(x(i) + s + j(5))} ${r1(y(p.value) - s + j(6))}L${r1(x(i) - s + j(7))} ${r1(y(p.value) + s + j(8))}`;
+                  return (
+                    <g key={p.label}>
+                      <path d={d} className="stroke-paper" strokeWidth="5.6" />
+                      <path d={d} className={i === dipIndex ? "stroke-stop" : "stroke-accent"} strokeWidth={i === active ? 2.6 : 2.2} />
+                    </g>
+                  );
+                })}
+              </g>
+
+              <text data-cut x={x(0)} y={y(points[0].value) + 24} textAnchor="start" className="tx-halo fill-ink font-mono" fontSize={font}>
                 {fmt(points[0].value)}
               </text>
-              <text data-cut x={x(last)} y={y(points[last].value) - 12} textAnchor="end" className="fill-ink font-mono" fontSize={font}>
+              <text data-cut x={x(last)} y={y(points[last].value) - 12} textAnchor="end" className="tx-halo fill-ink font-mono" fontSize={font}>
                 {fmt(points[last].value)}
               </text>
               {compact ? (
-                <text data-cut x={x(dipIndex) + 14} y={y(points[dipIndex].value) + 5} className="fill-ink font-mono" fontSize={font}>
+                <text data-cut x={x(dipIndex) + 14} y={y(points[dipIndex].value) + 5} className="tx-halo fill-ink font-mono" fontSize={font}>
                   {fmt(points[dipIndex].value)}
                 </text>
               ) : (
                 <>
-                  <text data-cut x={x(dipIndex) + 24} y={y(points[dipIndex].value) - 2} className="fill-ink" fontSize={font}>
+                  <text data-cut x={x(dipIndex) + 24} y={y(points[dipIndex].value) - 2} className="tx-halo fill-ink" fontSize={font}>
                     {figure.callout.title}
                   </text>
-                  <text data-cut x={x(dipIndex) + 24} y={y(points[dipIndex].value) + 14} className="fill-muted" fontSize={font}>
+                  <text data-cut x={x(dipIndex) + 24} y={y(points[dipIndex].value) + 14} className="tx-halo fill-muted" fontSize={font}>
                     {figure.callout.text}
                   </text>
                 </>
@@ -208,7 +269,7 @@ export default function AccuracyChart({ figure, lang, compact = false }: Props) 
         </div>
       </div>
 
-      <div aria-live="polite" className={`mt-3 min-h-[5.5rem] border-t border-rule pt-3 ${compact ? "" : "max-w-3xl"}`}>
+      <div aria-live="polite" className={`tx-seam-t tx-fine mt-3 min-h-[5.5rem] border-t border-rule pt-3 ${compact ? "" : "max-w-3xl"}`}>
         <p className="font-mono text-xs text-muted">
           {active + 1}/{points.length}
           {current.phase === "later" ? ` · ${figure.laterLabel}` : ""}
@@ -228,7 +289,7 @@ export default function AccuracyChart({ figure, lang, compact = false }: Props) 
             <table className="mt-3 w-full border-collapse text-left">
               <caption className="sr-only">{figure.label}</caption>
               <thead>
-                <tr className="border-b border-ink">
+                <tr className="tx-seam-b tx-ink border-b border-ink">
                   <th scope="col" className="w-8 py-1.5 pr-3 font-mono text-xs font-normal text-muted">
                     #
                   </th>
@@ -242,7 +303,7 @@ export default function AccuracyChart({ figure, lang, compact = false }: Props) 
               </thead>
               <tbody>
                 {points.map((p, i) => (
-                  <tr key={p.label} className="border-b border-rule align-top">
+                  <tr key={p.label} className="tx-seam-b tx-fine border-b border-rule align-top">
                     <td className="py-1.5 pr-3 font-mono text-xs text-muted">{i + 1}</td>
                     <td className="py-1.5 pr-3 text-body">{p.label}</td>
                     <td className="py-1.5 text-right font-mono text-ink">{fmt(p.value)}</td>

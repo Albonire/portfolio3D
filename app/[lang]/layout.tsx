@@ -46,7 +46,7 @@ export default async function RootLayout({
         </a>
         {children}
         <SunnyLayer />
-        <footer className="border-t border-rule">
+        <footer className="tx-seam-t tx-fringe border-t border-rule">
           <div className="mx-auto max-w-5xl px-5 py-8 text-sm text-muted sm:px-8">
             © {new Date().getFullYear()} {content.footer}
           </div>
