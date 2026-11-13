@@ -179,7 +179,9 @@ export default async function Home({ params }: Props) {
                 </p>
                 <ul className="mt-3 max-w-2xl list-disc space-y-2 pl-5 text-body marker:text-muted">
                   {job.bullets.map((bullet) => (
-                    <li key={bullet}>{bullet}</li>
+                    <li key={bullet}>
+                      <Inline text={bullet} refs={refs} />
+                    </li>
                   ))}
                 </ul>
               </article>
