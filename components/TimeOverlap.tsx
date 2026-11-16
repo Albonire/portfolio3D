@@ -135,7 +135,7 @@ function Bar({ segments, className }: { segments: Interval[]; className: string 
       {segments.map(([from, to]) => (
         <span
           key={from}
-          className={`tx-knit absolute inset-y-0 ${className}`}
+          className={`tx-satin absolute inset-y-0 ${className}`}
           style={{ left: `${(from / DAY) * 100}%`, width: `${((to - from) / DAY) * 100}%` }}
         />
       ))}
@@ -211,7 +211,7 @@ export default function TimeOverlap({ content, lang }: { content: OverlapContent
   const rows = [
     { key: "me", label: content.rows.me, offset: view?.meOffset ?? -300, segments: view?.me ?? [], color: "bg-muted/60" },
     { key: "you", label: content.rows.you, offset: view?.youOffset ?? null, segments: view?.you ?? [], color: "bg-muted/60" },
-    { key: "both", label: content.rows.both, offset: null, segments: view?.both ?? [], color: "bg-accent" },
+    { key: "both", label: content.rows.both, offset: null, segments: view?.both ?? [], color: "tx-satin-navy bg-accent" },
   ];
 
   return (
@@ -232,7 +232,7 @@ export default function TimeOverlap({ content, lang }: { content: OverlapContent
           value={zone ?? ""}
           onChange={(event) => setPicked(event.target.value)}
           disabled={zone === null}
-          className="rounded-sm border border-muted bg-paper px-2.5 py-1.5 text-sm text-ink"
+          className="tx-frame-fine rounded-sm border border-muted bg-paper px-2.5 py-1.5 text-sm text-ink"
         >
           {zone === null && <option value="">{content.detecting}</option>}
           {options.map((o) => (
@@ -254,11 +254,12 @@ export default function TimeOverlap({ content, lang }: { content: OverlapContent
           <div className="space-y-3">
             {rows.map((row) => (
               <div key={row.key}>
-                <p className="mb-1 font-mono text-xs text-muted">
+                {/* La etiqueta va por encima de la línea de "Ahora" y con el color del papel: la línea pasa por detrás. */}
+                <p className="relative z-20 mb-1 w-fit bg-paper pr-1.5 font-mono text-xs text-muted">
                   {row.label}
                   {row.offset !== null && ` (${formatOffset(row.offset)})`}
                 </p>
-                <div className="relative h-5 border border-rule bg-wash">
+                <div className="tx-track relative h-5 border border-rule bg-wash">
                   <Bar segments={row.segments} className={row.color} />
                 </div>
               </div>

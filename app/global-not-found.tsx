@@ -10,7 +10,7 @@ export const metadata: Metadata = { title: "404" };
 
 export default function GlobalNotFound() {
   return (
-    <html lang="es" className={`${sans.variable} ${serif.variable} ${mono.variable}`}>
+    <html lang="es" className={`${sans.variable} ${serif.variable} ${mono.variable}`} data-scroll-behavior="smooth">
       <body className="min-h-screen">
         <NotFoundBody />
       </body>

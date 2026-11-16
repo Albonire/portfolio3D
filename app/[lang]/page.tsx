@@ -51,7 +51,8 @@ export default async function Home({ params }: Props) {
       <main id="main" tabIndex={-1} className="mx-auto max-w-5xl px-5 outline-none sm:px-8">
         <section className="grid gap-12 py-14 sm:py-20 lg:grid-cols-[minmax(0,1fr)_27rem] lg:gap-14">
           <div>
-            <h1 className="font-serif text-4xl font-medium leading-[1.1] text-ink sm:text-[2.6rem]">{c.hero.name}</h1>
+            {/* text-wrap: el nombre no se equilibra, para que la inicial no quede sola al empezar el segundo renglón. */}
+            <h1 className="text-wrap font-serif text-4xl font-medium leading-[1.1] text-ink sm:text-[2.6rem]">{c.hero.name}</h1>
             <p className="mt-3 max-w-xl text-lg text-muted">{c.hero.role}</p>
             <p className="mt-8 max-w-xl text-lg leading-relaxed text-body">{c.hero.intro}</p>
             <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
@@ -223,16 +224,17 @@ export default async function Home({ params }: Props) {
         </Section>
 
         <Section id="skills" title={c.skills.title}>
-          <dl className="grid gap-x-8 gap-y-3 sm:grid-cols-[9rem_minmax(0,1fr)]">
+          {/* En una columna (móvil) cada grupo es un bloque: la etiqueta queda pegada a su valor y los grupos, separados. */}
+          <dl className="grid gap-x-8 gap-y-4 sm:grid-cols-[9rem_minmax(0,1fr)] sm:gap-y-3">
             {c.skills.groups.map((group) => (
-              <div key={group.label} className="contents">
+              <div key={group.label} className="sm:contents">
                 <dt className="font-mono text-xs text-muted sm:pt-1">{group.label}</dt>
-                <dd className="text-body">{group.items}</dd>
+                <dd className="mt-0.5 text-body sm:mt-0">{group.items}</dd>
               </div>
             ))}
-            <div className="contents">
+            <div className="sm:contents">
               <dt className="font-mono text-xs text-muted sm:pt-1">{c.skills.languagesLabel}</dt>
-              <dd className="text-body">{c.skills.languages}</dd>
+              <dd className="mt-0.5 text-body sm:mt-0">{c.skills.languages}</dd>
             </div>
           </dl>
         </Section>

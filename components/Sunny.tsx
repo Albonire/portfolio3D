@@ -1,6 +1,20 @@
 "use client";
 
 import { useEffect, useRef, useSyncExternalStore } from "react";
+import { SUNNY_BOOT, SUNNY_KEY, SUNNY_TILES_HREF, SUNNY_TILES_ID } from "@/lib/sunny";
+
+// El guion de arranque (ver lib/sunny.ts). Solo tiene que ejecutarse en el HTML que llega del servidor; al cambiar de
+// idioma el layout se vuelve a renderizar en el cliente y React avisaría de un <script> que no va a ejecutar, así que
+// ahí se marca como texto (la receta de la guía de Next "Preventing flash before hydration").
+export function SunnyBoot() {
+  return (
+    <script
+      type={typeof window === "undefined" ? "text/javascript" : "text/plain"}
+      suppressHydrationWarning
+      dangerouslySetInnerHTML={{ __html: SUNNY_BOOT }}
+    />
+  );
+}
 
 // EXPERIMENTO. El video es de dany.works (https://dany.works/): sombras de hojas, 720x1280, 12 s, sin audio.
 // Se enlaza desde su sitio y no se copia al repositorio. Para publicar el sitio hay que cambiarlo por un
@@ -48,10 +62,30 @@ function fadeAmbient(a: Ambient, to: number) {
   a.gain.gain.linearRampToValueAtTime(to, now + AUDIO_FADE_S);
 }
 
+// Las teselas del bordado se piden al encender el modo por primera vez (ver lib/sunny.ts). Si el guion de arranque del
+// layout ya puso el <link>, se espera a ese mismo.
+let tilesPromise: Promise<void> | null = null;
+function loadTiles(): Promise<void> {
+  tilesPromise ??= new Promise((resolve) => {
+    let link = document.getElementById(SUNNY_TILES_ID) as HTMLLinkElement | null;
+    if (link?.sheet) return resolve();
+    if (!link) {
+      link = document.createElement("link");
+      link.id = SUNNY_TILES_ID;
+      link.rel = "stylesheet";
+      link.href = SUNNY_TILES_HREF;
+      document.head.append(link);
+    }
+    link.addEventListener("load", () => resolve(), { once: true });
+    link.addEventListener("error", () => resolve(), { once: true });
+  });
+  return tilesPromise;
+}
+
 // El estado vive fuera de React para que lo compartan el interruptor (cabecera) y la capa (layout) sin
 // contexto, y se guarda en sessionStorage para que sobreviva al cambio de idioma y de página. El servidor
 // siempre dice "apagado", así que no hay diferencia de hidratación.
-const KEY = "sunny";
+const KEY = SUNNY_KEY;
 let memory = false;
 const listeners = new Set<() => void>();
 const subscribe = (listener: () => void) => {
@@ -79,8 +113,10 @@ function write(on: boolean) {
 
 // El tejido del modo Sol cambia cosas que CSS no sabe interpolar (texturas, puntadas en lugar de líneas), así que el
 // paso de un modo a otro se hace con un fundido de la página entera (View Transitions). Donde no existe, o con
-// movimiento reducido, el cambio es directo.
-function toggle(on: boolean) {
+// movimiento reducido, el cambio es directo. Al encender se espera a las teselas (un instante, y solo la primera vez)
+// para que el fundido ya las encuentre; si la red no responde, se sigue sin ellas.
+async function toggle(on: boolean) {
+  if (on) await Promise.race([loadTiles(), new Promise((resolve) => window.setTimeout(resolve, 1200))]);
   const root = document.documentElement;
   if (!("startViewTransition" in document) || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     write(on);
@@ -95,14 +131,17 @@ export const useSunny = () => useSyncExternalStore(subscribe, snapshot, () => fa
 
 // `labelFromSm`: en pantallas angostas la etiqueta queda solo para lectores de pantalla, para que la cabecera de los
 // casos de estudio (marca, nombre, interruptor e idioma) quepa en una fila.
-export function SunnySwitch({ label, labelFromSm = false }: { label: string; labelFromSm?: boolean }) {
+// `hint` avisa de lo que trae el modo (también suena) antes de encenderlo: sale al pasar el cursor y la leen los lectores
+// de pantalla como descripción.
+export function SunnySwitch({ label, hint, labelFromSm = false }: { label: string; hint: string; labelFromSm?: boolean }) {
   const on = useSunny();
   return (
     <button
       type="button"
       role="switch"
       aria-checked={on}
-      onClick={() => toggle(!on)}
+      title={hint}
+      onClick={() => void toggle(!on)}
       className="-my-2 flex items-center gap-2 py-2 text-muted transition-colors hover:text-ink"
     >
       <span className={`font-mono text-xs ${labelFromSm ? "sr-only sm:not-sr-only" : ""}`}>{label}</span>
@@ -127,6 +166,7 @@ export function SunnyLayer() {
     if (!el) return;
     document.documentElement.toggleAttribute("data-sunny", on);
     if (on) {
+      void loadTiles();
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
         // Con movimiento reducido el video no se anima: se carga y queda quieto en su primer fotograma.
         el.preload = "auto";

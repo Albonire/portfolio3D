@@ -157,9 +157,11 @@ export type Content = {
     switchTo: string;
     back: string;
     caseStudy: string;
+    caseNav: string;
+    nextCase: string;
     private: string;
     sourceLabel: string;
-    sunny: { label: string };
+    sunny: { label: string; hint: string };
   };
   nav: { work: string; experience: string; education: string; skills: string; contact: string };
   hero: {

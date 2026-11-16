@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import "./textile-tiles.css";
 @import "./textile.css";
 
 /* Fuentes: next/font define --font-plex-* en <html>; aquí solo se enlazan a los tokens de Tailwind.
@@ -25,7 +24,7 @@
   --color-stop: #9f1239;
 }
 
-/* Modo Sol (experimento): un tinte cálido sobre el papel, con fundido. Las variables se registran como
+/* Modo Sol (experimento): un tinte cálido sobre el papel, liso, con fundido. Las variables se registran como
    colores para que la transición las pueda interpolar. El resto de la paleta no cambia. */
 @property --color-paper {
   syntax: "<color>";
@@ -52,8 +51,7 @@
 
 html[data-sunny] {
   --color-paper: #f7f1e3;
-  /* Translúcido para que la trama del lino se vea a través; sobre el papel da #eee7d6. */
-  --color-wash: rgb(120 95 40 / 0.07);
+  --color-wash: #eee7d6;
   --color-rule: #ded6c2;
 }
 
@@ -119,6 +117,20 @@ html.sunny-fade::view-transition-new(root) {
   ::selection {
     background-color: var(--color-accent);
     color: var(--color-paper);
+  }
+
+  /* Los títulos reparten sus renglones por igual y los párrafos no dejan una palabra sola al final. Donde el
+     navegador no lo entiende, el texto parte como siempre. */
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+  p,
+  li,
+  dd,
+  figcaption {
+    text-wrap: pretty;
   }
 
   :focus-visible {

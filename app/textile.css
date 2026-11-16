@@ -1,7 +1,8 @@
-/* Modo Sol: tejido hecho a mano. Con el modo encendido la página se lee como una tela de lino bordada: las líneas
-   divisorias son costuras, los recuadros van cosidos, los botones son etiquetas tejidas y la gráfica es un bordado.
-   Todo cuelga de html[data-sunny] y de clases tx-* que no hacen nada con el modo apagado. Las imágenes (capturas)
-   no se tocan. Las teselas SVG vienen de textile-tiles.css (scripts/textile/build.mjs).
+/* Modo Sol: bordado. Con el modo encendido el papel queda liso y lo que se borda son las piezas: las líneas divisorias
+   son costuras (cada sección de la portada con un punto distinto, como en un muestrario), los recuadros van cosidos,
+   los botones son parches y la gráfica es un bordado. El fondo y las imágenes (capturas) no se tocan.
+   Todo cuelga de html[data-sunny] y de clases tx-* que no hacen nada con el modo apagado. Las teselas SVG vienen de
+   public/textile-tiles.css (scripts/textile/build.mjs), que components/Sunny.tsx pide al encender el modo.
    Solo en pantalla: al imprimir, y con colores forzados, quedan las líneas normales. */
 .tx-sol-only {
   display: none;
@@ -9,30 +10,15 @@
 
 @media screen and (forced-colors: none) {
   html[data-sunny] {
-    --tx-thread: #ad9a72;
-    --tx-thread-fine: #bfae8a;
+    --tx-thread: #b8934a;
 
-    /* La tela: fibras irregulares y, encima, el cruce de los hilos. Va detrás del contenido y se desplaza con él. */
-    & body {
-      position: relative;
-      isolation: isolate;
-    }
-    & body::before,
-    & .tx-cloth::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      z-index: -1;
-      pointer-events: none;
-      background-image: var(--tx-weave), var(--tx-linen);
-    }
-
-    /* Costuras: la línea de 1 px se queda (transparente, para no mover nada) y encima va el hilván. */
-    /* :where deja la regla base sin peso, para que tx-fine y tx-ink puedan cambiar el hilo. */
+    /* Costuras: la línea de 1 px se queda (transparente, para no mover nada) y encima va la costura. `round` hace
+       que quepa un número entero de teselas: ninguna puntada queda cortada en el borde. */
+    /* :where deja la regla base sin peso, para que cada sección y tx-fine / tx-ink puedan cambiar el punto. */
     & :where(.tx-seam-t, .tx-seam-b, .tx-seam-y, .tx-seams > :not(:last-child)) {
       --seam: var(--tx-seam);
       background-image: var(--seam);
-      background-repeat: repeat-x;
+      background-repeat: round no-repeat;
       background-origin: border-box;
     }
     & .tx-seam-t {
@@ -48,7 +34,7 @@
       background-image: var(--seam), var(--seam);
       background-position:
         0 0,
-        -71px 100%;
+        0 100%;
     }
     & :where(.tx-seams > :not(:last-child)) {
       --seam: var(--tx-seam-fine);
@@ -60,165 +46,209 @@
       --seam: var(--tx-seam-ink);
     }
 
-    /* Marcos cosidos: un rectángulo de puntadas con las esquinas resueltas. */
+    /* El muestrario: un punto por sección. Cadeneta, escapulario, espina, punto de cruz, mosca, tallo y festón. */
+    & #work.tx-seam-t {
+      --seam: var(--tx-band-chain);
+    }
+    & #reader.tx-seam-t {
+      --seam: var(--tx-band-herringbone);
+    }
+    & #experience.tx-seam-t {
+      --seam: var(--tx-band-feather);
+    }
+    & #education.tx-seam-t {
+      --seam: var(--tx-band-cross);
+    }
+    & #skills.tx-seam-t {
+      --seam: var(--tx-band-fly);
+    }
+    & #contact.tx-seam-t {
+      --seam: var(--tx-band-stem);
+    }
+    & #sources.tx-seam-t {
+      --seam: var(--tx-band-blanket);
+    }
+
+    /* Marcos cosidos. El de la gráfica de portada va en festón, como un parche aplicado, con un nudo en cada esquina. */
     & .tx-frame {
       border-color: transparent;
-      border-image: var(--tx-frame) 12 / 12px / 5px round;
+      border-image: var(--tx-frame) 11 / 11px / 0 round;
     }
-    & .tx-frame[data-active="true"] {
-      border-image-source: var(--tx-frame-navy);
+    /* La zona de arrastre: un hilván (la costura provisional). Al arrastrar un archivo encima se cierra en pespunte azul. */
+    & .tx-drop {
+      border-color: transparent;
+      border-image: var(--tx-frame-drop) 12 / 12px / 3px round;
+    }
+    & .tx-drop[data-active="true"] {
+      border-image-source: var(--tx-frame-drop-on);
+    }
+    & .tx-frame-fine {
+      border-color: transparent;
+      border-image: var(--tx-frame-fine) 8 / 8px / 4px round;
     }
 
-    /* Enlaces: el subrayado es una costura; al pasar el cursor se cierra en pespunte. */
-    & :is(a, button, summary).underline {
-      text-decoration-style: dashed;
-      text-decoration-thickness: 1.5px;
+    /* Enlaces: el subrayado es una costura de verdad (va como fondo, bajo la línea del texto); al pasar el cursor se
+       cierra en pespunte azul. El relleno inferior baja la costura sin mover nada. */
+    & .underline {
+      text-decoration-line: none;
+      padding-bottom: 0.22em;
+      /* El margen negativo no afecta a un enlace dentro de un renglón, pero sí a uno que es una caja (un botón, un
+         enlace en una fila flexible): le quita la altura que el relleno le sumó. */
+      margin-bottom: -0.22em;
+      background-image: var(--tx-underline);
+      background-repeat: round no-repeat;
+      background-position: 0 100%;
+      background-size: auto 0.36em;
+    }
+    & :is(a, button).underline:hover,
+    & summary:hover .underline {
+      background-image: var(--tx-underline-on);
+    }
+    /* Los superíndices de las fuentes son demasiado pequeños para una costura: llevan una línea fina. */
+    & sup .underline {
+      padding-bottom: 0;
+      margin-bottom: 0;
+      background-image: none;
+      text-decoration-line: underline;
+      text-decoration-thickness: 1px;
       text-decoration-color: var(--tx-thread);
     }
-    & :is(a, button, summary).underline:hover {
-      text-decoration-style: solid;
-      text-decoration-color: var(--color-accent);
-    }
-    & sup a.underline {
-      text-decoration-style: solid;
-      text-decoration-thickness: 1px;
+
+    /* La sección que se está leyendo, en el menú: en vez de la raya, una costura azul. */
+    & .tx-nav[aria-current] {
+      box-shadow: none;
+      background-image: var(--tx-underline-on);
+      background-repeat: round no-repeat;
+      background-position: 0 calc(100% - 1px);
+      background-size: auto 5px;
     }
 
-    /* Viñetas: una cruz de punto de cruz. */
+    /* Viñetas: un nudo francés. */
     & ul.list-disc {
-      list-style-image: var(--tx-cross);
+      list-style-image: var(--tx-knot);
     }
 
-    /* Botón principal: etiqueta tejida en sarga azul, cosida por el borde con hilo crudo. */
+    /* Botón principal: un parche. Fondo de sarga azul y la orilla remallada con puntadas apretadas. */
     & .tx-label {
       position: relative;
-      background-image: repeating-linear-gradient(135deg, rgb(255 255 255 / 0.07) 0 1px, transparent 1px 3px);
+      border-radius: 4px;
+      background-image: repeating-linear-gradient(135deg, rgb(255 255 255 / 0.075) 0 1px, transparent 1px 3px);
     }
     & .tx-label::after {
       content: "";
       position: absolute;
-      inset: 2px;
-      border: 1px solid transparent;
-      border-image: var(--tx-frame-cream) 8 / 8px / 0 round;
-      opacity: 0.8;
+      inset: -2.5px;
+      border: 7px solid transparent;
+      border-image: var(--tx-merrow) 7 / 7px / 0 round;
       pointer-events: none;
     }
 
-    /* Punto de media en las barras de horario. */
-    & .tx-knit {
-      background-image: var(--tx-knit);
+    /* Barras de horario en punto raso: hilos paralelos y apretados. El carril es solo un hilván fino. */
+    & .tx-track {
+      border-color: transparent;
+      background-color: transparent;
+      border-image: var(--tx-frame-fine) 8 / 8px / 4px round;
+    }
+    & .tx-satin {
+      background-color: transparent;
+      background-image: var(--tx-satin-slate);
+      background-size: auto 100%;
+      background-repeat: repeat-x;
+    }
+    & .tx-satin-navy {
+      background-image: var(--tx-satin-navy);
     }
 
-    /* Bordado (gráfica y sumador): rejilla en hilván fino, línea en pespunte y tandas posteriores en hilván suelto.
-       Los largos de cada lista son distintos para que el ritmo no sea de máquina. */
-    & .tx-grid {
-      stroke: var(--tx-thread-fine);
-      stroke-width: 1.1;
-      stroke-linecap: round;
-      stroke-dasharray: 5 4 6.2 3.6 4.6 4.2 5.6 3.8;
+    /* "Ahora" en el horario: un alfiler de cabeza redonda clavado en el papel. */
+    & .tx-pin {
+      width: 1.5px;
+      background-image: linear-gradient(90deg, #475569, #e2e8f0 45%, #334155);
+      box-shadow: 1px 1px 1px rgb(61 47 20 / 0.28);
     }
-    & .tx-guide {
-      stroke-linecap: round;
-      stroke-dasharray: 3.4 3.6 4 3.2;
+    & .tx-pin::before {
+      content: "";
+      position: absolute;
+      top: -6px;
+      left: -2.75px;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background-image: radial-gradient(circle at 34% 30%, #a9c0de 0 10%, #1f3a5f 46%, #12233b 100%);
+      box-shadow: 1px 1.5px 1.5px rgb(61 47 20 / 0.4);
     }
-    & .tx-backstitch {
-      stroke-width: 2.1;
-      stroke-dasharray: 6.2 3.9 7 3.7 5.6 4.1;
-    }
-    & .tx-running {
-      stroke-width: 2.1;
-      stroke-dasharray: 3.2 7 3.8 6.6;
-    }
+
+    /* Piezas SVG (gráfica, sumador, marca): con el modo encendido se dibuja el bordado y se oculta el trazo liso. */
     & .tx-sol-only {
       display: revert;
     }
     & .tx-sol-hide {
       display: none;
     }
-
-    /* Las etiquetas de la gráfica llevan un borde del color de la tela para que ninguna puntada les pase por debajo. */
+    /* Las etiquetas de la gráfica llevan un borde del color del papel para que ninguna puntada les pase por debajo. */
     & .tx-halo {
       paint-order: stroke;
       stroke: var(--color-paper);
       stroke-width: 4px;
       stroke-linejoin: round;
     }
-
-    /* Sumador: los cables son hilos (pespunte si llevan un 1, hilván suelto si llevan un 0) y las compuertas, parches. */
-    & .tx-wire-on {
-      stroke-dasharray: 6.4 4.4 7.2 4.2 5.8 4.6;
-    }
-    & .tx-wire-off {
-      stroke-dasharray: 3.6 5.4 4.2 5;
-    }
+    /* Sumador: las compuertas son parches de fieltro (el festón lo dibuja el componente) y las cajas pierden el filo. */
     & .tx-gate {
-      stroke-linecap: round;
-      stroke-dasharray: 5 3.6 6 3.4 4.4 3.8;
+      stroke: transparent;
+      fill: #efe5cd;
+    }
+    & .tx-io {
+      stroke: transparent;
+    }
+    /* Al pasar el cursor por una entrada apagada, su hilván toma el azul. */
+    & [role="switch"]:hover .tx-io-off [data-layer="core"] {
+      stroke: var(--color-accent);
+    }
+    & [role="switch"]:hover .tx-io-off [data-layer="edge"] {
+      stroke: var(--color-accent-strong);
     }
 
-    /* Parches: recuadros con relleno, cosidos por dentro del borde. En el flujo de pasos forman un trabajo de retazos. */
-    & .tx-patch {
-      border-color: transparent;
-      border-image: var(--tx-frame) 12 / 12px / 0 round;
-    }
+    /* Pasos de un flujo: retazos en dos tonos, cada uno con su orilla de festón. */
     & .tx-patchwork {
       border-color: transparent;
       background-color: transparent;
     }
+    /* El borde de 1 px que pide border-image se compensa con el margen, para que el retazo mida lo mismo. */
     & .tx-patchwork > .tx-patch {
-      border-width: 1px;
-      border-style: solid;
-      background-color: rgb(120 95 40 / 0.06);
+      border: 1px solid transparent;
+      margin: -1px;
+      border-image: var(--tx-frame-patch) 10 / 10px / 0 round;
+      background-color: #f1e8d3;
     }
     & .tx-patchwork > .tx-patch:nth-child(even) {
-      background-color: rgb(120 95 40 / 0.12);
+      background-color: #ebe0c6;
     }
 
-    /* "Ahora" en el horario: un alfiler. */
-    & .tx-pin::before {
-      content: "";
-      position: absolute;
-      top: -5px;
-      left: -2.5px;
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background-color: var(--color-ink);
-    }
-
-    /* La marca, bordada. */
-    & .tx-mark path {
-      stroke-dasharray: 4.7 1.4 5.5 1.3;
-    }
-
-    /* El interruptor: un botón de camisa en su ojal. */
+    /* El interruptor: un botón de hueso de cuatro agujeros en su ojal. Va un poco más grande para que se lea. */
     & .tx-buttonhole {
-      outline: 1px dashed rgb(247 241 227 / 0.75);
-      outline-offset: -3px;
+      border-color: transparent;
+      background-color: transparent;
+      background-image: var(--tx-buttonhole);
+      background-size: 100% 100%;
+      scale: 1.25;
     }
     & .tx-button {
-      scale: 1.2;
-      background-image:
-        radial-gradient(circle at 34% 50%, var(--color-accent) 0 0.9px, transparent 1.3px),
-        radial-gradient(circle at 66% 50%, var(--color-accent) 0 0.9px, transparent 1.3px);
-      box-shadow:
-        inset 0 0 0 1px rgb(31 58 95 / 0.25),
-        0 1px 1px rgb(0 0 0 / 0.3);
+      background-color: transparent;
+      background-image: var(--tx-button);
+      background-size: 100% 100%;
+      scale: 1.4;
     }
 
-    /* Final de la tela: cenefa y flecos. */
-    & .tx-fringe::after {
+    /* Pie de página: una cenefa en punto de cruz con la compuerta AND de la marca, como la firma de un muestrario. */
+    & .tx-hem {
+      --seam: none;
+    }
+    & .tx-hem::before {
       content: "";
       display: block;
-      height: 50px;
-      /* De arriba abajo: la cenefa, el borde de la tela (con su sombra) y los flecos sobre lo que hay debajo. */
-      background-image: var(--tx-cenefa), var(--tx-fringe), linear-gradient(rgb(74 58 28 / 0.22), rgb(74 58 28 / 0.07) 5px);
-      background-repeat: repeat-x, repeat-x, no-repeat;
-      background-position:
-        0 0,
-        0 16px,
-        0 16px;
-      background-color: var(--color-paper);
+      height: 38.4px;
+      background-image: var(--tx-cenefa);
+      background-repeat: round no-repeat;
+      background-position: 0 0;
     }
   }
 }
