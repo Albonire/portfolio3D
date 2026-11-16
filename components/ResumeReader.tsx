@@ -115,7 +115,7 @@ export default function ResumeReader({ content, lang }: { content: ReaderContent
           if (!busy) fromFile(event.dataTransfer.files[0]);
         }}
         data-active={dragging}
-        className={`tx-frame border p-5 transition-colors ${dragging ? "border-accent bg-wash" : "border-rule"}`}
+        className={`tx-drop border p-5 transition-colors ${dragging ? "border-accent bg-wash" : "border-rule"}`}
       >
         <div className="flex flex-wrap items-center gap-x-4 gap-y-3">
           <label
@@ -133,7 +133,8 @@ export default function ResumeReader({ content, lang }: { content: ReaderContent
               className="sr-only"
             />
           </label>
-          <span className="text-sm text-muted">{content.dropHint}</span>
+          {/* En pantallas táctiles no se puede arrastrar un archivo: la pista sobra. */}
+          <span className="text-sm text-muted pointer-coarse:hidden">{content.dropHint}</span>
         </div>
         <p className="mt-4 flex flex-wrap items-baseline gap-x-3 gap-y-1 text-sm text-muted">
           <span>{content.samplesLabel}</span>
@@ -282,7 +283,7 @@ function Findings({
                 tabIndex={0}
                 role="region"
                 aria-label={preview.title}
-                className="tx-frame mt-2 max-h-72 overflow-auto whitespace-pre-wrap break-words border border-rule bg-wash p-3 font-mono text-xs leading-relaxed text-ink"
+                className="tx-frame-fine mt-2 max-h-72 overflow-auto whitespace-pre-wrap break-words border border-rule bg-wash p-3 font-mono text-xs leading-relaxed text-ink"
               >
                 {cut(preview.text)}
               </pre>

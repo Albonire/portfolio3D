@@ -64,6 +64,9 @@ export default async function CaseStudyPage({ params }: Props) {
   const study = c.cases[slug];
   if (!study) notFound();
   const refs = { keys: collectRefs(study), label: c.ui.sourceLabel };
+  // El caso que sigue, en el orden de la portada (del último se vuelve al primero).
+  const withCase = c.work.projects.filter((project) => project.slug);
+  const next = withCase[(withCase.findIndex((project) => project.slug === slug) + 1) % withCase.length];
 
   return (
     <>
@@ -78,11 +81,11 @@ export default async function CaseStudyPage({ params }: Props) {
         <h1 className="mt-6 max-w-3xl font-serif text-3xl font-medium leading-tight text-ink sm:text-4xl">{study.title}</h1>
         <p className="mt-5 max-w-2xl text-lg leading-relaxed text-body">{study.lead}</p>
 
-        <dl className="tx-seam-y mt-10 grid gap-x-8 gap-y-3 border-y border-rule py-6 text-sm sm:grid-cols-[8rem_minmax(0,1fr)]">
+        <dl className="tx-seam-y mt-10 grid gap-x-8 gap-y-4 border-y border-rule py-6 text-sm sm:grid-cols-[8rem_minmax(0,1fr)] sm:gap-y-3">
           {study.meta.map((item) => (
-            <div key={item.label} className="contents">
+            <div key={item.label} className="sm:contents">
               <dt className="font-mono text-xs text-muted sm:pt-0.5">{item.label}</dt>
-              <dd className="text-ink">
+              <dd className="mt-0.5 text-ink sm:mt-0">
                 <Inline text={item.value} refs={refs} />
               </dd>
             </div>
@@ -160,6 +163,20 @@ export default async function CaseStudyPage({ params }: Props) {
             <Sources keys={refs.keys} items={c.sources.items} />
           </section>
         )}
+        {/* Al terminar de leer no hay que subir hasta arriba: se puede volver a la lista o seguir con otro caso. */}
+        <nav aria-label={c.ui.caseNav} className="tx-seam-t mt-16 flex flex-wrap items-baseline justify-between gap-x-8 gap-y-3 border-t border-rule pt-8 text-sm">
+          <Link href={`/${lang}#work`} className="text-accent underline decoration-rule underline-offset-4 transition-colors hover:decoration-accent">
+            {c.ui.back}
+          </Link>
+          {next && next.slug !== slug && (
+            <Link
+              href={`/${lang}/work/${next.slug}`}
+              className="text-accent underline decoration-rule underline-offset-4 transition-colors hover:decoration-accent"
+            >
+              {c.ui.nextCase}: {next.title}
+            </Link>
+          )}
+        </nav>
       </main>
     </>
   );

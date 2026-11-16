@@ -42,9 +42,11 @@ export const en: Content = {
     switchTo: "Español",
     back: "Back to work",
     caseStudy: "Case study",
+    caseNav: "More case studies",
+    nextCase: "Next case study",
     private: "Private code",
     sourceLabel: "Source",
-    sunny: { label: "Sun" },
+    sunny: { label: "Sun", hint: "Leaf shadows, embroidery and cicada sound" },
   },
   nav: {
     work: "Work",

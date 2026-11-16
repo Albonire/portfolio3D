@@ -10,7 +10,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "textile": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/textile/build.mjs"
   },
   "dependencies": {
     "next": "16.3.8",
